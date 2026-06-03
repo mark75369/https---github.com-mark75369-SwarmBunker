@@ -1,0 +1,37 @@
+我是 game-dialogue-bible 專案的使用者（工作資料夾 D:\劇本開發工具；GitHub remote https://github.com/mark75369/Writing-tools.git）。
+
+請接手重建 _design/POST_LOCK_PENDING.md 兩處對話 B（M4 follow-up）wrap-up 未實際寫入的結構缺口。完整背景與來源映射見 _design/HANDBACK_POST_LOCK_RECONSTRUCTION.md（先讀它）。
+
+== 必讀（按順序）==
+1. _design/HANDBACK_POST_LOCK_RECONSTRUCTION.md（你的 scope + 缺口 A/B 定義 + 對話 A 已處理清單）
+2. _design/M4_USER_TEST_REPORT.md §3.12–§3.19（F12–F19 finding 原始內容 = 缺口 A 的 source）+ §4（Meta-pattern / Wave-A1~A6 分組 = 缺口 B §5.20 重建來源）
+3. _design/POST_LOCK_PENDING.md body 既有 NEW_REQ_25–35 entry（重建格式範本）+ 檔頭 v0.19~v0.26 版本註記（§5.x 宣稱 vs body 缺口的證據）
+
+== 任務 A（先做；低風險機械重建）==
+補寫缺失的 NEW_REQ_36–43（8 條 entry body）進 POST_LOCK_PENDING body（插在 NEW_REQ_45 之後，或依號序整理）。
+映射規則 NEW_REQ_N = F(N−24)，已驗證（NEW_REQ_27=F3 / NEW_REQ_35=F11）：
+- NEW_REQ_36 = F12（M4 §3.12）聲線卡缺 Source Coverage / Downstream Hooks 固定尾段
+- NEW_REQ_37 = F13（M4 §3.13）/create-character 主動讀既有台詞 + 聲線基準段（連動 STYLE_ANCHOR W-style）
+- NEW_REQ_38 = F14（M4 §3.14）AGENTS.md / CLAUDE.md 開場 context budget 過大
+- NEW_REQ_39 = F15（M4 §3.15）parse_frontmatter.py 裸 --- 誤判 YAML block（line 2892 bug）
+- NEW_REQ_40 = F16（M4 §3.16）/create-outline→detailed 中間缺 DRAFT 原始細節保全層
+- NEW_REQ_41 = F17（M4 §3.17）/create-outline 缺遊戲設計語言 / 關卡功能 table（D-060 候選，合 F18）
+- NEW_REQ_42 = F18（M4 §3.18）/create-detailed-outline 缺開戰前→戰鬥→戰鬥後場景結構（D-060 候選，合 F17）
+- NEW_REQ_43 = F19（M4 §3.19）/create-outline·detailed 缺個人劇情 vs 主線邊界 check
+每條沿用既有 entry 欄位：狀態 / 時點 / 提出者 / 需求背景 / 分類+嚴重度 / 提議方案 / 對既有 spec 的影響 / 處理時機 / Owner / Cross-ref。內容只從 M4 對應小節抽取，不得新增 M4 沒有的設計主張。
+
+== 任務 B（需 user 拍板再動）==
+POST_LOCK_PENDING 整個 body 沒有 # 5 / ## 5.x section，但 v0.19~v0.25 header 一路宣稱新增 §5.3–§5.21。這是跨多輪 master 的 phantom。提兩條路給 user 拍板：
+- 路 1 重建：依 header 註記 + M4 §4 + first/second-run audit memo 實際補寫 # 5 評估紀錄總表 + §5.3–§5.21
+- 路 2（對話 A 傾向）正式宣告不重建：header 加 errata 說明「§5.x 為歷史虛擬編號；評估內容分散於各 NEW_REQ entry + AUDIT_2026Q2_REPORT + M4 報告」，並把散落的 §5.x cross-ref 改指實際位置
+先回報你對兩路的評估，等 user 拍板再動任務 B。
+
+== 不要重做（對話 A 已處理）==
+NEW_REQ_44 / NEW_REQ_45 entry body、NEW_REQ_35 截斷補完、v0.26 header §5.22 修正、D-056→D-062 順延（_design/D062_DECISION_PACKAGE.md）、6 檔 CRLF churn 還原、AUDIT_2026Q2_REPORT §9.5 errata — 全部已完成，勿動。
+
+== 邊界 ==
+- 只動 POST_LOCK_PENDING（+ 任務 B 路 2 可能微調 cross-ref 指向）；不動 10 LOCKED spec / D-001~D-061；不擅自開新 D-NNN
+- 升版：任務 A 完成 POST_LOCK header v0.26 → v0.27（註明補入 NEW_REQ_36–43 body）；任務 B 視拍板結果再升
+- 收尾給 GIT SUMMARY 讓 user 手動 commit；提醒 user commit 前先 del D:\劇本開發工具\.git\index.lock（stale lock）
+
+請先回報讀完必讀後對任務 A 範圍 + 任務 B 兩路的理解，再動手任務 A。

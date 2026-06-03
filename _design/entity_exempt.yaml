@@ -1,0 +1,31 @@
+# 狀態：DRAFT
+# 版本：v0.1
+# 最後更新：2026-05-19
+# 適用範圍：Phase A.0.1 entity-exempt 清單，供 parser/status 後續檢查使用
+# 優先級：高
+
+manifest_version: v0.1
+source: _design/TASKS.md §A.0.1
+description: Files that do not need entities in frontmatter during A.0.1 baseline parsing.
+
+exemptions:
+  protocol_files:
+    reason: "00_* protocol files may omit entities."
+    paths:
+      - 00_protocol/00_a_台詞生產協議.md
+      - 00_protocol/00_b_反ai味檢查表.md
+      - 00_protocol/00_c_台詞輸出格式.md
+      - 00_protocol/00_d_工作流總覽.md
+      - 00_protocol/00_e_世界觀創建協議.md
+      - 00_protocol/00_f_角色創建協議.md
+      - 00_protocol/00_g_大綱創建協議.md
+      - 00_protocol/00_h_細綱創建協議.md
+      - 00_protocol/00_i_專案初始化協議.md
+      - 00_protocol/00_k_台詞生產流程協議.md
+      - 00_protocol/00_l_關係創建協議.md
+
+  character_templates:
+    reason: "Template files do not represent actual character instances."
+    paths:
+      - 03_characters/03_b_主要角色聲線卡模板.md
+      - 03_characters/03_c_次要角色與npc模板.md

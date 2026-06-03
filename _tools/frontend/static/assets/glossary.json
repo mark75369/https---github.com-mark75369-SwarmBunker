@@ -1,0 +1,196 @@
+{
+  "schema_version": "1.0",
+  "updated": "2026-05-22",
+  "categories": [
+    {
+      "id": "states",
+      "label": "文件狀態 / Status",
+      "terms": [
+        {
+          "term": "DRAFT",
+          "definition": "草稿態 — 可自由修改。"
+        },
+        {
+          "term": "REVIEW",
+          "definition": "審查態 — 等 REVIEW gate 通過升 FINAL。"
+        },
+        {
+          "term": "FINAL",
+          "definition": "定稿態 — 通過所有 QA + final-gating。"
+        },
+        {
+          "term": "LOCKED",
+          "definition": "鎖定態 — 不可直接編輯，需先降級為 DEPRECATED（SPEC §16）。"
+        },
+        {
+          "term": "DEPRECATED",
+          "definition": "棄用態 — 不影響定稿；可保留作歷史紀錄。"
+        },
+        {
+          "term": "APPLIED",
+          "definition": "archive/ 補丁專用 — 補丁已套用紀錄。"
+        },
+        {
+          "term": "DERIVED",
+          "definition": "view/ 整合檔專用 — 衍生檔，修改需修 source 後重 export（D-038）。"
+        }
+      ]
+    },
+    {
+      "id": "entities",
+      "label": "實體類型 / Entity types",
+      "terms": [
+        {
+          "term": "W-rules",
+          "definition": "世界規則 / World rules — 物理 / 異能 / 戰鬥 / 宗教等規則。"
+        },
+        {
+          "term": "W-language",
+          "definition": "世界語言 / World language — 語言層級、陣營與階級語言。"
+        },
+        {
+          "term": "V",
+          "definition": "詞彙 / Vocabulary — 專有名詞 / 俗稱黑話 / 禁用詞慎用詞。"
+        },
+        {
+          "term": "C-*",
+          "definition": "角色 / Character — C-主角A、C-反派B 等。"
+        },
+        {
+          "term": "R-*-*",
+          "definition": "角色關係 / Relationship — R-主角A-反派B 等。"
+        },
+        {
+          "term": "P",
+          "definition": "劇情前提 / Premise — 中心問題 + 主題 + 資訊揭露時序。"
+        },
+        {
+          "term": "CH-*",
+          "definition": "章節 / Chapter — CH-01、CH-02 等。"
+        },
+        {
+          "term": "S-*",
+          "definition": "場景 / Scene — S-01-03（第一章第三場）等。"
+        },
+        {
+          "term": "A-*",
+          "definition": "美術資產 / Art asset — 7 subtype: portrait/bg/cg/sfx/bgm/voice/ui (D-044)。"
+        }
+      ]
+    },
+    {
+      "id": "modes",
+      "label": "Mode Tag (D-028)",
+      "terms": [
+        {
+          "term": "DRAFT_TRIAL",
+          "definition": "試寫態 — 一場可有多版 (v01A/B/C)。"
+        },
+        {
+          "term": "EXPERIMENTAL",
+          "definition": "實驗態 — 探索性版本。"
+        },
+        {
+          "term": "CONVERGENCE",
+          "definition": "收斂態 — v02 — 從多版試寫合併。"
+        },
+        {
+          "term": "SINGLE_ITER",
+          "definition": "單次迭代態 — D-028 拍板，QA finding 後局部修改。"
+        },
+        {
+          "term": "FINAL_CANDIDATE",
+          "definition": "定稿候選態 — 等 final-gating 升 FINAL。"
+        },
+        {
+          "term": "DIALOGUE_FINAL",
+          "definition": "對白定稿態。"
+        }
+      ]
+    },
+    {
+      "id": "qa_types",
+      "label": "QA 模板 (8 必跑 + 1 final-gating)",
+      "terms": [
+        {
+          "term": "09_a AI_FLAVOR",
+          "definition": "AI 味檢查。"
+        },
+        {
+          "term": "09_b VOICE_CONSISTENCY",
+          "definition": "角色聲線一致性。"
+        },
+        {
+          "term": "09_c FORBIDDEN_WORD",
+          "definition": "禁用詞檢查。"
+        },
+        {
+          "term": "09_d INFO_CONTROL",
+          "definition": "資訊揭露控制。"
+        },
+        {
+          "term": "09_e",
+          "definition": "定稿變更紀錄 (final-gating 屬人類，非 /qa)。"
+        },
+        {
+          "term": "09_f GENRE_DRIFT",
+          "definition": "類型偏移檢查。"
+        },
+        {
+          "term": "09_g RHYTHM",
+          "definition": "節奏感檢查。"
+        },
+        {
+          "term": "09_h DRAMATIC_TENSION",
+          "definition": "對話張力。"
+        },
+        {
+          "term": "09_i CROSS_SCENE_CONTINUITY",
+          "definition": "跨場一致性。"
+        }
+      ]
+    },
+    {
+      "id": "design_principles",
+      "label": "設計守則 (UX §1.4.3)",
+      "terms": [
+        {
+          "term": "G1",
+          "definition": "badge 不單獨呈現 — 必搭配 checklist / 計數 / next fix。"
+        },
+        {
+          "term": "G2",
+          "definition": "流程視覺化僅供閱讀順序 — 不代表強制執行步驟。"
+        },
+        {
+          "term": "G3",
+          "definition": "UX grouping 不是資料層必要單位 — 不假設「每場必有 N」「每角色必有弧線」。"
+        },
+        {
+          "term": "D-029 (α)",
+          "definition": "前端跟 agent 完全分離 — agent action 走 CopyCommandButton 切外部 chat。"
+        },
+        {
+          "term": "D-035",
+          "definition": "Scene Detail (read-only cockpit) + Scene Editor 雙頁面拍板。"
+        },
+        {
+          "term": "D-038",
+          "definition": "L3 Export 走 A1 prompt 流程 — 前端產 prompt → user 貼 → agent 跑。"
+        },
+        {
+          "term": "D-040",
+          "definition": "Save flow LOCKED race guard — Step 3 pre-flight check + LOCKED race modal 三選項。"
+        },
+        {
+          "term": "D-044",
+          "definition": "A-* 7 subtype canonical。"
+        },
+        {
+          "term": "D-045",
+          "definition": "A-* 不納入 narrative /status 完成度。"
+        }
+      ]
+    }
+  ]
+}

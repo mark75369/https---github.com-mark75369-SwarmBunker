@@ -1,0 +1,103 @@
+# Entity Type Registry - Template
+# LOCKED-tier reference: schema authority for Phase A.0 entity type parsing.
+# Instance bootstrap copies this file to <instance_root>/entity_type_registry.yaml.
+# Instance users may append user_extensions; core entries are not user-editable.
+#
+# Source materials note: raw user source materials live under
+# <instance_root>/_source_materials/. They are NOT entities, carry no entity ID,
+# and are excluded from all frontmatter scans. No entity type is defined for them.
+
+version: 1
+schema_version: data_format_spec_v0.3
+
+core:
+  - type: W-rules
+    description: 世界規則
+    id_pattern: ^W-rules$
+    target_dir: 01_world/
+    cross_ref_allowed: true
+    locked: true
+  - type: W-language
+    description: 世界語言
+    id_pattern: ^W-language$
+    target_dir: 01_world/
+    cross_ref_allowed: true
+    locked: true
+  - type: W-style
+    description: 文風樣本與指紋
+    id_pattern: ^W-style$
+    target_dir: 01_world/
+    cross_ref_allowed: true
+    locked: true
+  - type: V
+    description: 詞彙系統
+    id_pattern: ^V$
+    target_dir: 02_vocabulary/
+    cross_ref_allowed: true
+    locked: true
+  - type: C
+    description: 角色
+    id_pattern: ^C-.+$
+    target_dir: 03_characters/
+    cross_ref_allowed: true
+    locked: true
+  - type: R
+    description: 關係
+    id_pattern: ^R-.+-.+$
+    target_dir: 04_relationships/
+    cross_ref_allowed: true
+    locked: true
+  - type: P
+    description: 主線
+    id_pattern: ^P$
+    target_dir: 05_plot/
+    cross_ref_allowed: true
+    locked: true
+  - type: CH
+    description: 章節
+    id_pattern: ^CH-\d{2}$
+    target_dir: 05_plot/
+    cross_ref_allowed: true
+    locked: true
+  - type: S
+    description: 場景
+    id_pattern: ^S-\d{2}-\d{2}(?:[a-z]+|sub)?$
+    target_dir: 06_scene_index/, 07_scene_tasks/, 08_dialogue_outputs/
+    cross_ref_allowed: true
+    locked: true
+  - type: A
+    description: 美術資產
+    id_pattern: ^A-(portrait|bg|cg|sfx|bgm|voice|ui)-.+-.+$
+    target_dir: 10_art_assets/
+    cross_ref_allowed: true
+    locked: true
+    subtype:
+      allowed_values:
+        - portrait
+        - bg
+        - cg
+        - sfx
+        - bgm
+        - voice
+        - ui
+      reserved_subtypes:
+        - icon
+        - effect
+        - video
+        - shader
+  - type: ORG
+    description: 組織 / 非人格反派 / 組織型對抗源（公司 / 制度 / 機構 / 體系 / 殘留或已解散組織；不會說話、無聲線卡、不進 /dialogue-write 為說話者；可被 P / S / R / C 以穩定 ID depends_on / cross-ref 的一級節點）
+    id_pattern: ^ORG-.+$
+    target_dir: 11_organizations/
+    cross_ref_allowed: true
+    locked: true
+
+reserved_prefixes:
+  - prefix: I
+    description: 物品 / 道具（reserved，本輪不採）
+  - prefix: UI
+    description: UI 文案（reserved，本輪不採）
+  - prefix: SKILL
+    description: 技能說明（reserved，本輪不採）
+
+user_extensions: []

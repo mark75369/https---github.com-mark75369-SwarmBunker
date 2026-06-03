@@ -1,0 +1,65 @@
+# 狀態：LOCKED
+# 版本：v0.1（Batch 2 大綱鏈 D-067 落地 — pattern pack 機制首發；F17 遊戲設計語言 outline table + F18 場景類型 enum / 戰鬥前後場）
+# 最後更新：2026-06-02
+# 適用範圍：Phase B /create-outline + /create-detailed-outline 依 00_b §1 作品類型載入的可選 pattern pack registry；skill 唯讀消費
+# 優先級：最高
+
+# Pattern Pack Registry - Template
+# LOCKED-tier reference: schema authority for genre-specific outline / detailed-outline pattern packs (D-067).
+#
+# 與兄弟 registry 的關鍵差異（務必理解）：
+#   - skill 唯讀消費：/create-outline 與 /create-detailed-outline 只「讀」本 registry，永不寫/改它（比照 issue_type_registry 慣例）。
+#   - 非 bootstrap 強制 registry：本 registry NOT 在 /init-project 的三 registry 強制拷貝清單內（D-067 決策；避免動 LOCKED 00_i）。
+#     skill 載入順序：優先讀 <instance_root>/pattern_pack_registry.yaml（user 若自行拷貝並客製）→ 缺則 fallback 讀本 template + WARN
+#     → 兩者皆缺 / parse 失敗則「略過 pattern pack 機制、走現行通用流程」（pack 是 opt-in 加值、非必要；與 issue_type_registry 缺則 block 不同）。
+#   - opt-in 啟用：00_b §1 作品類型語氣定位是 free-text（無固定 enum），skill 讀它「僅作提示候選 pack」，
+#     實際啟用以 user 在 instance registry 標 enabled: true 或 Stage 1 明示為準；skill 不自行臆測 free-text 自動套用。
+#   - scene_types 是「pack 內容資料」非「系統級 entity enum」：不是 entity_type_registry 的型別、不對應任何 S-* id_pattern、不改 parser 行為；
+#     skill 只把場景類型字串當 06_a 行內 note 使用（沿用既有 risk_type note 機制）。
+#
+# 三層機制（對齊 issue_type_registry / entity_type_registry / qa_type_registry pattern）：
+#   - core: 內建 pack（locked=true 禁 user 改；enabled=false 預設關，由 user 啟用）
+#   - user_extensions: user 自訂 pack（如未來 visual_novel / arpg）
+#   - core_overrides: user 標記 skip 某 core pack
+#
+# user_extensions 擴充範例骨架（user 照抄；本批不入 core 半成品）：
+#   user_extensions:
+#     visual_novel:
+#       enabled: false
+#       applies_to: [00_g_outline, 00_h_detailed_outline]
+#       applies_when: [視覺小說, visual novel, visual_novel, AVG, 文字冒險]
+#       outline_table:
+#         columns: []            # TODO: 待首個 VN 專案落地時填
+#       scene_types:
+#         enum: []               # TODO
+#     arpg:
+#       enabled: false
+#       applies_to: [00_g_outline, 00_h_detailed_outline]
+#       applies_when: [動作角色扮演, action rpg, arpg]
+#       outline_table:
+#         columns: []            # TODO
+#       scene_types:
+#         enum: []               # TODO
+
+version: 1
+schema_version: data_format_spec_v0.3
+
+core:
+  tower_defense:
+    locked: true
+    enabled: false                       # 預設關；user 在 instance registry 標 true 啟用
+    applies_to: [00_g_outline, 00_h_detailed_outline]
+    applies_when: [塔防, tower defense, tower_defense]   # 提示候選用；非自動套用權威
+    # F17：/create-outline 可選結構化輸出 — 遊戲設計關卡功能 table
+    outline_table:
+      columns: [關卡, 開戰前功能, 戰鬥功能, 戰鬥後功能, 玩家新增資訊, 後續鉤子, 禁止提前揭露]
+    # F18：/create-detailed-outline 場景類型 enum + 每關結構
+    scene_types:
+      enum: [劇情場, 戰鬥前場, 戰鬥場, 戰鬥後場, UI語音場]
+      per_unit_structure: [戰鬥前場, 戰鬥場, 戰鬥後場]   # 每關 = 戰鬥前場 + 戰鬥場 + 戰鬥後場
+      dialogue_routing:
+        auto_dialogue_false: [戰鬥場, UI語音場]          # 標 auto_dialogue:false；不自動進 /dialogue-write（下游 /scene-task 對接待後續批）
+
+user_extensions: {}
+
+core_overrides: {}

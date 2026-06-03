@@ -1,0 +1,6 @@
+# audit-P2 cleanup: ignore sandbox/test residue
+__pycache__/
+*.pyc
+__cache_test.txt
+*.egg-info/
+.pytest_cache/

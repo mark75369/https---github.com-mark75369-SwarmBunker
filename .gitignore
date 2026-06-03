@@ -1,0 +1,37 @@
+# Root .gitignore — 11th master 對話 A 新建（2026-06-01）
+# 詳 _design/SANDBOX_REFACTOR_PLAN.md + _design/POST_LOCK_PENDING.md NEW_REQ_22
+
+# === Sandbox for Claude Code Dynamic Workflows audit (2026-Q2) ===
+# user 在 _sandbox/snapshot/ 內跑 Claude Code Dynamic Workflows audit
+# audit 結論走人工 transcribe 回 production；不 commit sandbox 內檔
+# audit 結束 rm -rf _sandbox/ 重 bootstrap baseline
+/_sandbox/
+
+# === Common ===
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Python virtual envs（如 dev / audit 期間建立）
+.venv/
+venv/
+env/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor temp files
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Node.js (in case _tools/frontend/node_modules/ leaks to root scan)
+node_modules/
+
+# Export 產物不入版控（D-038 附帶第 3 項）
+export/

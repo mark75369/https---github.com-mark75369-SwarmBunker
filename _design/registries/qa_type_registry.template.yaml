@@ -1,0 +1,50 @@
+# 狀態：DRAFT
+# 版本：v0.1
+# 最後更新：2026-05-19
+# 適用範圍：Phase A.0.8 qa_type registry Template，供 parser 與 Instance bootstrap 使用
+# 優先級：最高
+
+# QA Type Registry - Template
+# LOCKED-tier reference: schema authority for Phase A.0 qa_type parsing.
+# Instance bootstrap copies this file to <instance_root>/qa_type_registry.yaml.
+# Instance users may append user_extensions; core entries are not user-editable.
+# 09_e final-gating 紀錄不在 QA pipeline，不入 registry（屬 SPEC §12.7 M9 鎖定 + UD §3.5 範圍）。
+
+version: 1
+schema_version: data_format_spec_v0.3
+
+core:
+  - qa_type: AI_FLAVOR
+    description: AI 味檢查
+    template_path: 09_quality_assurance/09_a_ai味qa報告模板.md
+    locked: true
+  - qa_type: VOICE_CONSISTENCY
+    description: 角色聲線一致性檢查
+    template_path: 09_quality_assurance/09_b_角色聲線一致性檢查模板.md
+    locked: true
+  - qa_type: FORBIDDEN_WORD
+    description: 禁用詞檢查
+    template_path: 09_quality_assurance/09_c_禁用詞檢查報告模板.md
+    locked: true
+  - qa_type: INFO_CONTROL
+    description: 資訊控制檢查
+    template_path: 09_quality_assurance/09_d_資訊控制檢查報告模板.md
+    locked: true
+  - qa_type: GENRE_DRIFT
+    description: 類型偏移檢查
+    template_path: 09_quality_assurance/09_f_類型偏移檢查模板.md
+    locked: true
+  - qa_type: RHYTHM
+    description: 節奏感檢查
+    template_path: 09_quality_assurance/09_g_節奏感檢查模板.md
+    locked: true
+  - qa_type: DRAMATIC_TENSION
+    description: 對話張力檢查
+    template_path: 09_quality_assurance/09_h_對話張力檢查模板.md
+    locked: true
+  - qa_type: CROSS_SCENE_CONTINUITY
+    description: 跨場一致性檢查
+    template_path: 09_quality_assurance/09_i_跨場一致性檢查模板.md
+    locked: true
+
+user_extensions: []

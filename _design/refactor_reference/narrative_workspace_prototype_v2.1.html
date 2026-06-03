@@ -1,0 +1,2297 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Narrative Workspace Prototype — v2.1 (single-file reference for refactor)</title>
+
+  <!-- =========================================================================
+       Narrative Workspace Prototype — v2.1 (single-file reference for refactor)
+       -------------------------------------------------------------------------
+       本檔是 self-contained HTML：原本拆成 index.html + mock_data.js + README.md
+       + prototype_notes.md 四檔；此版本把 mock_data.js inline 進來，給新重構專
+       案的對話作為「一個檔就能完整看到 prototype」的參考檔。
+       
+       對應的 UI/UX 規格說明（含設計決策、重構候選等）：UI_UX_SPEC.md
+       對應的原始 4 檔結構：game-dialogue-bible/_prototypes/ux/narrative_workspace/
+       
+       使用：用任何現代瀏覽器直開即可（不需 server / build）。
+       ========================================================================= -->
+
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --bg: #f5f6fa;
+      --surface: #ffffff;
+      --surface-alt: #f9fafc;
+      --surface-hover: #fafbff;
+      --border: #e2e5ec;
+      --border-strong: #cbd1dd;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --subtle: #9ca3af;
+      --primary: #4a6cf7;
+      --primary-hover: #3957d8;
+      --primary-soft: #eef1ff;
+      --primary-soft-border: #d2dcff;
+      --warning: #b8860b;
+      --warning-bg: #fff7e6;
+      --warning-border: #f5d28a;
+      --warning-text: #6b4f00;
+      --warning-text-strong: #5a3e00;
+      --danger: #c94a4a;
+      --danger-bg: #fdecec;
+      --danger-border: #f3c4c4;
+      --success: #0f9b6e;
+      --success-bg: #e8f7f0;
+      --success-border: #b6e4ce;
+      --info: #2563eb;
+      --info-bg: #eaf2ff;
+      --info-border: #cfdcff;
+      --info-border-hover: #dde7ff;
+      --future: #9ca3af;
+      --future-bg: #f0f1f4;
+      --future-border: #d8dbe2;
+      --proto-bg: #fff5d4;
+      --proto-border: #e6c75a;
+      --proto-active-bg: #6b4f00;
+      --proto-active-text: #fff5d4;
+      --proto-controls-btn-bg: rgba(255,255,255,.6);
+      --modal-backdrop: rgba(15,23,42,.45);
+      --shadow-sm: 0 1px 2px rgba(15,23,42,.04), 0 1px 3px rgba(15,23,42,.06);
+      --shadow-md: 0 2px 4px rgba(15,23,42,.06), 0 6px 16px rgba(15,23,42,.08);
+      --shadow-lg: 0 10px 30px rgba(15,23,42,.18);
+      --radius: 10px;
+    }
+    [data-theme="dark"] {
+      --bg: #0f1115; --surface: #1a1d23; --surface-alt: #242830; --surface-hover: #2a2f3a;
+      --border: #2a2f3a; --border-strong: #3a414f;
+      --text: #e5e7eb; --muted: #a3aab8; --subtle: #6b7280;
+      --primary: #6c8aff; --primary-hover: #8aa1ff; --primary-soft: #1f2742; --primary-soft-border: #2a3559;
+      --warning: #fbbf24; --warning-bg: #2c2410; --warning-border: #5e4a14;
+      --warning-text: #fde68a; --warning-text-strong: #fef3c7;
+      --danger: #f87171; --danger-bg: #3a1a1a; --danger-border: #5b2828;
+      --success: #34d399; --success-bg: #112d22; --success-border: #1f5040;
+      --info: #60a5fa; --info-bg: #15243f; --info-border: #28406b; --info-border-hover: #2f4a7d;
+      --future: #6b7280; --future-bg: #1f242d; --future-border: #2f3540;
+      --proto-bg: #3d2f10; --proto-border: #6b5210;
+      --proto-active-bg: #fbbf24; --proto-active-text: #2c2410;
+      --proto-controls-btn-bg: rgba(255,255,255,.06);
+      --modal-backdrop: rgba(0,0,0,.6);
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.5);
+      --shadow-md: 0 2px 4px rgba(0,0,0,.5), 0 6px 16px rgba(0,0,0,.6);
+      --shadow-lg: 0 16px 36px rgba(0,0,0,.6);
+    }
+    html, body {
+      margin: 0; padding: 0;
+      background: var(--bg); color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+      font-size: 14px; line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color .2s ease, color .2s ease;
+    }
+    a { color: var(--primary); text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ===== Prototype banner =================================== */
+    .proto-banner {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--proto-bg);
+      border-bottom: 1px solid var(--proto-border);
+      padding: 8px 20px;
+      display: flex; align-items: center; gap: 14px;
+      font-size: 12px; color: var(--warning-text);
+      transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+    }
+    .proto-banner strong { color: var(--warning-text-strong); letter-spacing: .04em; }
+    .proto-banner .proto-controls { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+    .proto-banner .proto-controls .divider { width: 1px; height: 18px; background: var(--proto-border); opacity: .8; }
+    .proto-banner .proto-controls button {
+      background: var(--proto-controls-btn-bg);
+      border: 1px solid var(--proto-border);
+      padding: 4px 10px; border-radius: 6px;
+      font-size: 12px; color: var(--warning-text);
+    }
+    .proto-banner .proto-controls button.active {
+      background: var(--proto-active-bg); color: var(--proto-active-text); border-color: var(--proto-active-bg);
+    }
+    .theme-toggle-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px;
+      background: var(--surface); color: var(--text);
+      border: 1px solid var(--border-strong); border-radius: 999px;
+      font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit;
+      transition: background-color .12s ease, border-color .12s ease, color .12s ease;
+    }
+    .theme-toggle-btn:hover { background: var(--primary-soft); border-color: var(--primary); color: var(--primary); }
+    .theme-toggle-btn .icon { font-size: 13px; line-height: 1; }
+
+    /* ===== App shell ========================================== */
+    .app-header {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 14px 28px;
+      display: flex; align-items: center; gap: 18px;
+    }
+    .app-header .brand { font-weight: 700; font-size: 15px; letter-spacing: .02em; display: flex; align-items: center; gap: 8px; }
+    .app-header .brand .dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; }
+    .breadcrumb { color: var(--muted); font-size: 13px; display: flex; align-items: center; gap: 6px; flex: 1; flex-wrap: wrap; }
+    .breadcrumb a { color: var(--muted); }
+    .breadcrumb .sep { color: var(--subtle); }
+    .breadcrumb .current { color: var(--text); font-weight: 600; }
+    .header-actions { display: flex; gap: 8px; }
+    .header-actions .summary-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 10px; border-radius: 999px;
+      background: var(--info-bg); color: var(--info);
+      font-size: 12px; font-weight: 600;
+      border: 1px solid var(--info-border); cursor: pointer;
+    }
+    .header-actions .summary-chip:hover { background: var(--info-border-hover); }
+    main { max-width: 1280px; margin: 0 auto; padding: 24px 24px 80px; }
+
+    /* ===== Common: section / card / button / badge ============ */
+    .section { margin-bottom: 26px; }
+    .section-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+    .section-header h2 { margin: 0; font-size: 16px; font-weight: 700; color: var(--text); }
+    .section-header h2 .en-sub { font-size: 11.5px; font-weight: 500; color: var(--muted); margin-left: 6px; letter-spacing: .04em; }
+    .section-header .desc { color: var(--muted); font-size: 13px; }
+    .section-header .right { margin-left: auto; }
+
+    .card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 16px 18px; box-shadow: var(--shadow-sm);
+      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    }
+    .card.clickable:hover { cursor: pointer; transform: translateY(-1px); box-shadow: var(--shadow-md); border-color: var(--border-strong); }
+    .card-title { font-size: 15px; font-weight: 700; margin: 0 0 4px; }
+    .card-meta { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text); font-size: 13px; font-weight: 500; }
+    .btn:hover { background: var(--surface-alt); }
+    .btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .btn.primary:hover { background: var(--primary-hover); }
+    .btn.ghost { background: transparent; border: 1px dashed var(--border-strong); color: var(--muted); }
+    .btn.small { padding: 4px 8px; font-size: 12px; border-radius: 6px; }
+    .btn[disabled], .btn.disabled { opacity: .5; cursor: not-allowed; pointer-events: none; }
+
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: .02em; border: 1px solid transparent; }
+    .badge.info     { background: var(--info-bg);    color: var(--info);    border-color: var(--info-border); }
+    .badge.success  { background: var(--success-bg); color: var(--success); border-color: var(--success-border); }
+    .badge.warning  { background: var(--warning-bg); color: var(--warning); border-color: var(--warning-border); }
+    .badge.danger   { background: var(--danger-bg);  color: var(--danger);  border-color: var(--danger-border); }
+    .badge.muted    { background: var(--future-bg);  color: var(--muted);   border-color: var(--future-border); }
+    .badge.future   { background: var(--future-bg);  color: var(--future);  border-color: var(--future-border); }
+    .badge.dot::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; display: inline-block; }
+
+    /* ===== Info-icon (glossary tooltip) ====================== */
+    .info-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--surface-alt); border: 1px solid var(--border-strong);
+      color: var(--muted); font-size: 10px; font-weight: 700;
+      cursor: help; margin-left: 4px; vertical-align: 1px; user-select: none;
+    }
+    .info-icon:hover { background: var(--primary-soft); border-color: var(--primary); color: var(--primary); }
+    .glossary-pop {
+      position: absolute; z-index: 200; max-width: 320px;
+      background: #1f2937; color: #f3f4f6;
+      padding: 10px 12px; border-radius: 8px;
+      font-size: 12.5px; line-height: 1.55;
+      box-shadow: 0 8px 24px rgba(15,23,42,.18);
+    }
+    .glossary-pop .term { font-weight: 700; color: #fbbf24; margin-bottom: 4px; }
+    .glossary-pop::after { content: ""; position: absolute; top: -6px; left: 14px; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 6px solid #1f2937; }
+
+    /* ===== Workspace Home ==================================== */
+    .home-intro { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 18px; gap: 18px; }
+    .home-intro h1 { margin: 0 0 4px; font-size: 22px; }
+    .home-intro .lede { color: var(--muted); font-size: 13.5px; }
+    .home-intro .home-actions { display: flex; gap: 8px; }
+    .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+    .project-card .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .project-card .top .menu-btn { background: transparent; border: none; color: var(--subtle); padding: 2px 6px; border-radius: 6px; font-size: 16px; }
+    .project-card .top .menu-btn:hover { background: var(--surface-alt); color: var(--text); }
+    .project-card .status-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0 10px; }
+    .project-card .next-step { font-size: 12.5px; color: var(--text); background: var(--surface-alt); border-left: 3px solid var(--primary); padding: 8px 10px; border-radius: 6px; margin-bottom: 10px; }
+    .project-card .next-step .label { font-size: 11px; color: var(--muted); display: block; margin-bottom: 2px; letter-spacing: .03em; }
+    .counts-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .count-cell { text-align: center; padding: 6px 4px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-alt); }
+    .count-cell .num { font-size: 16px; font-weight: 700; line-height: 1.1; }
+    .count-cell .lbl { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+    .count-cell.danger .num   { color: var(--danger); }
+    .count-cell.warning .num  { color: var(--warning); }
+    .count-cell.info .num     { color: var(--info); }
+    .count-cell.muted .num    { color: var(--muted); }
+    .ws-tools { margin-top: 36px; padding: 18px; background: var(--surface-hover); border: 1px dashed var(--border-strong); border-radius: var(--radius); }
+    .ws-tools .label { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+    .ws-tools .tool-card { display: flex; gap: 14px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; cursor: pointer; transition: border-color .12s ease; }
+    .ws-tools .tool-card:hover { border-color: var(--warning-border); }
+    .ws-tools .tool-card .warn-tag { flex-shrink: 0; padding: 4px 10px; border-radius: 6px; background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning-border); font-size: 11px; font-weight: 700; }
+    .ws-tools .tool-card .body { flex: 1; }
+    .ws-tools .tool-card .title { font-weight: 600; }
+    .ws-tools .tool-card .desc { color: var(--muted); font-size: 12.5px; }
+    .empty-state { text-align: center; padding: 80px 20px; background: var(--surface); border: 1px dashed var(--border-strong); border-radius: var(--radius); }
+    .empty-state .emoji { font-size: 36px; margin-bottom: 14px; }
+    .empty-state h3 { margin: 0 0 6px; font-size: 18px; }
+    .empty-state p { color: var(--muted); margin: 0 0 16px; }
+    .empty-state .actions { display: inline-flex; gap: 10px; }
+
+    /* ===== Project Dashboard (Round 2 — Next Actions priority) === */
+    .pd-header { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 18px; }
+    .pd-header .row1 { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .pd-header h1 { margin: 0; font-size: 20px; }
+    .pd-header .phase-pill { padding: 4px 10px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); font-size: 12px; font-weight: 600; border: 1px solid var(--primary-soft-border); }
+    .pd-header .last-updated { margin-left: auto; color: var(--muted); font-size: 12px; }
+    .pd-header .pd-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 14px; }
+
+    /* Hero blocks: Next Actions + Blockers */
+    .hero-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px; margin-bottom: 18px; }
+    .hero-card { padding: 18px 20px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+    .hero-card.actions { border-left: 4px solid var(--primary); }
+    .hero-card.blockers { border-left: 4px solid var(--danger); }
+    .hero-card .hero-title { font-size: 14px; font-weight: 700; margin: 0 0 10px; display: flex; align-items: center; gap: 6px; }
+    .hero-card.actions .hero-title { color: var(--primary); }
+    .hero-card.blockers .hero-title { color: var(--danger); }
+    .hero-list { list-style: none; margin: 0; padding: 0; }
+    .hero-list li { padding: 8px 10px; border-radius: 6px; cursor: pointer; transition: background-color .12s ease; display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .hero-list li:hover { background: var(--surface-alt); }
+    .hero-list li .arrow { margin-left: auto; color: var(--subtle); font-size: 14px; }
+    .hero-list .empty { color: var(--muted); padding: 8px 10px; font-size: 13px; font-style: italic; }
+
+    /* Scene Readiness Summary chip cluster (Round 2 NEW) */
+    .readiness-summary { padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 18px; }
+    .readiness-summary .rs-title { font-size: 13.5px; font-weight: 700; margin: 0 0 4px; }
+    .readiness-summary .rs-desc { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+    .readiness-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .readiness-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 999px;
+      font-size: 12.5px; font-weight: 600; cursor: pointer;
+      border: 1px solid transparent; user-select: none;
+      transition: transform .1s ease;
+    }
+    .readiness-chip:hover { transform: translateY(-1px); }
+    .readiness-chip .count { font-weight: 800; }
+    .readiness-chip.success { background: var(--success-bg); color: var(--success); border-color: var(--success-border); }
+    .readiness-chip.warning { background: var(--warning-bg); color: var(--warning); border-color: var(--warning-border); }
+    .readiness-chip.danger  { background: var(--danger-bg);  color: var(--danger);  border-color: var(--danger-border); }
+    .readiness-chip.info    { background: var(--info-bg);    color: var(--info);    border-color: var(--info-border); }
+    .readiness-chip.muted   { background: var(--future-bg);  color: var(--muted);   border-color: var(--future-border); }
+    .readiness-chip.zero    { opacity: .45; cursor: default; }
+    .readiness-chip.zero:hover { transform: none; }
+
+    /* Module Status Overview — Round 1 phase grid（demoted to mid priority） */
+    .state-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 18px; }
+    .state-card .state-title { display: flex; align-items: center; gap: 8px; font-weight: 600; margin-bottom: 4px; }
+    .state-card .state-detail { font-size: 12.5px; color: var(--muted); }
+
+    /* Triplet (HD / Canon Delta / Agent reading) */
+    .triplet { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .triplet .card { display: flex; flex-direction: column; }
+    .mini-list { font-size: 12.5px; }
+    .mini-list .item { padding: 6px 8px; border-radius: 6px; background: var(--surface-alt); margin-bottom: 6px; cursor: pointer; border: 1px solid transparent; }
+    .mini-list .item:hover { border-color: var(--border-strong); }
+    .mini-list .item .title { font-weight: 500; }
+    .mini-list .item .meta { color: var(--muted); font-size: 11.5px; margin-top: 2px; }
+    .mini-list.empty { color: var(--muted); padding: 8px; }
+
+    /* Module Navigation cards (demoted to bottom secondary) */
+    .module-nav-collapsed { background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+    .module-nav-collapsed .mn-title { font-size: 13px; font-weight: 700; margin: 0 0 4px; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+    .module-nav-collapsed .mn-desc { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+    .module-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+    .module-card { position: relative; min-height: 100px; display: flex; flex-direction: column; padding: 12px 14px; }
+    .module-card .mod-title { font-size: 13.5px; font-weight: 600; margin-bottom: 4px; }
+    .module-card .mod-desc { color: var(--muted); font-size: 12px; flex: 1; }
+    .module-card .mod-footer { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+    .module-card.future { background: var(--future-bg); border-style: dashed; color: var(--muted); cursor: not-allowed; }
+    .module-card.future:hover { transform: none; box-shadow: var(--shadow-sm); }
+    .module-card.future .mod-title { color: var(--muted); }
+    .future-tag { position: absolute; top: 8px; right: 8px; padding: 2px 7px; border-radius: 4px; background: var(--future-border); color: var(--muted); font-size: 10.5px; font-weight: 700; letter-spacing: .04em; }
+
+    /* ===== Scene Queue (Round 2 NEW) ========================== */
+    .sq-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 14px; gap: 12px; flex-wrap: wrap; }
+    .sq-header h1 { margin: 0; font-size: 20px; }
+    .sq-header .lede { color: var(--muted); font-size: 12.5px; margin-top: 4px; }
+    .sq-header .sq-meta { color: var(--muted); font-size: 12px; }
+    .sq-filter-row { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 18px; align-items: center; }
+    .sq-filter-row .fl-label { font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-right: 4px; }
+    .sq-filter-chip {
+      padding: 4px 12px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
+      cursor: pointer; user-select: none;
+      background: var(--surface-alt); color: var(--muted); border: 1px solid var(--border);
+    }
+    .sq-filter-chip:hover { background: var(--primary-soft); color: var(--primary); border-color: var(--primary); }
+    .sq-filter-chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .sq-chapter-group { margin-bottom: 24px; }
+    .sq-chapter-header { font-size: 13px; font-weight: 700; color: var(--muted); margin: 0 0 10px; padding-bottom: 6px; border-bottom: 1px dashed var(--border-strong); letter-spacing: .04em; }
+    .scene-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 12px; }
+    .scene-card { padding: 14px 16px; }
+    .scene-card .sc-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+    .scene-card .sc-pos { font-size: 11px; color: var(--muted); padding: 2px 8px; background: var(--surface-alt); border-radius: 4px; font-family: SFMono-Regular, Consolas, monospace; }
+    .scene-card .sc-title { font-size: 14.5px; font-weight: 700; margin: 0; line-height: 1.3; flex: 1; }
+    .scene-card .sc-purpose { font-size: 12.5px; color: var(--muted); margin: 0 0 10px; line-height: 1.5; min-height: 36px; }
+    .scene-card .sc-strip { display: flex; gap: 4px; margin-bottom: 10px; }
+    .scene-card .sc-strip .step {
+      flex: 1; height: 6px; border-radius: 3px;
+      background: var(--future-bg); position: relative;
+    }
+    .scene-card .sc-strip .step.ok { background: var(--success); }
+    .scene-card .sc-strip .step.partial { background: var(--warning); }
+    .scene-card .sc-strip .step.bad { background: var(--danger); }
+    .scene-card .sc-strip .step.na { background: var(--future-border); }
+    .scene-card .sc-counts { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+    .scene-card .sc-next { font-size: 12px; color: var(--primary); display: flex; align-items: center; gap: 4px; }
+    .scene-card .sc-next:hover { text-decoration: underline; }
+
+    /* ===== Scene Detail (Round 2 NEW) ========================= */
+    .sd-back { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+    .sd-back a { color: var(--muted); }
+    .sd-back a:hover { color: var(--primary); }
+    .sd-header { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 16px; }
+    .sd-header .sd-pos { font-size: 11px; color: var(--muted); padding: 2px 8px; background: var(--surface-alt); border-radius: 4px; font-family: SFMono-Regular, Consolas, monospace; display: inline-block; margin-bottom: 6px; }
+    .sd-header h1 { margin: 0 0 6px; font-size: 22px; }
+    .sd-header .sd-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .sd-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; align-items: flex-start; }
+    @media (max-width: 920px) { .sd-layout { grid-template-columns: 1fr; } }
+    .sd-main, .sd-side { display: flex; flex-direction: column; gap: 14px; }
+    .sd-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow-sm); }
+    .sd-block-title { font-size: 13.5px; font-weight: 700; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
+    .sd-block-title .right { margin-left: auto; }
+
+    /* Readiness Panel: badge + checklist + next fix */
+    .rp-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+    .rp-badge { padding: 5px 12px; border-radius: 999px; font-size: 12.5px; font-weight: 700; border: 1px solid; }
+    .rp-badge.success { background: var(--success-bg); color: var(--success); border-color: var(--success-border); }
+    .rp-badge.warning { background: var(--warning-bg); color: var(--warning); border-color: var(--warning-border); }
+    .rp-badge.danger  { background: var(--danger-bg);  color: var(--danger);  border-color: var(--danger-border); }
+    .rp-badge.info    { background: var(--info-bg);    color: var(--info);    border-color: var(--info-border); }
+    .rp-badge.muted   { background: var(--future-bg);  color: var(--muted);   border-color: var(--future-border); }
+    .checklist { list-style: none; margin: 0; padding: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 8px; padding: 5px 0; font-size: 12.5px; }
+    .checklist .icon { width: 14px; flex-shrink: 0; font-weight: 700; line-height: 1.3; }
+    .checklist .icon.ok       { color: var(--success); }
+    .checklist .icon.partial  { color: var(--warning); }
+    .checklist .icon.missing  { color: var(--danger); }
+    .checklist .icon.conflict { color: var(--danger); }
+    .checklist .icon.blocked  { color: var(--danger); }
+    .checklist .icon.review   { color: var(--info); }
+    .checklist .icon.na       { color: var(--subtle); }
+    .checklist .label { flex: 1; }
+    .checklist .label .detail { color: var(--muted); font-size: 11.5px; margin-top: 2px; }
+    .next-fix { margin-top: 10px; padding: 10px 12px; background: var(--primary-soft); border-radius: 6px; font-size: 12.5px; color: var(--text); border-left: 3px solid var(--primary); }
+    .next-fix .label { font-size: 11px; color: var(--primary); font-weight: 700; letter-spacing: .04em; display: block; margin-bottom: 2px; }
+
+    /* Required Context */
+    .ctx-section { margin-bottom: 12px; }
+    .ctx-section:last-child { margin-bottom: 0; }
+    .ctx-section .ctx-title { font-size: 11.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+    .ctx-list { list-style: none; margin: 0; padding: 0; }
+    .ctx-list li { padding: 6px 8px; background: var(--surface-alt); border-radius: 6px; margin-bottom: 4px; font-size: 12.5px; display: flex; align-items: flex-start; gap: 8px; }
+    .ctx-list li .lbl { font-weight: 600; }
+    .ctx-list li .meta { color: var(--muted); font-size: 11.5px; margin-left: auto; flex-shrink: 0; }
+    .ctx-list a.ref-link { color: var(--primary); cursor: pointer; }
+    .ctx-list a.ref-link:hover { text-decoration: underline; }
+    .ctx-warning { padding: 8px 10px; background: var(--warning-bg); border: 1px solid var(--warning-border); border-radius: 6px; color: var(--warning-text); font-size: 12px; margin-bottom: 6px; }
+    .ctx-warning.danger { background: var(--danger-bg); border-color: var(--danger-border); color: var(--danger); }
+
+    /* Beat / Outline Preview */
+    .beat-block { padding: 12px 14px; background: var(--surface-alt); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; }
+    .beat-block .beat-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+    .beat-block .beat-title { font-size: 13.5px; font-weight: 700; }
+    .beat-block .beat-meta { font-size: 11.5px; color: var(--muted); }
+    .beat-block .beat-meta strong { color: var(--text); }
+
+    /* Dialogue Draft Preview — read-only */
+    .dialogue-preview .preview-banner { padding: 8px 10px; background: var(--info-bg); border: 1px solid var(--info-border); color: var(--info); border-radius: 6px; font-size: 12px; margin-bottom: 10px; display: flex; gap: 8px; align-items: center; }
+    .lines-list { list-style: none; margin: 0; padding: 0; }
+    .lines-list li { padding: 8px 0; border-bottom: 1px dashed var(--border); display: grid; grid-template-columns: 90px 1fr auto; gap: 10px; align-items: start; }
+    .lines-list li:last-child { border-bottom: none; }
+    .lines-list .speaker { font-weight: 700; color: var(--muted); font-size: 12.5px; }
+    .lines-list .line-text { font-size: 13px; color: var(--text); user-select: text; }
+    .lines-list .line-tags { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+    .lines-list .qa-tag { padding: 2px 6px; border-radius: 4px; font-size: 10.5px; font-weight: 700; cursor: help; }
+    .lines-list .qa-tag.high { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-border); }
+    .lines-list .qa-tag.medium { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning-border); }
+    .lines-list .info-tag { padding: 2px 6px; border-radius: 4px; font-size: 10.5px; font-weight: 700; background: var(--info-bg); color: var(--info); border: 1px solid var(--info-border); cursor: help; }
+    .lines-list .line-actions { display: flex; gap: 4px; }
+    .lines-list .line-action-btn {
+      padding: 2px 6px; border-radius: 4px; font-size: 11px;
+      background: var(--surface-alt); color: var(--subtle);
+      border: 1px solid var(--border); cursor: not-allowed;
+      opacity: .5;
+    }
+    .lines-list .empty-beat { color: var(--muted); padding: 8px; font-size: 12px; font-style: italic; }
+
+    /* Side: Next Action / Blockers / QA / HD / Canon Delta / Agent */
+    .side-block .next-action-card {
+      padding: 14px; border-radius: 8px;
+      background: var(--primary-soft); border: 1px solid var(--primary-soft-border);
+      cursor: pointer; transition: border-color .12s ease;
+    }
+    .side-block .next-action-card:hover { border-color: var(--primary); }
+    .side-block .next-action-card .label { font-size: 11px; color: var(--primary); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    .side-block .next-action-card .text { font-size: 13.5px; color: var(--text); margin-top: 4px; font-weight: 600; }
+    .summary-list { list-style: none; margin: 0; padding: 0; font-size: 12.5px; }
+    .summary-list li { padding: 8px 10px; border-radius: 6px; background: var(--surface-alt); margin-bottom: 6px; cursor: pointer; border: 1px solid transparent; }
+    .summary-list li:hover { border-color: var(--border-strong); }
+    .summary-list li .title { font-weight: 600; display: flex; align-items: center; gap: 6px; }
+    .summary-list li .meta { color: var(--muted); font-size: 11.5px; margin-top: 2px; }
+    .summary-list .empty { color: var(--muted); padding: 8px 10px; font-size: 12px; font-style: italic; }
+    .agent-action {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 10px; border-radius: 6px; background: var(--surface-alt);
+      border: 1px solid var(--border); margin-bottom: 6px;
+      font-size: 12.5px; cursor: pointer;
+    }
+    .agent-action:hover { border-color: var(--primary); }
+    .agent-action.disabled { opacity: .55; cursor: not-allowed; }
+    .agent-action.disabled:hover { border-color: var(--border); }
+    .agent-action .agent-text { flex: 1; }
+    .agent-action .warn { font-size: 11px; color: var(--warning); }
+
+    /* ===== Modal (Round 2 NEW) ================================ */
+    .modal-backdrop {
+      position: fixed; inset: 0; z-index: 300;
+      background: var(--modal-backdrop);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .modal-card {
+      background: var(--surface); border: 1px solid var(--border-strong);
+      border-radius: var(--radius); box-shadow: var(--shadow-lg);
+      max-width: 560px; width: 100%; max-height: 85vh;
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .modal-head { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 10px; }
+    .modal-head .modal-tag { font-size: 10.5px; padding: 2px 8px; border-radius: 4px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    .modal-head .modal-tag.qa  { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-border); }
+    .modal-head .modal-tag.hd  { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning-border); }
+    .modal-head .modal-tag.cd  { background: var(--info-bg); color: var(--info); border: 1px solid var(--info-border); }
+    .modal-head .modal-title { font-size: 15px; font-weight: 700; margin: 4px 0 0; flex: 1; }
+    .modal-head .modal-close { background: transparent; border: none; color: var(--muted); font-size: 22px; line-height: 1; padding: 0 4px; cursor: pointer; }
+    .modal-head .modal-close:hover { color: var(--text); }
+    .modal-body { padding: 16px 20px; overflow-y: auto; }
+    .modal-body .meta-row { color: var(--muted); font-size: 12px; margin-bottom: 10px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .modal-body .summary-text { font-size: 13.5px; line-height: 1.6; white-space: pre-wrap; }
+    .modal-body .ref-info { margin-top: 12px; padding: 10px 12px; background: var(--surface-alt); border: 1px solid var(--border); border-radius: 6px; font-size: 12px; }
+    .modal-foot { padding: 12px 20px; border-top: 1px solid var(--border); background: var(--surface-alt); display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+    .modal-foot .mock-tag { font-size: 11px; color: var(--muted); margin-right: auto; align-self: center; font-style: italic; }
+
+    /* ===== Legacy Scene Dialogue (Round 1 quick overview) ==== */
+    .scene-table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .scene-table th, .scene-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .scene-table th { background: var(--surface-alt); font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: .03em; }
+    .scene-table tr:last-child td { border-bottom: none; }
+    .scene-table tr:hover td { background: var(--surface-hover); }
+    .scene-table .actions-col { display: flex; gap: 4px; flex-wrap: wrap; }
+
+    /* ===== Templates layer preview =========================== */
+    .templates-warning { background: var(--warning-bg); border: 1px solid var(--warning-border); border-left: 4px solid var(--warning); padding: 14px 16px; border-radius: 8px; margin-bottom: 18px; color: var(--warning-text); }
+    .templates-warning strong { color: var(--warning-text-strong); }
+    .template-section-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+
+    /* ===== Misc ============================================== */
+    .placeholder-note { padding: 14px; background: var(--surface-alt); border: 1px dashed var(--border-strong); border-radius: 8px; color: var(--muted); font-size: 13px; }
+    .kbd { font-family: SFMono-Regular, Consolas, monospace; font-size: 12px; background: var(--surface-alt); padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border); color: var(--muted); }
+  </style>
+
+  <!-- 早期主題套用（first-paint 防 flash） -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('narrative-ws-theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <!-- Prototype banner -->
+  <div class="proto-banner">
+    <strong>PROTOTYPE / MOCK DATA — Round 2</strong>
+    <span>UI-only 探索用，所有資料皆為假資料；Scene Queue / Scene Detail / 中央 Modal 皆為 mock。</span>
+    <div class="proto-controls">
+      <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="切換亮色 / 深色主題">
+        <span class="icon">🌙</span><span class="label">Dark</span>
+      </button>
+      <span class="divider" aria-hidden="true"></span>
+      <span style="color:var(--warning-text)">Empty state：</span>
+      <button id="toggle-empty" type="button">關閉</button>
+    </div>
+  </div>
+
+  <!-- App header -->
+  <header class="app-header">
+    <div class="brand"><span class="dot"></span>Narrative Workspace <span style="color:var(--muted);font-weight:500;font-size:11.5px;letter-spacing:.04em;margin-left:6px;">Round 2 prototype</span></div>
+    <nav class="breadcrumb" id="breadcrumb"></nav>
+    <div class="header-actions" id="header-actions"></div>
+  </header>
+
+  <!-- App content -->
+  <main id="app-root"></main>
+
+  <!-- Modal mount point -->
+  <div id="modal-root"></div>
+
+  <!-- Mock data -->
+  <script>
+  // ── inlined from mock_data.js (Round 2 / Round 2.1) ──
+/* =========================================================================
+ * Narrative Workspace — UI Prototype Mock Data (Round 2)
+ * -------------------------------------------------------------------------
+ *  ⚠⚠⚠ MOCK DATA / NOT A SCHEMA / NOT A DATA MODEL ⚠⚠⚠
+ *
+ *  本檔是 Round 2 UI prototype 探索用的假資料。Round 2 為支撐
+ *  Scene Queue 與 Scene Detail，加入了大量巢狀結構（readiness
+ *  checklist / beats / mock lines / scene-scoped findings 等）。
+ *
+ *  以下事項必須清楚：
+ *  - 本檔內容不是 schema、不是 schema 提案、不是 enum 定案。
+ *  - 不是正式 Project Data Layer 結構，也不是該層的設計起點。
+ *  - 不對應 _docs/harness_architecture.md 中的任何具體欄位定義。
+ *  - 欄位命名（id / state / status / area / target 等）僅服務 UI
+ *    prototype 的 UX 驗證；同名不同層之間不保證有關聯。
+ *  - 任何欄位若被未來資料層採用，必須由 GPT-主控室另行裁決，
+ *    並可能完全重寫欄位名稱、結構、語意與 enum。
+ *  - 不得被下游讀者誤讀為資料層提案或實作起點。
+ *
+ *  Round 2 三條額外守則（資料結構分析端 2026-05-09 補充）：
+ *
+ *  G1 / Scene Readiness badges 與 queue labels 都是 UX labels，不是 enum。
+ *      實際 scene 可能同時有多個狀態信號（例：QA pending +
+ *      Needs Decision + Delta pending）。本 prototype 為了 UX 顯示
+ *      簡化成單一 badge + checklist，但這個簡化方式不能被當成
+ *      正式狀態模型。
+ *
+ *  G2 / Production mini-strip 只是 workflow visualization，不是狀態機。
+ *      實際 scene production 可能回退、跳步、重跑 QA、並行處理。
+ *      mini-strip 中的順序只是 UI 上的 reading order。
+ *
+ *  G3 / Beat 只作 Dialogue Draft Preview 的 UX grouping，不是正式資料層。
+ *      未來可能支援短 scene、branching dialogue、gameplay-triggered
+ *      dialogue，不能強迫每句 line 都屬於 beat。
+ *
+ *  詳細說明請見 prototype_notes.md §「Round 2 mock data 反推資料層觀察」。
+ * ========================================================================= */
+
+window.MOCK = (function () {
+  const glossary = {
+    'Bible': '作品的世界觀、角色、關係、主線、資訊揭露彙整資料庫，給 AI 和編劇共用的事實底稿。',
+    'Canon Delta': '從台詞或場景生產過程中浮現、可能需要回寫進 Bible 的新事實候選。需要人類審核後才會回寫。',
+    'Harness': '整套讓 AI、編劇、未來 Agent 能在同一份規則上協作的工具系統，本工具就是它的具體實作。',
+    'Scene Task': '單一場景的台詞生成輸入包，把該場必要的角色、關係、資訊、限制壓成可執行輸入。',
+    'Human Decision': '必須由人類最終拍板的待裁決事項。AI 與 Agent 不能自己決定。',
+    'Bible Readiness': '針對特定場景判斷「Bible 中該場需要的部分是否就緒」，是場景級不是 repo 級的判定。',
+    '公版 Harness': '影響工具本體與所有 project 的全域規則、模板與檢查。修改這裡會擴散到未來所有專案。',
+    'Production Loop': '原始資料 → Bible → 場景任務 → 台詞 → QA → 人類裁決 → Canon Delta → Bible 的循環。',
+    'Beat': '本 prototype 中將 beat 視為 Dialogue Draft Preview 的畫面分組單位。不是正式資料層必要單位，未來可能支援短 scene、分支對白、玩法觸發對白等不一定有 beat 的情境。',
+    'Dramatic Purpose': '本場戲存在的戲劇理由 — 「為什麼這場戲必要」。',
+    'Scene Readiness': '某場戲是否可進入台詞生產的判斷。本 prototype 用 7 個 UX label 表達，不是正式 enum；同一場 scene 可能同時帶多個狀態信號。',
+    'Scene Queue': '場景列隊。場景 / 台詞生產工作區的 Round 2 主入口，把場景視為 production unit 而非劇情項目。',
+    'Scene Detail': '單場控制台。在進入完整 Dialogue Editor 前，先確認 scene context、readiness、blockers、QA / HD / Canon Delta 影響。',
+  };
+
+  const readinessLabels = {
+    READY:               { label: '可生成台詞',       tone: 'success' },
+    READY_WITH_RISK:     { label: '可生成但有風險',   tone: 'warning' },
+    BLOCKED:             { label: '暫不可生成',       tone: 'danger'  },
+    AWAITING_DECISION:   { label: '等待裁決',         tone: 'warning' },
+    AWAITING_DATA:       { label: '等待資料',         tone: 'muted'   },
+    DRAFT_PENDING_QA:    { label: '已有草稿,待 QA',  tone: 'info'    },
+    QA_NEEDS_REWRITE:    { label: 'QA 後需重寫',      tone: 'danger'  },
+  };
+
+  const workspace = {
+    name: 'Narrative Workspace',
+    crossProjectPendingDecisions: 5,
+    crossProjectOpenQA: 12,
+    crossProjectCanonDeltas: 4,
+    templateLayerEntry: {
+      label: '公版 Harness / 模板管理',
+      sections: [
+        { id: 'protocol',  label: '公版 protocol' },
+        { id: 'templates', label: '公版模板（00–09）' },
+        { id: 'qa',        label: '公版 QA / checks' },
+      ],
+      warning: '此區影響工具本體與所有 project。一般作品內的規則調整應優先放在 project-specific protocol。',
+    },
+  };
+
+  const moduleDefs = [
+    { id: 'source',          label: '專案資料導入',       desc: '把原始世界觀、角色、大綱、細綱導入專案。',                                        future: false },
+    { id: 'bible',           label: '專案聖經管理',       desc: '01–06 模板的填寫、審核、鎖定；作品事實底稿的單一來源。',                          future: false },
+    { id: 'scene-dialogue',  label: '場景 / 台詞生產工作區', desc: '從 scene readiness 到多版本台詞、收斂、QA 的 production loop 入口。',         future: false },
+    { id: 'qa',              label: 'QA 報告',             desc: 'AI 味、聲線一致性、禁用詞、資訊控制四份檢查的彙整入口。',                       future: false },
+    { id: 'human-decision',  label: '人類裁決收件匣',     desc: '所有需要由人類拍板的待裁決事項集中區。AI 不能代決。',                            future: false },
+    { id: 'canon-delta',     label: 'Canon Delta 審核',    desc: '從台詞與場景浮現、可能要回寫進 Bible 的新事實候選審核區。',                     future: false },
+    { id: 'info-reveal',     label: '資訊揭露 / 隱性資訊追蹤', desc: '玩家、角色、世界三層資訊狀態追蹤。',                                       future: true  },
+    { id: 'export',          label: '匯出',                desc: '產出可導入遊戲引擎的指定格式。',                                                 future: true  },
+  ];
+
+  const cli = (id, label, status, detail) => ({ id, label, status, detail: detail || null });
+
+  const projects = [
+
+    /* ================================================================
+     * Project A：[範例] 都市奇幻
+     * ================================================================ */
+    {
+      id: 'urban-fantasy', name: '[範例] 都市奇幻', type: '長篇遊戲敘事',
+      status: '專案聖經整理中', lastUpdated: '2026-05-08',
+      nextStep: '審核 3 條角色設定衝突',
+      blockers: 1, pendingDecisions: 2, qaFindings: 5, canonDeltaCandidates: 1,
+      phase: 'Bible Building',
+      sourceImport:    { state: '進行中',     detail: '已匯入 70%，主線細綱待補' },
+      bibleStatus:     { state: '部分 REVIEW', detail: '世界觀 REVIEW，角色聲線 DRAFT，關係矩陣 DRAFT' },
+      plotStatus:      { state: '草稿',       detail: '主線大綱 v1，章節結構待整理' },
+      sceneStatus:     { state: '尚未開始',   detail: '場景索引 3 / 30' },
+      dialogueStatus:  { state: '部分 v01',   detail: 'CH01_S01 有試寫，其餘未進入' },
+      qaStatus:        { state: '尚無',       detail: '尚無 QA 紀錄' },
+      humanDecisionItems: [
+        { id: 'pd-d1', summary: '是否接受角色 A 的新稱呼「夜守」？', priority: 'high', area: '角色聲線卡' },
+        { id: 'pd-d2', summary: '是否允許主角在 CH01_S03 提前知道避難所秘密？', priority: 'high', area: '資訊揭露' },
+      ],
+      canonDeltaItems: [
+        { id: 'pd-cd1', summary: '新增角色稱呼「夜守」', state: '待審核', impact: '角色聲線卡 + 對白稱呼解禁時間軸' },
+      ],
+      nextActions: [
+        { id: 'pd-a1', label: '為 CH01_S01「街角初遇」啟動 Beat 2 試寫', target: 'scene-detail', sceneId: 'ch01-s01' },
+        { id: 'pd-a2', label: '審核 3 條角色設定衝突', target: 'bible' },
+        { id: 'pd-a3', label: '裁決 2 項待處理 Human Decision', target: 'human-decision' },
+      ],
+      blockerItems: [
+        { id: 'pd-b1', summary: '主角與 NPC 關係設定衝突（CH01_S02）', area: 'Bible', sceneId: 'ch01-s02' },
+      ],
+      agentPreTaskReadingList: [
+        '01_world/01_a_世界觀總覽',
+        '03_characters/03_a_角色總表',
+        '04_relationships/04_a_角色關係矩陣',
+        '00_protocol/00_a_台詞生產協議',
+      ],
+      scenes: [
+        {
+          id: 'ch01-s01', chapter: 1, position: 1,
+          label: '第1章 第1場 — 街角初遇', title: '街角初遇',
+          dramaticPurpose: '主角第一次接觸「夜守」組織，建立初步可疑信任，但雙方都未透露真實身份。',
+          readiness: {
+            badge: 'READY',
+            checklist: [
+              cli('goal', 'Scene goal 明確', 'ok'),
+              cli('bible', 'Required Bible context 齊全', 'ok'),
+              cli('characters', '參與角色聲線卡可用', 'ok'),
+              cli('relations', '角色關係無衝突', 'ok'),
+              cli('task', 'Scene Task 已 human-approved', 'ok'),
+              cli('beats', 'Beat / outline 充足', 'ok'),
+              cli('info', '資訊揭露限制已確認', 'ok'),
+              cli('hd', '無 blocking Human Decision', 'ok'),
+              cli('qa', '無未處理 high-risk QA', 'partial', '1 項 medium 等級 finding'),
+              cli('canon', '無 pending Canon Delta', 'ok'),
+            ],
+            nextFix: '處理 1 項 medium QA finding，再啟動 Beat 2 試寫或 v02 收斂。',
+          },
+          taskStatus: 'in_progress', dialogueStatus: 'v01_drafts',
+          qa: 'pending', humanDecisionsCount: 0, canonDeltaCount: 0,
+          requiredContext: {
+            bibleRefs: [
+              { label: '世界觀總覽', section: '01_world / §3 都市結構' },
+              { label: '派系規則 — 夜守', section: '01_world / §5' },
+            ],
+            characters: [
+              { name: '主角', role: 'protagonist', voiceCardStatus: 'REVIEW' },
+              { name: '夜守 NPC', role: 'foil', voiceCardStatus: 'DRAFT' },
+            ],
+            relationships: [
+              { pair: '主角 ↔ 夜守 NPC', summary: '初次見面，零信任度', status: 'ok' },
+            ],
+            worldVocab: [
+              { term: '夜守', state: '本場為首次出現，可暗示但不解禁' },
+            ],
+            infoReveal: [
+              { note: '不揭露主角真實身份', priority: 'high' },
+              { note: '可暗示「夜守」一詞但不正式說明含義', priority: 'medium' },
+            ],
+            warnings: [],
+          },
+          beats: [
+            {
+              id: 'b1', title: 'Beat 1：街角試探',
+              purpose: '建立警戒對峙的張力。',
+              emotionalTurn: '陌生 → 警戒',
+              infoRevealNote: '不揭露主角身份。',
+              dialogueStatus: 'v01_drafts',
+              lines: [
+                { id: 'l1', speaker: '夜守 NPC', preview: '這附近的事，最好別多問。' },
+                { id: 'l2', speaker: '主角', preview: '我只是路過。',
+                  qaWarning: { severity: 'medium', note: '聲線偏現代' } },
+                { id: 'l3', speaker: '夜守 NPC', preview: '路過？穿這雙鞋？',
+                  infoRevealTag: { type: 'safe', note: '對主角身份的安全試探' } },
+              ],
+            },
+            {
+              id: 'b2', title: 'Beat 2：暗號交換',
+              purpose: '微妙轉折：警戒 → 試探合作。',
+              emotionalTurn: '警戒 → 試探',
+              infoRevealNote: '可暗示「夜守」存在，不解禁名詞。',
+              dialogueStatus: 'not_started',
+              lines: [],
+            },
+          ],
+          qaFindings: [
+            {
+              id: 'qa1', severity: 'medium',
+              title: '聲線偏現代',
+              affected: { beatId: 'b1', lineId: 'l2' },
+              summary: 'L2「我只是路過」過於日常口語，與主角聲線卡的「克制 + 微帶古意」不一致。建議改為「不過是路過。」',
+              suggestedActions: ['view-affected-line', 'create-human-decision'],
+            },
+          ],
+          humanDecisions: [],
+          canonDeltas: [],
+          nextAction: { label: '為 Beat 2 啟動 v01 多版本試寫', target: 'agent-action', agentActionId: 'a1' },
+          blockers: [],
+          agentActions: [
+            { id: 'a1', label: '生成 Beat 2 v01A/B/C 試寫', enabled: true },
+            { id: 'a2', label: '執行 Beat 1 完整 4 份 QA', enabled: true },
+            { id: 'a3', label: '建議 Beat 1 v02 收斂版', enabled: true },
+            { id: 'a4', label: '檢查資訊揭露邊界', enabled: true },
+          ],
+        },
+        {
+          id: 'ch01-s02', chapter: 1, position: 2,
+          label: '第1章 第2場 — 巷弄偵察', title: '巷弄偵察',
+          dramaticPurpose: 'TODO（未填，本場 blocker 之一）',
+          readiness: {
+            badge: 'BLOCKED',
+            checklist: [
+              cli('goal', 'Scene goal 明確', 'missing', 'TODO 未填'),
+              cli('bible', 'Required Bible context 齊全', 'partial', '夜守規則尚有 1 條 DRAFT'),
+              cli('characters', '參與角色聲線卡可用', 'ok'),
+              cli('relations', '角色關係無衝突', 'conflict', '主角 ↔ NPC：聲線卡 vs 關係矩陣不一致'),
+              cli('task', 'Scene Task 已 human-approved', 'missing'),
+              cli('beats', 'Beat / outline 充足', 'missing'),
+              cli('info', '資訊揭露限制已確認', 'partial'),
+              cli('hd', '無 blocking Human Decision', 'ok'),
+              cli('qa', '無未處理 high-risk QA', 'na'),
+              cli('canon', '無 pending Canon Delta', 'ok'),
+            ],
+            nextFix: '先補 scene goal，再裁決角色關係衝突。兩者完成後才能啟動 Scene Task。',
+          },
+          taskStatus: 'planned', dialogueStatus: 'not_started',
+          qa: 'na', humanDecisionsCount: 0, canonDeltaCount: 0,
+          requiredContext: {
+            bibleRefs: [],
+            characters: [
+              { name: '主角', role: 'protagonist', voiceCardStatus: 'REVIEW' },
+              { name: 'NPC', role: 'foil', voiceCardStatus: 'DRAFT' },
+            ],
+            relationships: [
+              { pair: '主角 ↔ NPC', summary: '聲線卡與關係矩陣對信任度的描述不一致', status: 'conflict' },
+            ],
+            worldVocab: [],
+            infoReveal: [],
+            warnings: [
+              { type: 'missing', text: 'Scene goal 未填' },
+              { type: 'conflict', text: '主角與 NPC 關係設定衝突（聲線卡 vs 關係矩陣）' },
+            ],
+          },
+          beats: [],
+          qaFindings: [],
+          humanDecisions: [],
+          canonDeltas: [],
+          nextAction: { label: '補 scene goal 並裁決關係衝突', target: 'fix-blocker' },
+          blockers: [
+            { id: 'b1', text: '主角與 NPC 關係設定衝突', area: 'Bible' },
+            { id: 'b2', text: 'Scene goal 未填', area: 'Scene Task' },
+          ],
+          agentActions: [
+            { id: 'a1', label: '生成 Beat 試寫', enabled: false, warning: '待補 scene goal 後啟用' },
+          ],
+        },
+        {
+          id: 'ch01-s03', chapter: 1, position: 3,
+          label: '第1章 第3場 — 廟口談判', title: '廟口談判',
+          dramaticPurpose: '主角試圖與夜守組織達成有限合作，但揭露時序未定。',
+          readiness: {
+            badge: 'AWAITING_DECISION',
+            checklist: [
+              cli('goal', 'Scene goal 明確', 'ok'),
+              cli('bible', 'Required Bible context 齊全', 'partial', '夜守規則尚有 1 條 DRAFT'),
+              cli('characters', '參與角色聲線卡可用', 'partial'),
+              cli('relations', '角色關係無衝突', 'ok'),
+              cli('task', 'Scene Task 已 human-approved', 'partial'),
+              cli('beats', 'Beat / outline 充足', 'partial'),
+              cli('info', '資訊揭露限制已確認', 'partial', '揭露時序待裁決'),
+              cli('hd', '無 blocking Human Decision', 'blocked', '1 項 blocking decision pending'),
+              cli('qa', '無未處理 high-risk QA', 'na'),
+              cli('canon', '無 pending Canon Delta', 'ok'),
+            ],
+            nextFix: '裁決 1 項 blocking Human Decision（揭露時序），再進入 Scene Task。',
+          },
+          taskStatus: 'planned', dialogueStatus: 'not_started',
+          qa: 'na', humanDecisionsCount: 1, canonDeltaCount: 0,
+          requiredContext: {
+            bibleRefs: [
+              { label: '派系規則 — 夜守', section: '01_world / §5' },
+              { label: '主線資訊揭露表', section: '05_plot / §CH01–CH02' },
+            ],
+            characters: [
+              { name: '主角', role: 'protagonist', voiceCardStatus: 'REVIEW' },
+              { name: '夜守長老', role: 'antagonist-foil', voiceCardStatus: 'DRAFT' },
+            ],
+            relationships: [
+              { pair: '主角 ↔ 夜守長老', summary: '尚未建立信任', status: 'ok' },
+            ],
+            worldVocab: [
+              { term: '夜守', state: 'CH01_S01 後可暗示，CH02 才正式解禁' },
+            ],
+            infoReveal: [
+              { note: '不可在本場揭露主角真實身份', priority: 'high' },
+              { note: '揭露時序待裁決', priority: 'medium' },
+            ],
+            warnings: [
+              { type: 'pending-hd', text: '1 項 blocking Human Decision 待裁決' },
+            ],
+          },
+          beats: [],
+          qaFindings: [],
+          humanDecisions: [
+            {
+              id: 'hd1', priority: 'high', blocking: true,
+              title: '是否允許主角在本場提前知道避難所秘密？',
+              area: '資訊揭露',
+              preview: '若是，將影響 CH02 與 CH03 主線揭露節奏，並需要重寫一條伏筆回收路徑。\n若否，本場需要設計另一條 information path 達到 scene goal。',
+            },
+          ],
+          canonDeltas: [],
+          nextAction: { label: '裁決 1 項 blocking Human Decision', target: 'modal-hd', hdId: 'hd1' },
+          blockers: [{ id: 'b1', text: '揭露時序待裁決', area: '資訊揭露' }],
+          agentActions: [
+            { id: 'a1', label: '生成 Beat 試寫', enabled: false, warning: 'Human Decision 待裁決後啟用' },
+          ],
+        },
+      ],
+    },
+
+    /* ================================================================
+     * Project B：[範例] 群像武俠
+     * ================================================================ */
+    {
+      id: 'wuxia-ensemble', name: '[範例] 群像武俠', type: '長篇遊戲敘事',
+      status: '台詞 QA 中', lastUpdated: '2026-05-09',
+      nextStep: '處理 CH02_S04 review-required QA + 1 項 Canon Delta',
+      blockers: 2, pendingDecisions: 3, qaFindings: 7, canonDeltaCandidates: 2,
+      phase: 'Dialogue Generation',
+      sourceImport:   { state: '已完成', detail: '世界觀、角色、主線資料已導入' },
+      bibleStatus:    { state: '主要 REVIEW', detail: '主要角色聲線卡 REVIEW，部分 LOCKED' },
+      plotStatus:     { state: 'REVIEW', detail: '主線 + 章節結構 REVIEW，伏筆表 DRAFT' },
+      sceneStatus:    { state: '進行中', detail: '場景索引 18 / 42，5 場已有任務包' },
+      dialogueStatus: { state: '進行中', detail: '3 場進入 v02 收斂，1 場 QA_PASS 待 FINAL' },
+      qaStatus:       { state: '進行中', detail: '4 份 QA 報告 DRAFT，2 項待人類裁決' },
+      humanDecisionItems: [
+        { id: 'pd-d1', summary: 'CH02_S04 破格台詞「劍未出鞘，人已敗」是否保留？', priority: 'high', area: '台詞收斂' },
+        { id: 'pd-d2', summary: '反派理念場是否提前到第 3 章揭露真相 X？', priority: 'high', area: '資訊揭露' },
+        { id: 'pd-d3', summary: 'Canon Delta：是否回寫「南宗門派分裂」設定？', priority: 'medium', area: 'Canon Delta' },
+      ],
+      canonDeltaItems: [
+        { id: 'pd-cd1', summary: '新增「南宗門派分裂」設定', state: '待審核', impact: '世界觀 + 角色弧線 + 派系規則' },
+        { id: 'pd-cd2', summary: '補充「劍意」一詞解禁時序', state: '待審核', impact: '專有名詞表 + 章節資訊揭露' },
+      ],
+      nextActions: [
+        { id: 'pd-a1', label: '處理 CH02_S04 review-required QA', target: 'scene-detail', sceneId: 'ch02-s04' },
+        { id: 'pd-a2', label: '裁決 3 項 Human Decision', target: 'human-decision' },
+        { id: 'pd-a3', label: '審核 2 個 Canon Delta candidate', target: 'canon-delta' },
+      ],
+      blockerItems: [
+        { id: 'pd-b1', summary: '台詞草稿提前揭露核心真相 X', area: '資訊控制', sceneId: 'ch02-s04' },
+        { id: 'pd-b2', summary: 'CH03_S02 缺少 scene goal', area: 'Scene Task', sceneId: 'ch03-s02' },
+      ],
+      agentPreTaskReadingList: [
+        '03_characters/main/主角_聲線卡',
+        '04_relationships/04_a_角色關係矩陣',
+        '05_plot/05_d_資訊揭露表',
+        '07_scene_tasks/CH02_S04_台詞任務包',
+      ],
+      scenes: [
+        {
+          id: 'ch02-s03', chapter: 2, position: 3,
+          label: '第2章 第3場 — 江畔夜行', title: '江畔夜行',
+          dramaticPurpose: '透過小衝突展現主角內在轉變的萌芽，師徒關係出現未說破的溫度。',
+          readiness: {
+            badge: 'DRAFT_PENDING_QA',
+            checklist: [
+              cli('goal', 'Scene goal 明確', 'ok'),
+              cli('bible', 'Required Bible context 齊全', 'ok'),
+              cli('characters', '參與角色聲線卡可用', 'ok'),
+              cli('relations', '角色關係無衝突', 'ok'),
+              cli('task', 'Scene Task 已 human-approved', 'ok'),
+              cli('beats', 'Beat / outline 充足', 'ok'),
+              cli('info', '資訊揭露限制已確認', 'ok'),
+              cli('hd', '無 blocking Human Decision', 'ok'),
+              cli('qa', '無未處理 high-risk QA', 'partial', 'AI 味與聲線一致性 QA 未跑'),
+              cli('canon', '無 pending Canon Delta', 'ok'),
+            ],
+            nextFix: '執行剩餘 2 份 QA 報告（AI 味、聲線一致性），通過後進入 v02 final 候選。',
+          },
+          taskStatus: 'human_approved', dialogueStatus: 'v02_convergence',
+          qa: 'partial_pass', humanDecisionsCount: 0, canonDeltaCount: 0,
+          requiredContext: {
+            bibleRefs: [
+              { label: '主角_聲線卡', section: '03_characters/main (LOCKED)' },
+              { label: '主線資訊揭露表', section: '05_plot/05_d §CH02' },
+            ],
+            characters: [
+              { name: '主角', role: 'protagonist', voiceCardStatus: 'LOCKED' },
+              { name: '師父', role: 'mentor', voiceCardStatus: 'REVIEW' },
+            ],
+            relationships: [
+              { pair: '主角 ↔ 師父', summary: '師徒，含未說破的誤解', status: 'ok' },
+            ],
+            worldVocab: [{ term: '劍意', state: 'CH02 起可暗示' }],
+            infoReveal: [{ note: '師父真實身份本場不揭露', priority: 'high' }],
+            warnings: [],
+          },
+          beats: [
+            {
+              id: 'b1', title: 'Beat 1：江畔對話',
+              purpose: '建立師徒間微妙的溫度。',
+              emotionalTurn: '克制 → 微暖',
+              infoRevealNote: '不揭露身份。',
+              dialogueStatus: 'v02_convergence',
+              lines: [
+                { id: 'l1', speaker: '師父', preview: '夜涼了。' },
+                { id: 'l2', speaker: '主角', preview: '師父今日話多。' },
+                { id: 'l3', speaker: '師父', preview: '我也老了。' },
+              ],
+            },
+          ],
+          qaFindings: [],
+          humanDecisions: [],
+          canonDeltas: [],
+          nextAction: { label: '執行剩餘 2 份 QA', target: 'agent-action', agentActionId: 'a1' },
+          blockers: [],
+          agentActions: [
+            { id: 'a1', label: '執行 AI 味 QA', enabled: true },
+            { id: 'a2', label: '執行聲線一致性 QA', enabled: true },
+            { id: 'a3', label: '生成 v02 收斂版（修飾）', enabled: true },
+          ],
+        },
+        {
+          id: 'ch02-s04', chapter: 2, position: 4,
+          label: '第2章 第4場 — 比劍對峙', title: '比劍對峙',
+          dramaticPurpose: '主角第一次直面反派理念，被迫思考自己的立場。本場是 CH02 高潮，也是 CH03 立場分化的種子。',
+          readiness: {
+            badge: 'READY_WITH_RISK',
+            checklist: [
+              cli('goal', 'Scene goal 明確', 'ok'),
+              cli('bible', 'Required Bible context 齊全', 'ok'),
+              cli('characters', '參與角色聲線卡可用', 'ok'),
+              cli('relations', '角色關係無衝突', 'ok'),
+              cli('task', 'Scene Task 已 human-approved', 'ok'),
+              cli('beats', 'Beat / outline 充足', 'ok'),
+              cli('info', '資訊揭露限制已確認', 'partial', '揭露程度待人類裁決'),
+              cli('hd', '無 blocking Human Decision', 'review', '1 項 review-needed (non-blocking)'),
+              cli('qa', '無未處理 high-risk QA', 'review', '1 項 high-risk + 1 項 medium'),
+              cli('canon', '無 pending Canon Delta', 'partial', '1 項 Canon Delta 候選 pending review'),
+            ],
+            nextFix: '優先處理 1 項 high-risk QA finding（主題宣言式台詞），再裁決破格句保留性與 Canon Delta candidate。',
+          },
+          taskStatus: 'human_approved', dialogueStatus: 'v02_convergence',
+          qa: 'review_required', humanDecisionsCount: 1, canonDeltaCount: 1,
+          requiredContext: {
+            bibleRefs: [
+              { label: '主線伏筆與回收表', section: '05_plot/05_e §CH02–CH03' },
+              { label: '反派_設定', section: '03_characters/main (REVIEW)' },
+              { label: '南宗門派分裂候選', section: 'Canon Delta 候選 #cd1（pending）' },
+            ],
+            characters: [
+              { name: '主角', role: 'protagonist', voiceCardStatus: 'LOCKED' },
+              { name: '反派', role: 'antagonist', voiceCardStatus: 'REVIEW' },
+            ],
+            relationships: [
+              { pair: '主角 ↔ 反派', summary: '對立中帶相互理解', status: 'ok' },
+            ],
+            worldVocab: [
+              { term: '劍意', state: '可正式提及' },
+              { term: '南宗', state: '候選新詞，待 Canon Delta 審核' },
+            ],
+            infoReveal: [
+              { note: '反派理念可揭露 70%，餘 30% 留至 CH03', priority: 'high' },
+              { note: '不可揭露主角弱點', priority: 'high' },
+            ],
+            warnings: [
+              { type: 'pending-canon', text: '本場引用「南宗門派分裂」設定，候選尚未通過 Canon Delta 審核' },
+            ],
+          },
+          beats: [
+            {
+              id: 'b1', title: 'Beat 1：劍鋒相對',
+              purpose: '建立反派理念的可怕但合理。',
+              emotionalTurn: '對立 → 動搖',
+              infoRevealNote: '反派可揭露至 70%。',
+              dialogueStatus: 'v02_convergence',
+              lines: [
+                { id: 'l1', speaker: '反派', preview: '你以為這天下還有正義嗎？' },
+                { id: 'l2', speaker: '主角', preview: '至少不是你定義的。',
+                  qaWarning: { severity: 'high', note: '主題宣言式台詞' } },
+                { id: 'l3', speaker: '反派', preview: '劍未出鞘，人已敗。',
+                  infoRevealTag: { type: 'experimental', note: '破格句，保留性待裁決' } },
+              ],
+            },
+            {
+              id: 'b2', title: 'Beat 2：劍意交鋒',
+              purpose: '從理念辯論轉到行動。',
+              emotionalTurn: '動搖 → 決意',
+              infoRevealNote: '不揭露主角弱點。',
+              dialogueStatus: 'v01_drafts',
+              lines: [
+                { id: 'l4', speaker: '主角', preview: '夠了。' },
+                { id: 'l5', speaker: '反派', preview: '夠了？才剛開始。' },
+              ],
+            },
+          ],
+          qaFindings: [
+            {
+              id: 'qa1', severity: 'high',
+              title: '主題宣言式台詞',
+              affected: { beatId: 'b1', lineId: 'l2' },
+              summary: 'L2「至少不是你定義的」過於直白聲明立場，違反「不直接說出心理總結」的台詞品質規則。建議改為動作描寫或反問句。',
+              suggestedActions: ['view-affected-line', 'create-human-decision', 'request-rewrite'],
+            },
+            {
+              id: 'qa2', severity: 'medium',
+              title: '破格句保留性待裁決',
+              affected: { beatId: 'b1', lineId: 'l3' },
+              summary: 'L3「劍未出鞘，人已敗」風格鮮明但偏離反派聲線卡的「克制 + 殺氣內斂」。可作為破格亮點保留，需人類裁決。',
+              suggestedActions: ['view-affected-line', 'create-human-decision'],
+            },
+          ],
+          humanDecisions: [
+            {
+              id: 'hd1', priority: 'high', blocking: false,
+              title: '破格台詞「劍未出鞘，人已敗」是否保留至 v03？',
+              area: '台詞收斂',
+              preview: '若保留，本句成為反派標誌台詞，可能影響 CH03 反派場的聲線設計。\n若不保留，回到原 v01 設計（更克制）。',
+            },
+          ],
+          canonDeltas: [
+            {
+              id: 'cd1', source: 'dialogue',
+              title: '新增「南宗門派分裂」設定',
+              state: '待審核', pendingReview: true,
+              impact: '影響世界觀 + 角色弧線 + 派系規則',
+              preview: '本場戲中反派提及南宗已分裂，這是過去 Bible 未載明的事實。若接受，需要回寫世界觀總覽 §5 與角色弧線 §CH02_反派。',
+            },
+          ],
+          nextAction: { label: '處理 1 項 high-risk QA finding', target: 'modal-qa', qaId: 'qa1' },
+          blockers: [],
+          agentActions: [
+            { id: 'a1', label: '生成 Beat 1 v03（依 QA 修稿）', enabled: true },
+            { id: 'a2', label: '生成 Beat 2 v01 多版本試寫', enabled: true },
+            { id: 'a3', label: 'Canon Delta 影響評估', enabled: true, warning: '需人類最終決定' },
+            { id: 'a4', label: '執行 CH02_S04 完整 4 份 QA', enabled: true },
+          ],
+        },
+        {
+          id: 'ch03-s01', chapter: 3, position: 1,
+          label: '第3章 第1場 — 山門初開', title: '山門初開',
+          dramaticPurpose: '建立 CH03 新階段，主角抵達師門禁地，準備面對更深層的真相。',
+          readiness: {
+            badge: 'READY',
+            checklist: [
+              cli('goal', 'Scene goal 明確', 'ok'),
+              cli('bible', 'Required Bible context 齊全', 'ok'),
+              cli('characters', '參與角色聲線卡可用', 'ok'),
+              cli('relations', '角色關係無衝突', 'ok'),
+              cli('task', 'Scene Task 已 human-approved', 'ok'),
+              cli('beats', 'Beat / outline 充足', 'ok'),
+              cli('info', '資訊揭露限制已確認', 'ok'),
+              cli('hd', '無 blocking Human Decision', 'ok'),
+              cli('qa', '無未處理 high-risk QA', 'na'),
+              cli('canon', '無 pending Canon Delta', 'ok'),
+            ],
+            nextFix: '進入多版本試寫。',
+          },
+          taskStatus: 'in_progress', dialogueStatus: 'v01_drafts',
+          qa: 'pending', humanDecisionsCount: 0, canonDeltaCount: 0,
+          requiredContext: { bibleRefs: [], characters: [], relationships: [], worldVocab: [], infoReveal: [], warnings: [] },
+          beats: [],
+          qaFindings: [], humanDecisions: [], canonDeltas: [],
+          nextAction: { label: '生成 Beat 1 v01 多版本試寫', target: 'agent-action', agentActionId: 'a1' },
+          blockers: [],
+          agentActions: [{ id: 'a1', label: '生成 Beat 1 v01A/B/C', enabled: true }],
+        },
+        {
+          id: 'ch03-s02', chapter: 3, position: 2,
+          label: '第3章 第2場 — 夜談', title: '夜談',
+          dramaticPurpose: 'TODO',
+          readiness: {
+            badge: 'BLOCKED',
+            checklist: [
+              cli('goal', 'Scene goal 明確', 'missing'),
+              cli('bible', 'Required Bible context 齊全', 'partial'),
+              cli('characters', '參與角色聲線卡可用', 'ok'),
+              cli('relations', '角色關係無衝突', 'ok'),
+              cli('task', 'Scene Task 已 human-approved', 'missing'),
+              cli('beats', 'Beat / outline 充足', 'missing'),
+              cli('info', '資訊揭露限制已確認', 'na'),
+              cli('hd', '無 blocking Human Decision', 'ok'),
+              cli('qa', '無未處理 high-risk QA', 'na'),
+              cli('canon', '無 pending Canon Delta', 'ok'),
+            ],
+            nextFix: '補 scene goal 後啟動 Scene Task。',
+          },
+          taskStatus: 'blocked', dialogueStatus: 'not_started',
+          qa: 'na', humanDecisionsCount: 0, canonDeltaCount: 0,
+          requiredContext: {
+            bibleRefs: [], characters: [], relationships: [], worldVocab: [], infoReveal: [],
+            warnings: [{ type: 'missing', text: 'Scene goal 未填' }],
+          },
+          beats: [],
+          qaFindings: [], humanDecisions: [], canonDeltas: [],
+          nextAction: { label: '補 scene goal', target: 'fix-blocker' },
+          blockers: [{ id: 'b1', text: 'Scene goal 未填', area: 'Scene Task' }],
+          agentActions: [],
+        },
+      ],
+    },
+
+    /* ================================================================
+     * Project C：[範例] 校園懸疑
+     * ================================================================ */
+    {
+      id: 'campus-mystery', name: '[範例] 校園懸疑', type: '長篇遊戲敘事',
+      status: '資料導入中', lastUpdated: '2026-05-06',
+      nextStep: '補齊原始大綱 + 角色設定第二批',
+      blockers: 0, pendingDecisions: 0, qaFindings: 0, canonDeltaCandidates: 1,
+      phase: 'Source Intake',
+      sourceImport:   { state: '進行中', detail: '世界觀已導入 30%，角色設定第二批待補' },
+      bibleStatus:    { state: '尚未開始', detail: 'Bible Builder 尚未進入正式整理' },
+      plotStatus:     { state: '尚未開始', detail: '主線大綱僅有原始草稿' },
+      sceneStatus:    { state: 'N/A', detail: '尚未進入' },
+      dialogueStatus: { state: 'N/A', detail: '尚未進入' },
+      qaStatus:       { state: 'N/A', detail: '尚未進入' },
+      humanDecisionItems: [],
+      canonDeltaItems: [
+        { id: 'pd-cd1', summary: '從原始大綱發現新地名「夜訓樓」', state: '建議直接寫入', impact: '專有名詞表' },
+      ],
+      nextActions: [
+        { id: 'pd-a1', label: '補齊原始大綱第二批', target: 'source' },
+        { id: 'pd-a2', label: '匯入角色設定第二批', target: 'source' },
+      ],
+      blockerItems: [],
+      agentPreTaskReadingList: [
+        '00_protocol/00_d_工作流總覽',
+        '_docs/mvp_workflow',
+      ],
+      scenes: [],
+    },
+  ];
+
+  return Object.freeze({
+    __mock__: true,
+    __notice__: 'PROTOTYPE MOCK DATA — not a schema, not a data model, not authoritative. See file header & prototype_notes.md.',
+    glossary,
+    workspace,
+    projects,
+    moduleDefs,
+    readinessLabels,
+  });
+})();
+
+  </script>
+
+  <!-- Application script -->
+  <script>
+  (function () {
+    "use strict";
+
+    /* =====================================================================
+     * 0. Helpers
+     * ===================================================================== */
+    const $ = (sel, root = document) => root.querySelector(sel);
+    const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+    const escapeHtml = (s) => String(s == null ? '' : s).replace(/[&<>"']/g,
+      c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    function gloss(term) {
+      return `<span class="info-icon" data-glossary="${escapeHtml(term)}" tabindex="0" role="button" aria-label="說明：${escapeHtml(term)}">?</span>`;
+    }
+    function mockAction(label, detail) {
+      const msg = `[MOCK] ${label}` + (detail ? `\n\n${detail}` : '') +
+        '\n\n（這是 prototype mock 互動，不寫真資料、不操作真 repo。）';
+      alert(msg);
+    }
+    function projectById(id) { return window.MOCK.projects.find(p => p.id === id); }
+    function sceneInProject(p, sid) { return p && p.scenes && p.scenes.find(s => s.id === sid); }
+    function readinessLabel(key) {
+      const r = window.MOCK.readinessLabels[key];
+      return r ? r : { label: key, tone: 'muted' };
+    }
+    // Dialogue status → 中文 mock label
+    const dialogueStatusLabels = {
+      not_started: ['muted', '未開始'],
+      v01_drafts: ['info', 'v01 試寫'],
+      v02_convergence: ['info', 'v02 收斂'],
+      final: ['success', 'FINAL'],
+    };
+    const taskStatusLabels = {
+      planned: ['muted', '計畫中'],
+      in_progress: ['info', '撰寫中'],
+      human_approved: ['success', '人類已核准'],
+      blocked: ['danger', '阻塞'],
+    };
+    const qaStatusLabels = {
+      na: ['muted', 'N/A'],
+      pending: ['muted', '尚未跑'],
+      partial_pass: ['info', '部分通過'],
+      review_required: ['warning', '需審核'],
+      pass: ['success', 'PASS'],
+    };
+
+    /* =====================================================================
+     * 1. Hash router
+     *    Routes:
+     *      #/home                                → Workspace Home
+     *      #/home?empty=1                        → Workspace Home empty state
+     *      #/project/<id>                        → Project Dashboard (Round 2 重排)
+     *      #/project/<id>/scene-queue            → Scene Queue (Round 2 NEW，主入口)
+     *      #/project/<id>/scene-queue?filter=X   → filtered Scene Queue
+     *      #/project/<id>/scene/<sid>            → Scene Detail (Round 2 NEW)
+     *      #/project/<id>/scene-dialogue         → 場景索引快速概覽（legacy 表格）
+     *      #/templates                           → 公版 Harness / 模板管理 preview
+     * ===================================================================== */
+    const router = {
+      current: { name: 'home', params: {}, query: {} },
+      parse() {
+        const raw = (location.hash || '#/home').replace(/^#/, '');
+        const [path, qs] = raw.split('?');
+        const query = {};
+        (qs || '').split('&').filter(Boolean).forEach(p => {
+          const [k, v] = p.split('=');
+          query[decodeURIComponent(k)] = decodeURIComponent(v || '');
+        });
+        const parts = path.split('/').filter(Boolean);
+        if (parts.length === 0 || parts[0] === 'home') return { name: 'home', params: {}, query };
+        if (parts[0] === 'templates') return { name: 'templates', params: {}, query };
+        if (parts[0] === 'project' && parts[1]) {
+          if (parts[2] === 'scene-queue') return { name: 'scene-queue', params: { projectId: parts[1] }, query };
+          if (parts[2] === 'scene-dialogue') return { name: 'scene-dialogue', params: { projectId: parts[1] }, query };
+          if (parts[2] === 'scene' && parts[3]) return { name: 'scene-detail', params: { projectId: parts[1], sceneId: parts[3] }, query };
+          return { name: 'project', params: { projectId: parts[1] }, query };
+        }
+        return { name: 'home', params: {}, query };
+      },
+      go(path) { location.hash = path; },
+      onChange(handler) { window.addEventListener('hashchange', handler); },
+    };
+
+    /* =====================================================================
+     * 2. Glossary popover
+     * ===================================================================== */
+    let activePop = null;
+    function closePop() { if (activePop) { activePop.remove(); activePop = null; } }
+    document.addEventListener('click', (e) => {
+      const trig = e.target.closest('[data-glossary]');
+      if (trig) {
+        e.stopPropagation();
+        closePop();
+        const term = trig.getAttribute('data-glossary');
+        const def = (window.MOCK.glossary || {})[term] || '（無說明）';
+        const pop = document.createElement('div');
+        pop.className = 'glossary-pop';
+        pop.innerHTML = `<div class="term">${escapeHtml(term)}</div><div>${escapeHtml(def)}</div>
+          <div style="margin-top:6px;font-size:10.5px;color:#9ca3af;">點擊任意處關閉</div>`;
+        document.body.appendChild(pop);
+        const rect = trig.getBoundingClientRect();
+        pop.style.left = Math.max(8, rect.left + window.scrollX - 8) + 'px';
+        pop.style.top = (rect.bottom + window.scrollY + 8) + 'px';
+        activePop = pop;
+        return;
+      }
+      if (activePop && !e.target.closest('.glossary-pop')) closePop();
+    });
+
+    /* =====================================================================
+     * 3. Modal infrastructure (Round 2 NEW)
+     *    開關真做。內部 action 仍是 mock alert。
+     * ===================================================================== */
+    function openModal({ tag, tagLabel, title, body, actions }) {
+      closeModal();
+      const root = $('#modal-root');
+      const tagClass = tag || 'qa';
+      const actionsHtml = (actions || []).map(a => `
+        <button class="btn ${a.primary ? 'primary' : ''}" data-modal-action="${escapeHtml(a.id)}">${escapeHtml(a.label)}</button>
+      `).join('');
+      root.innerHTML = `
+        <div class="modal-backdrop" data-modal-backdrop>
+          <div class="modal-card" role="dialog" aria-modal="true">
+            <div class="modal-head">
+              <span class="modal-tag ${tagClass}">${escapeHtml(tagLabel || '')}</span>
+              <h3 class="modal-title">${escapeHtml(title || '')}</h3>
+              <button class="modal-close" data-modal-close aria-label="關閉">×</button>
+            </div>
+            <div class="modal-body">${body || ''}</div>
+            <div class="modal-foot">
+              <span class="mock-tag">所有按鈕為 mock — 不寫真資料</span>
+              ${actionsHtml}
+              <button class="btn" data-modal-close>關閉</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      const root = $('#modal-root');
+      if (root) root.innerHTML = '';
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-modal-close]')) { closeModal(); return; }
+      if (e.target.matches('[data-modal-backdrop]')) { closeModal(); return; }
+      const actEl = e.target.closest('[data-modal-action]');
+      if (actEl) {
+        const aid = actEl.getAttribute('data-modal-action');
+        mockAction(`Modal 內動作：${aid}`, '本動作為 mock，不寫真資料。');
+      }
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+    /* =====================================================================
+     * 4. Theme toggle
+     * ===================================================================== */
+    const themeBtn = $('#theme-toggle');
+    function getTheme() { return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'; }
+    function applyTheme(mode) {
+      if (mode === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      else document.documentElement.removeAttribute('data-theme');
+      try { localStorage.setItem('narrative-ws-theme', mode); } catch (_) {}
+      syncThemeBtn();
+    }
+    function syncThemeBtn() {
+      const t = getTheme();
+      const icon = themeBtn.querySelector('.icon');
+      const label = themeBtn.querySelector('.label');
+      if (t === 'dark') { icon.textContent = '☀'; label.textContent = 'Light'; themeBtn.title = '切換到亮色主題'; }
+      else { icon.textContent = '🌙'; label.textContent = 'Dark'; themeBtn.title = '切換到深色主題'; }
+    }
+    themeBtn.addEventListener('click', () => applyTheme(getTheme() === 'dark' ? 'light' : 'dark'));
+    syncThemeBtn();
+
+    /* =====================================================================
+     * 5. Empty state toggle
+     * ===================================================================== */
+    const emptyBtn = $('#toggle-empty');
+    function syncEmptyBtn() {
+      const empty = (router.parse().query.empty === '1');
+      emptyBtn.textContent = empty ? '開啟（顯示 empty）' : '關閉（顯示專案）';
+      emptyBtn.classList.toggle('active', empty);
+    }
+    emptyBtn.addEventListener('click', () => {
+      const r = router.parse();
+      const empty = r.query.empty === '1';
+      router.go(empty ? '#/home' : '#/home?empty=1');
+    });
+
+    /* =====================================================================
+     * 6. Header / breadcrumb
+     * ===================================================================== */
+    function renderBreadcrumb(route) {
+      const wrap = $('#breadcrumb');
+      const actions = $('#header-actions');
+      wrap.innerHTML = '';
+      actions.innerHTML = '';
+      const home = `<a href="#/home">工作區首頁</a>`;
+      if (route.name === 'home') {
+        wrap.innerHTML = `<span class="current">工作區首頁</span>`;
+        const ws = window.MOCK.workspace;
+        actions.innerHTML = `
+          <span class="summary-chip" data-action="cross-decisions">跨專案待裁決 ${ws.crossProjectPendingDecisions}</span>`;
+      } else if (route.name === 'templates') {
+        wrap.innerHTML = `${home} <span class="sep">/</span> <span class="current">公版 Harness / 模板管理</span>`;
+      } else if (route.name === 'project') {
+        const p = projectById(route.params.projectId);
+        wrap.innerHTML = `${home} <span class="sep">/</span> <span class="current">${escapeHtml(p ? p.name : route.params.projectId)}</span>`;
+      } else if (route.name === 'scene-queue') {
+        const p = projectById(route.params.projectId);
+        wrap.innerHTML = `${home} <span class="sep">/</span>
+          <a href="#/project/${escapeHtml(route.params.projectId)}">${escapeHtml(p ? p.name : route.params.projectId)}</a>
+          <span class="sep">/</span> <span class="current">場景列隊 / Scene Queue</span>`;
+      } else if (route.name === 'scene-detail') {
+        const p = projectById(route.params.projectId);
+        const s = sceneInProject(p, route.params.sceneId);
+        wrap.innerHTML = `${home} <span class="sep">/</span>
+          <a href="#/project/${escapeHtml(route.params.projectId)}">${escapeHtml(p ? p.name : route.params.projectId)}</a>
+          <span class="sep">/</span>
+          <a href="#/project/${escapeHtml(route.params.projectId)}/scene-queue">場景列隊</a>
+          <span class="sep">/</span> <span class="current">${escapeHtml(s ? s.title : route.params.sceneId)}</span>`;
+      } else if (route.name === 'scene-dialogue') {
+        const p = projectById(route.params.projectId);
+        wrap.innerHTML = `${home} <span class="sep">/</span>
+          <a href="#/project/${escapeHtml(route.params.projectId)}">${escapeHtml(p ? p.name : route.params.projectId)}</a>
+          <span class="sep">/</span> <span class="current">場景索引快速覽（legacy）</span>`;
+      }
+    }
+
+    /* =====================================================================
+     * 7. View: Workspace Home（沿用 Round 1.1）
+     * ===================================================================== */
+    function renderHome() {
+      const empty = router.current.query.empty === '1';
+      const ws = window.MOCK.workspace;
+      let projectListHtml;
+      if (empty) {
+        projectListHtml = `
+          <div class="empty-state">
+            <div class="emoji">📁</div>
+            <h3>還沒有任何專案</h3>
+            <p>建立第一個專案後，這裡會顯示所有 project 的摘要狀態。<br>
+              你也可以先進入「公版 Harness / 模板管理」確認工具底層規則。</p>
+            <div class="actions">
+              <button class="btn primary" data-action="create-project">＋ 新增專案</button>
+              <a class="btn" href="#/templates">前往公版 Harness / 模板管理</a>
+            </div>
+          </div>`;
+      } else {
+        projectListHtml = `<div class="project-grid">${window.MOCK.projects.map(renderProjectCard).join('')}</div>`;
+      }
+      return `
+        <div class="home-intro">
+          <div>
+            <h1>工作區首頁 <span style="color:var(--muted);font-weight:500;font-size:14px;">/ Workspace Home</span></h1>
+            <div class="lede">這裡是所有敘事專案的入口。每張卡片是一個 ${gloss('Bible')}，點進去看詳細狀態。</div>
+          </div>
+          <div class="home-actions">
+            <button class="btn" data-action="sort-projects">排序</button>
+            <button class="btn primary" data-action="create-project">＋ 新增專案</button>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-header">
+            <h2>專案清單<span class="en-sub">Projects</span></h2>
+            <span class="desc">點擊卡片進入該專案的儀表板。</span>
+          </div>
+          ${projectListHtml}
+        </div>
+        <div class="ws-tools">
+          <div class="label">Workspace 工具層</div>
+          <div class="tool-card" data-nav="#/templates">
+            <div class="warn-tag">高風險</div>
+            <div class="body">
+              <div class="title">${escapeHtml(ws.templateLayerEntry.label)} ${gloss('公版 Harness')}</div>
+              <div class="desc">${escapeHtml(ws.templateLayerEntry.warning)}</div>
+            </div>
+            <div class="badge muted">Workspace-level</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderProjectCard(p) {
+      const phaseTone = p.phase === 'Source Intake' ? 'muted' : (p.phase === 'Bible Building' ? 'info' : 'success');
+      return `
+        <div class="card project-card clickable" data-nav="#/project/${escapeHtml(p.id)}">
+          <div class="top">
+            <div>
+              <h3 class="card-title">${escapeHtml(p.name)}</h3>
+              <div class="card-meta">${escapeHtml(p.type)} · 最近更新 ${escapeHtml(p.lastUpdated)}</div>
+            </div>
+            <button class="menu-btn" data-action="project-menu" data-pid="${escapeHtml(p.id)}" title="封存 / 隱藏 / 刪除（mock）">⋯</button>
+          </div>
+          <div class="status-row">
+            <span class="badge ${phaseTone}">${escapeHtml(p.phase)}</span>
+            <span class="badge muted">${escapeHtml(p.status)}</span>
+          </div>
+          <div class="next-step"><span class="label">下一步</span>${escapeHtml(p.nextStep)}</div>
+          <div class="counts-grid">
+            <div class="count-cell ${p.blockers > 0 ? 'danger' : 'muted'}"><div class="num">${p.blockers}</div><div class="lbl">Blockers</div></div>
+            <div class="count-cell ${p.pendingDecisions > 0 ? 'warning' : 'muted'}"><div class="num">${p.pendingDecisions}</div><div class="lbl">待裁決</div></div>
+            <div class="count-cell ${p.qaFindings > 0 ? 'info' : 'muted'}"><div class="num">${p.qaFindings}</div><div class="lbl">QA Findings</div></div>
+            <div class="count-cell ${p.canonDeltaCandidates > 0 ? 'info' : 'muted'}"><div class="num">${p.canonDeltaCandidates}</div><div class="lbl">Canon Δ</div></div>
+          </div>
+        </div>`;
+    }
+
+    /* =====================================================================
+     * 8. View: Project Dashboard (Round 2 — Next Actions priority + Scene Readiness chips)
+     * ===================================================================== */
+    function renderProjectDashboard() {
+      const p = projectById(router.current.params.projectId);
+      if (!p) return `<div class="placeholder-note">找不到 project：${escapeHtml(router.current.params.projectId)}。 <a href="#/home">回工作區首頁</a></div>`;
+
+      // Next Actions hero
+      const actionsHtml = (p.nextActions || []).length
+        ? `<ul class="hero-list">${p.nextActions.map(a => `
+            <li data-action="next-action" data-target="${escapeHtml(a.target)}" data-pid="${escapeHtml(p.id)}" data-sid="${escapeHtml(a.sceneId || '')}" data-hd="${escapeHtml(a.hdId || '')}">
+              <span>▸</span><span>${escapeHtml(a.label)}</span><span class="arrow">→</span>
+            </li>`).join('')}</ul>`
+        : '<div class="empty">目前無 next actions。</div>';
+
+      // Blockers hero
+      const blockersHtml = (p.blockerItems || []).length
+        ? `<ul class="hero-list">${p.blockerItems.map(b => `
+            <li data-action="blocker" data-bid="${escapeHtml(b.id)}" data-pid="${escapeHtml(p.id)}" data-sid="${escapeHtml(b.sceneId || '')}">
+              <span>⚠</span><span>${escapeHtml(b.summary)}</span>
+              <span class="badge muted" style="margin-left:auto">${escapeHtml(b.area)}</span>
+            </li>`).join('')}</ul>`
+        : '<div class="empty">目前無 blockers。</div>';
+
+      // Scene Readiness Summary chips（B1: chip 群）
+      const readinessSummary = computeReadinessSummary(p);
+      const chipKeys = ['READY', 'READY_WITH_RISK', 'BLOCKED', 'AWAITING_DECISION', 'AWAITING_DATA', 'DRAFT_PENDING_QA', 'QA_NEEDS_REWRITE'];
+      const chipsHtml = chipKeys.map(k => {
+        const cnt = readinessSummary[k] || 0;
+        const meta = readinessLabel(k);
+        return `
+          <span class="readiness-chip ${meta.tone} ${cnt === 0 ? 'zero' : ''}"
+                data-nav="#/project/${escapeHtml(p.id)}/scene-queue?filter=${escapeHtml(k)}"
+                title="點擊：到 Scene Queue 篩選此狀態">
+            ${escapeHtml(meta.label)}
+            <span class="count">${cnt}</span>
+          </span>`;
+      }).join('');
+      const totalScenes = (p.scenes || []).length;
+
+      // Module Status Overview (Round 1 phase grid) — 6 區塊
+      const phaseBlocks = [
+        { title: '原始資料導入', val: p.sourceImport, icon: '📥' },
+        { title: `${gloss('Bible')} 整理`, val: p.bibleStatus, icon: '📚' },
+        { title: '劇情 / 章節結構', val: p.plotStatus, icon: '🧭' },
+        { title: '場景索引', val: p.sceneStatus, icon: '🗺' },
+        { title: '台詞生產', val: p.dialogueStatus, icon: '✍' },
+        { title: 'QA', val: p.qaStatus, icon: '✓' },
+      ].map(b => `
+        <div class="card state-card">
+          <div class="state-title">${b.icon} ${b.title}
+            <span class="badge muted" style="margin-left:auto">${escapeHtml(b.val.state)}</span>
+          </div>
+          <div class="state-detail">${escapeHtml(b.val.detail)}</div>
+        </div>
+      `).join('');
+
+      // Triplet
+      const decisionsHtml = (p.humanDecisionItems || []).length
+        ? p.humanDecisionItems.map(d => `
+          <div class="item" data-action="hd-item" data-id="${escapeHtml(d.id)}">
+            <div class="title">${escapeHtml(d.summary)}</div>
+            <div class="meta">${escapeHtml(d.area)} · 優先級 ${escapeHtml(d.priority)}</div>
+          </div>`).join('')
+        : '<div class="mini-list empty">目前無待裁決事項。</div>';
+      const canonHtml = (p.canonDeltaItems || []).length
+        ? p.canonDeltaItems.map(c => `
+          <div class="item" data-action="canon-item" data-id="${escapeHtml(c.id)}">
+            <div class="title">${escapeHtml(c.summary)}</div>
+            <div class="meta">${escapeHtml(c.state)} · 影響：${escapeHtml(c.impact)}</div>
+          </div>`).join('')
+        : '<div class="mini-list empty">目前無 Canon Delta 候選。</div>';
+      const readingHtml = (p.agentPreTaskReadingList || []).length
+        ? p.agentPreTaskReadingList.map(r => `
+          <div class="item" data-action="reading-item">
+            <div class="title">📄 ${escapeHtml(r)}</div>
+          </div>`).join('')
+        : '<div class="mini-list empty">尚無 Agent 必讀清單。</div>';
+
+      // Module Navigation (demoted)
+      const modulesHtml = window.MOCK.moduleDefs.map(m => {
+        if (m.future) return `
+          <div class="card module-card future" data-action="future-module" data-mid="${escapeHtml(m.id)}">
+            <div class="future-tag">FUTURE</div>
+            <div class="mod-title">${escapeHtml(m.label)}</div>
+            <div class="mod-desc">${escapeHtml(m.desc)}</div>
+          </div>`;
+        const navHash = m.id === 'scene-dialogue' ? `#/project/${p.id}/scene-queue` : null;
+        const clickAttr = navHash ? `data-nav="${navHash}"` : `data-action="module-preview" data-mid="${escapeHtml(m.id)}" data-pid="${escapeHtml(p.id)}"`;
+        const subline = m.id === 'scene-dialogue'
+          ? '<div style="font-size:11.5px;color:var(--muted);margin-top:4px;">Round 2 主入口：Scene Queue</div>'
+          : '';
+        return `
+          <div class="card module-card clickable" ${clickAttr}>
+            <div class="mod-title">${escapeHtml(m.label)}</div>
+            <div class="mod-desc">${escapeHtml(m.desc)}</div>
+            ${subline}
+          </div>`;
+      }).join('');
+
+      return `
+        <div class="pd-header">
+          <div class="row1">
+            <h1>${escapeHtml(p.name)}</h1>
+            <span class="phase-pill">階段：${escapeHtml(p.phase)}</span>
+            <span class="badge muted">${escapeHtml(p.status)}</span>
+            <span class="last-updated">最近更新 ${escapeHtml(p.lastUpdated)}</span>
+          </div>
+          <div class="pd-summary">
+            <div class="count-cell ${p.blockers > 0 ? 'danger' : 'muted'}"><div class="num">${p.blockers}</div><div class="lbl">Blockers</div></div>
+            <div class="count-cell ${p.pendingDecisions > 0 ? 'warning' : 'muted'}"><div class="num">${p.pendingDecisions}</div><div class="lbl">${gloss('Human Decision')}</div></div>
+            <div class="count-cell ${p.qaFindings > 0 ? 'info' : 'muted'}"><div class="num">${p.qaFindings}</div><div class="lbl">QA Findings</div></div>
+            <div class="count-cell ${p.canonDeltaCandidates > 0 ? 'info' : 'muted'}"><div class="num">${p.canonDeltaCandidates}</div><div class="lbl">${gloss('Canon Delta')}</div></div>
+          </div>
+        </div>
+
+        <!-- HERO row：Next Actions + Blockers -->
+        <div class="hero-row">
+          <div class="hero-card actions">
+            <h3 class="hero-title">▸ 下一步建議 / Next Actions</h3>
+            ${actionsHtml}
+          </div>
+          <div class="hero-card blockers">
+            <h3 class="hero-title">⚠ 卡點 · 風險 <span style="font-weight:500;color:var(--muted);font-size:11.5px;margin-left:6px;">/ Blockers · Risks</span></h3>
+            ${blockersHtml}
+          </div>
+        </div>
+
+        <!-- Scene Readiness Summary（chip 群） -->
+        <div class="readiness-summary">
+          <h3 class="rs-title">${gloss('Scene Readiness')} 場景就緒度總覽 <span style="font-weight:500;color:var(--muted);font-size:12px;">/ Scene Readiness Summary</span></h3>
+          <div class="rs-desc">總共 ${totalScenes} 場。點任一狀態 chip 進入 Scene Queue 並套上篩選。</div>
+          <div class="readiness-chips">${chipsHtml}</div>
+        </div>
+
+        <!-- Module Status Overview（demoted to mid priority） -->
+        <div class="section">
+          <div class="section-header">
+            <h2>模組狀態總覽<span class="en-sub">Module Status Overview</span></h2>
+            <span class="desc">六個生產階段目前狀態。這是狀態判讀，不是入口導航。</span>
+          </div>
+          <div class="state-grid">${phaseBlocks}</div>
+        </div>
+
+        <!-- Triplet：HD / Canon Delta / Agent Reading -->
+        <div class="section">
+          <div class="triplet">
+            <div class="card">
+              <div class="card-title">${gloss('Human Decision')} 待裁決</div>
+              <div class="mini-list">${decisionsHtml}</div>
+            </div>
+            <div class="card">
+              <div class="card-title">${gloss('Canon Delta')} 候選</div>
+              <div class="mini-list">${canonHtml}</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Agent 任務啟動前必讀</div>
+              <div class="mini-list">${readingHtml}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Module Navigation（demoted） -->
+        <div class="module-nav-collapsed">
+          <div class="mn-title">模組導航 / Module Navigation</div>
+          <div class="mn-desc">次要入口。Round 2 主流程是 Next Actions → Scene Queue → Scene Detail；這裡保留各模組總覽入口。</div>
+          <div class="module-grid">${modulesHtml}</div>
+        </div>
+      `;
+    }
+
+    // 計算 readiness 計數（純 derived）
+    function computeReadinessSummary(p) {
+      const summary = { READY:0, READY_WITH_RISK:0, BLOCKED:0, AWAITING_DECISION:0, AWAITING_DATA:0, DRAFT_PENDING_QA:0, QA_NEEDS_REWRITE:0 };
+      (p.scenes || []).forEach(s => {
+        const k = s.readiness && s.readiness.badge;
+        if (k && summary[k] !== undefined) summary[k] += 1;
+      });
+      return summary;
+    }
+
+    /* =====================================================================
+     * 9. View: Scene Queue (Round 2 NEW)
+     *    Filter chips + chapter grouping
+     * ===================================================================== */
+    function renderSceneQueue() {
+      const p = projectById(router.current.params.projectId);
+      if (!p) return '<div class="placeholder-note">找不到 project。</div>';
+      const filter = router.current.query.filter || '';
+      const allScenes = p.scenes || [];
+      const filtered = filter ? allScenes.filter(s => s.readiness && s.readiness.badge === filter) : allScenes;
+
+      // Filter chips
+      const summary = computeReadinessSummary(p);
+      const allChip = `<span class="sq-filter-chip ${filter === '' ? 'active' : ''}" data-nav="#/project/${escapeHtml(p.id)}/scene-queue">全部 <span class="count">${allScenes.length}</span></span>`;
+      const chipKeys = ['READY', 'READY_WITH_RISK', 'BLOCKED', 'AWAITING_DECISION', 'AWAITING_DATA', 'DRAFT_PENDING_QA', 'QA_NEEDS_REWRITE'];
+      const chips = chipKeys.map(k => {
+        const cnt = summary[k] || 0;
+        const meta = readinessLabel(k);
+        return `<span class="sq-filter-chip ${filter === k ? 'active' : ''}" data-nav="#/project/${escapeHtml(p.id)}/scene-queue?filter=${escapeHtml(k)}">${escapeHtml(meta.label)} <span class="count">${cnt}</span></span>`;
+      }).join('');
+
+      // Group by chapter
+      const byChapter = {};
+      filtered.forEach(s => { const c = s.chapter || 0; if (!byChapter[c]) byChapter[c] = []; byChapter[c].push(s); });
+      const chapters = Object.keys(byChapter).sort((a,b) => Number(a) - Number(b));
+      const groupsHtml = chapters.length === 0
+        ? '<div class="placeholder-note">符合此篩選的場景：0 場。試試其他狀態 chip。</div>'
+        : chapters.map(c => `
+          <div class="sq-chapter-group">
+            <h3 class="sq-chapter-header">第 ${escapeHtml(c)} 章 · CH${String(c).padStart(2,'0')}</h3>
+            <div class="scene-card-grid">
+              ${byChapter[c].sort((a,b) => (a.position||0) - (b.position||0)).map(renderSceneCardForQueue).join('')}
+            </div>
+          </div>`).join('');
+
+      return `
+        <div class="sd-back"><a href="#/project/${escapeHtml(p.id)}">← 回 ${escapeHtml(p.name)} Dashboard</a></div>
+        <div class="sq-header">
+          <div>
+            <h1>${gloss('Scene Queue')} 場景列隊 <span style="color:var(--muted);font-weight:500;font-size:14px;">/ Scene Queue</span></h1>
+            <div class="lede">場景 / 台詞生產工作區的 Round 2 主入口。把場景視為 ${gloss('Production Loop')} 中的 production unit。</div>
+          </div>
+          <div class="sq-meta">${escapeHtml(p.name)} · 共 ${allScenes.length} 場 · 顯示 ${filtered.length} 場</div>
+        </div>
+
+        <div class="sq-filter-row">
+          <span class="fl-label">篩選</span>
+          ${allChip}
+          ${chips}
+        </div>
+
+        ${groupsHtml}
+      `;
+    }
+
+    function renderSceneCardForQueue(s) {
+      const meta = readinessLabel(s.readiness ? s.readiness.badge : 'BLOCKED');
+      // production mini-strip：6 個 step（goal / bible / task / beats / dialogue / qa）
+      // ⚠ 這只是 UI workflow visualization，不是狀態機。
+      const stripKeys = ['goal', 'bible', 'task', 'beats', 'dialogue', 'qa'];
+      const cmap = {};
+      (s.readiness && s.readiness.checklist || []).forEach(c => { cmap[c.id] = c.status; });
+      const stripHtml = stripKeys.map(k => {
+        let cls = 'na';
+        if (k === 'dialogue') {
+          cls = s.dialogueStatus && s.dialogueStatus !== 'not_started' ? 'ok' : 'na';
+        } else {
+          const st = cmap[k];
+          if (st === 'ok') cls = 'ok';
+          else if (st === 'partial' || st === 'review') cls = 'partial';
+          else if (st === 'missing' || st === 'conflict' || st === 'blocked') cls = 'bad';
+        }
+        return `<div class="step ${cls}" title="${escapeHtml(k)}: ${escapeHtml(cmap[k] || 'na')}"></div>`;
+      }).join('');
+      const counts = [];
+      if (s.qaFindings && s.qaFindings.length) counts.push(`<span class="badge info">QA ${s.qaFindings.length}</span>`);
+      if (s.humanDecisions && s.humanDecisions.length) counts.push(`<span class="badge warning">HD ${s.humanDecisions.length}</span>`);
+      if (s.canonDeltas && s.canonDeltas.length) counts.push(`<span class="badge info">Canon Δ ${s.canonDeltas.length}</span>`);
+      if (s.blockers && s.blockers.length) counts.push(`<span class="badge danger">Blockers ${s.blockers.length}</span>`);
+      const next = s.nextAction ? `<div class="sc-next">▸ ${escapeHtml(s.nextAction.label)}</div>` : '';
+      return `
+        <div class="card scene-card clickable" data-nav="#/project/${escapeHtml(router.current.params.projectId)}/scene/${escapeHtml(s.id)}">
+          <div class="sc-top">
+            <h3 class="sc-title">${escapeHtml(s.title)}</h3>
+            <span class="badge ${meta.tone}">${escapeHtml(meta.label)}</span>
+          </div>
+          <div class="sc-pos">CH${String(s.chapter).padStart(2,'0')}_S${String(s.position).padStart(2,'0')}</div>
+          <p class="sc-purpose">${escapeHtml(s.dramaticPurpose)}</p>
+          <div class="sc-strip" title="Workflow visualization (UX only — 不是狀態機)">${stripHtml}</div>
+          <div class="sc-counts">${counts.join('') || '<span class="badge muted">無待處理</span>'}</div>
+          ${next}
+        </div>`;
+    }
+
+    /* =====================================================================
+     * 10. View: Scene Detail (Round 2 NEW) — Scene Production Cockpit
+     * ===================================================================== */
+    function renderSceneDetail() {
+      const p = projectById(router.current.params.projectId);
+      const s = sceneInProject(p, router.current.params.sceneId);
+      if (!p || !s) return `<div class="placeholder-note">找不到 scene：${escapeHtml(router.current.params.sceneId)}。 <a href="#/project/${escapeHtml(router.current.params.projectId)}/scene-queue">回 Scene Queue</a></div>`;
+
+      const meta = readinessLabel(s.readiness ? s.readiness.badge : 'BLOCKED');
+
+      // ─── 主欄 ───
+      // (1) Scene Header
+      const headerHtml = `
+        <div class="sd-back"><a href="#/project/${escapeHtml(p.id)}/scene-queue">← 回場景列隊</a></div>
+        <div class="sd-header">
+          <div class="sd-pos">CH${String(s.chapter).padStart(2,'0')}_S${String(s.position).padStart(2,'0')}</div>
+          <h1>${escapeHtml(s.title)}</h1>
+          <div class="sd-row">
+            <span class="rp-badge ${meta.tone}">${escapeHtml(meta.label)}</span>
+            <span class="badge muted">${escapeHtml(p.name)}</span>
+          </div>
+        </div>`;
+
+      // (2) Scene Goal / Dramatic Purpose
+      const goalHtml = `
+        <div class="sd-block">
+          <h3 class="sd-block-title">${gloss('Dramatic Purpose')} 戲劇目的 <span style="font-weight:500;color:var(--muted);font-size:11.5px;margin-left:6px;">/ Scene Goal</span></h3>
+          <div style="font-size:13.5px;line-height:1.6;">${escapeHtml(s.dramaticPurpose)}</div>
+        </div>`;
+
+      // (3) Readiness Panel: badge + checklist + next fix
+      const iconMap = { ok:'✓', partial:'◐', missing:'○', conflict:'⚠', blocked:'⚠', review:'◑', na:'—' };
+      const checklistHtml = (s.readiness && s.readiness.checklist || []).map(c => `
+        <li>
+          <span class="icon ${escapeHtml(c.status)}">${iconMap[c.status] || '·'}</span>
+          <span class="label">
+            ${escapeHtml(c.label)}
+            ${c.detail ? `<div class="detail">${escapeHtml(c.detail)}</div>` : ''}
+          </span>
+        </li>`).join('');
+      const readinessHtml = `
+        <div class="sd-block">
+          <h3 class="sd-block-title">${gloss('Scene Readiness')} 場景就緒度 <span style="font-weight:500;color:var(--muted);font-size:11.5px;margin-left:6px;">/ Scene Readiness Panel</span></h3>
+          <div class="rp-row">
+            <span class="rp-badge ${meta.tone}">${escapeHtml(meta.label)}</span>
+            <span style="color:var(--muted);font-size:12px;">這是 UX label，不是 enum。同場景可能同時有多個狀態信號。</span>
+          </div>
+          <ul class="checklist">${checklistHtml}</ul>
+          ${s.readiness && s.readiness.nextFix ? `
+            <div class="next-fix">
+              <span class="label">Next Fix</span>${escapeHtml(s.readiness.nextFix)}
+            </div>` : ''}
+        </div>`;
+
+      // (4) Required Context
+      const ctx = s.requiredContext || {};
+      const ctxParts = [];
+      if (ctx.warnings && ctx.warnings.length) {
+        ctxParts.push(ctx.warnings.map(w => `<div class="ctx-warning ${w.type === 'missing' || w.type === 'conflict' ? 'danger' : ''}">⚠ ${escapeHtml(w.text)}</div>`).join(''));
+      }
+      if (ctx.bibleRefs && ctx.bibleRefs.length) {
+        ctxParts.push(`
+          <div class="ctx-section">
+            <div class="ctx-title">Bible References ${gloss('Bible')}</div>
+            <ul class="ctx-list">${ctx.bibleRefs.map(r => `
+              <li>
+                <span class="lbl">${escapeHtml(r.label)}</span>
+                <a class="ref-link" data-action="ref-link" data-ref="${escapeHtml(r.section)}">查看 →</a>
+                <span class="meta">${escapeHtml(r.section)}</span>
+              </li>`).join('')}</ul>
+          </div>`);
+      }
+      if (ctx.characters && ctx.characters.length) {
+        ctxParts.push(`
+          <div class="ctx-section">
+            <div class="ctx-title">參與角色 / Characters</div>
+            <ul class="ctx-list">${ctx.characters.map(c => `
+              <li>
+                <span class="lbl">${escapeHtml(c.name)}</span>
+                <span style="color:var(--muted);font-size:11.5px;">${escapeHtml(c.role)}</span>
+                <span class="meta"><span class="badge ${c.voiceCardStatus === 'LOCKED' ? 'success' : (c.voiceCardStatus === 'REVIEW' ? 'info' : 'muted')}">聲線卡 ${escapeHtml(c.voiceCardStatus)}</span></span>
+              </li>`).join('')}</ul>
+          </div>`);
+      }
+      if (ctx.relationships && ctx.relationships.length) {
+        ctxParts.push(`
+          <div class="ctx-section">
+            <div class="ctx-title">角色關係 / Relationships</div>
+            <ul class="ctx-list">${ctx.relationships.map(r => `
+              <li>
+                <span class="lbl">${escapeHtml(r.pair)}</span>
+                <span style="color:var(--muted);font-size:11.5px;">${escapeHtml(r.summary)}</span>
+                <span class="meta"><span class="badge ${r.status === 'conflict' ? 'danger' : 'success'}">${r.status === 'conflict' ? '衝突' : 'OK'}</span></span>
+              </li>`).join('')}</ul>
+          </div>`);
+      }
+      if (ctx.worldVocab && ctx.worldVocab.length) {
+        ctxParts.push(`
+          <div class="ctx-section">
+            <div class="ctx-title">世界詞彙 / World Vocab</div>
+            <ul class="ctx-list">${ctx.worldVocab.map(v => `
+              <li><span class="lbl">「${escapeHtml(v.term)}」</span><span style="color:var(--muted);font-size:11.5px;">${escapeHtml(v.state)}</span></li>`).join('')}</ul>
+          </div>`);
+      }
+      if (ctx.infoReveal && ctx.infoReveal.length) {
+        ctxParts.push(`
+          <div class="ctx-section">
+            <div class="ctx-title">資訊揭露限制 / Info Reveal</div>
+            <ul class="ctx-list">${ctx.infoReveal.map(i => `
+              <li>
+                <span style="font-size:12.5px;">${escapeHtml(i.note)}</span>
+                <span class="meta"><span class="badge ${i.priority === 'high' ? 'danger' : 'warning'}">${escapeHtml(i.priority)}</span></span>
+              </li>`).join('')}</ul>
+          </div>`);
+      }
+      const requiredCtxHtml = `
+        <div class="sd-block">
+          <h3 class="sd-block-title">必要脈絡 <span style="font-weight:500;color:var(--muted);font-size:11.5px;margin-left:6px;">/ Required Context · Bible Reference (mock)</span></h3>
+          ${ctxParts.length ? ctxParts.join('') : '<div class="placeholder-note">本場暫無必要脈絡資料（mock）。</div>'}
+        </div>`;
+
+      // (5) Beat / Outline Preview
+      const beatsOutlineHtml = (s.beats && s.beats.length) ? `
+        <div class="sd-block">
+          <h3 class="sd-block-title">Beat 與大綱預覽 ${gloss('Beat')}<span style="font-weight:500;color:var(--muted);font-size:11.5px;margin-left:6px;">/ Beat / Outline Preview</span></h3>
+          ${s.beats.map(b => `
+            <div class="beat-block">
+              <div class="beat-head">
+                <span class="beat-title">${escapeHtml(b.title)}</span>
+                <span class="badge ${(dialogueStatusLabels[b.dialogueStatus] || ['muted','—'])[0]}">${(dialogueStatusLabels[b.dialogueStatus] || ['muted','—'])[1]}</span>
+              </div>
+              <div class="beat-meta"><strong>Purpose：</strong>${escapeHtml(b.purpose)}</div>
+              <div class="beat-meta"><strong>Emotional turn：</strong>${escapeHtml(b.emotionalTurn)}</div>
+              <div class="beat-meta"><strong>Info reveal：</strong>${escapeHtml(b.infoRevealNote)}</div>
+            </div>`).join('')}
+        </div>` : '';
+
+      // (6) Dialogue Draft Preview — read-only with disabled actions
+      const draftHtml = (s.beats && s.beats.length) ? `
+        <div class="sd-block dialogue-preview">
+          <h3 class="sd-block-title">${gloss('Dialogue Draft Preview')}台詞草稿預覽 <span style="font-weight:500;color:var(--muted);font-size:11.5px;margin-left:6px;">/ Dialogue Draft Preview · read-only</span></h3>
+          <div class="preview-banner">📖 此為 scene / beat context 下的台詞 preview。本輪 prototype 不是完整 Dialogue Editor，所有 lock / rewrite / reorder 動作皆 disabled。</div>
+          ${s.beats.map(b => `
+            <div style="margin-bottom:18px;">
+              <div style="font-weight:700;font-size:13px;margin-bottom:6px;color:var(--muted);">${escapeHtml(b.title)}</div>
+              ${b.lines && b.lines.length ? `
+                <ul class="lines-list">${b.lines.map(l => `
+                  <li>
+                    <span class="speaker">${escapeHtml(l.speaker)}</span>
+                    <span class="line-text">${escapeHtml(l.preview)}</span>
+                    <span class="line-tags">
+                      ${l.qaWarning ? `<span class="qa-tag ${escapeHtml(l.qaWarning.severity)}" title="${escapeHtml(l.qaWarning.note)}">QA</span>` : ''}
+                      ${l.infoRevealTag ? `<span class="info-tag" title="${escapeHtml(l.infoRevealTag.note || l.infoRevealTag.type)}">info</span>` : ''}
+                      <button class="line-action-btn" disabled title="(mock — 本輪不執行)">🔒</button>
+                      <button class="line-action-btn" disabled title="(mock — 本輪不執行)">↻</button>
+                      <button class="line-action-btn" disabled title="(mock — 本輪不執行)">⇅</button>
+                    </span>
+                  </li>`).join('')}</ul>` : '<div class="empty-beat">此 beat 尚無 mock dialogue line。</div>'}
+            </div>`).join('')}
+        </div>` : '';
+
+      const mainCol = headerHtml + `<div class="sd-main">${goalHtml}${readinessHtml}${requiredCtxHtml}${beatsOutlineHtml}${draftHtml}</div>`;
+
+      // ─── 側欄 ───
+      const sideHtml = renderSceneDetailSide(p, s);
+
+      return `
+        ${headerHtml}
+        <div class="sd-layout">
+          <div class="sd-main">${goalHtml}${readinessHtml}${requiredCtxHtml}${beatsOutlineHtml}${draftHtml}</div>
+          <div class="sd-side">${sideHtml}</div>
+        </div>
+      `;
+    }
+
+    function renderSceneDetailSide(p, s) {
+      // 1. Next Action
+      const naHtml = s.nextAction ? `
+        <div class="sd-block">
+          <h3 class="sd-block-title">下一步 / Next Action</h3>
+          <div class="next-action-card" data-action="scene-next-action" data-target="${escapeHtml(s.nextAction.target)}" data-pid="${escapeHtml(p.id)}" data-sid="${escapeHtml(s.id)}" data-hd="${escapeHtml(s.nextAction.hdId || '')}" data-qa="${escapeHtml(s.nextAction.qaId || '')}" data-aaid="${escapeHtml(s.nextAction.agentActionId || '')}">
+            <div class="label">下一步</div>
+            <div class="text">${escapeHtml(s.nextAction.label)}</div>
+          </div>
+        </div>` : '';
+
+      // 2. Blockers
+      const bkHtml = `
+        <div class="sd-block">
+          <h3 class="sd-block-title">⚠ 卡點 <span style="font-weight:500;color:var(--muted);font-size:11.5px;margin-left:6px;">/ Blockers</span></h3>
+          ${(s.blockers && s.blockers.length) ? `
+            <ul class="summary-list">${s.blockers.map(b => `
+              <li data-action="scene-blocker" data-bid="${escapeHtml(b.id)}">
+                <div class="title">${escapeHtml(b.text)}</div>
+                <div class="meta">${escapeHtml(b.area)}</div>
+              </li>`).join('')}</ul>`
+            : '<div class="summary-list empty">本場無 blockers。</div>'}
+        </div>`;
+
+      // 3. QA Findings Summary
+      const qaSummary = s.qaFindings && s.qaFindings.length ? `
+        ${s.qaFindings.length} 項 finding，其中 ${s.qaFindings.filter(q => q.severity === 'high').length} 項 high-risk。
+      ` : '本場無 open QA finding。';
+      const qaListHtml = (s.qaFindings && s.qaFindings.length) ? `
+        <ul class="summary-list">${s.qaFindings.map(q => `
+          <li data-action="open-qa" data-qaid="${escapeHtml(q.id)}" data-pid="${escapeHtml(p.id)}" data-sid="${escapeHtml(s.id)}">
+            <div class="title">
+              <span class="badge ${q.severity === 'high' ? 'danger' : 'warning'}">${escapeHtml(q.severity)}</span>
+              ${escapeHtml(q.title)}
+            </div>
+            <div class="meta">影響：${escapeHtml(q.affected ? `${q.affected.beatId}/${q.affected.lineId}` : '—')}</div>
+          </li>`).join('')}</ul>` : '<div class="summary-list empty">本場無 open QA finding。</div>';
+      const qaHtml = `
+        <div class="sd-block">
+          <h3 class="sd-block-title">QA 結果 <span style="font-weight:500;color:var(--muted);font-size:11.5px;margin-left:6px;">/ QA Findings</span><span class="right" style="font-size:11px;color:var(--muted);font-weight:500;">${escapeHtml(qaSummary)}</span></h3>
+          ${qaListHtml}
+        </div>`;
+
+      // 4. Human Decision Summary
+      const hdHtml = `
+        <div class="sd-block">
+          <h3 class="sd-block-title">${gloss('Human Decision')} 待裁決</h3>
+          ${(s.humanDecisions && s.humanDecisions.length) ? `
+            <ul class="summary-list">${s.humanDecisions.map(d => `
+              <li data-action="open-hd" data-hdid="${escapeHtml(d.id)}" data-pid="${escapeHtml(p.id)}" data-sid="${escapeHtml(s.id)}">
+                <div class="title">
+                  <span class="badge ${d.blocking ? 'danger' : 'warning'}">${d.blocking ? 'blocking' : 'non-blocking'}</span>
+                  ${escapeHtml(d.title)}
+                </div>
+                <div class="meta">${escapeHtml(d.area)} · ${escapeHtml(d.priority)}</div>
+              </li>`).join('')}</ul>`
+            : '<div class="summary-list empty">本場無待裁決事項。</div>'}
+        </div>`;
+
+      // 5. Canon Delta Summary
+      const cdHtml = `
+        <div class="sd-block">
+          <h3 class="sd-block-title">${gloss('Canon Delta')} 候選</h3>
+          ${(s.canonDeltas && s.canonDeltas.length) ? `
+            <ul class="summary-list">${s.canonDeltas.map(c => `
+              <li data-action="open-cd" data-cdid="${escapeHtml(c.id)}" data-pid="${escapeHtml(p.id)}" data-sid="${escapeHtml(s.id)}">
+                <div class="title">${escapeHtml(c.title)}</div>
+                <div class="meta">${escapeHtml(c.state)} · 來源：${escapeHtml(c.source)}</div>
+              </li>`).join('')}</ul>`
+            : '<div class="summary-list empty">本場無 Canon Delta 候選。</div>'}
+        </div>`;
+
+      // 6. Mock Agent Actions
+      const aaHtml = `
+        <div class="sd-block">
+          <h3 class="sd-block-title">Agent 動作 <span style="font-weight:500;color:var(--muted);font-size:11.5px;margin-left:6px;">/ Mock Agent Actions</span><span class="right" style="font-size:11px;color:var(--muted);font-weight:500;">所有動作為 mock</span></h3>
+          ${(s.agentActions && s.agentActions.length) ? s.agentActions.map(a => `
+            <div class="agent-action ${a.enabled ? '' : 'disabled'}" data-action="agent-action" data-aaid="${escapeHtml(a.id)}" data-pid="${escapeHtml(p.id)}" data-sid="${escapeHtml(s.id)}">
+              <span>${a.enabled ? '▸' : '⊘'}</span>
+              <span class="agent-text">${escapeHtml(a.label)}</span>
+              ${a.warning ? `<span class="warn">⚠ ${escapeHtml(a.warning)}</span>` : ''}
+            </div>`).join('') : '<div class="summary-list empty">本場無 mock agent actions。</div>'}
+        </div>`;
+
+      return `<div class="side-block">${naHtml}${bkHtml}${qaHtml}${hdHtml}${cdHtml}${aaHtml}</div>`;
+    }
+
+    /* =====================================================================
+     * 11. View: Scene Dialogue (legacy quick overview)
+     * ===================================================================== */
+    function renderSceneDialogue() {
+      const p = projectById(router.current.params.projectId);
+      if (!p) return '<div class="placeholder-note">找不到 project。</div>';
+      const rows = (p.scenes || []).map(s => {
+        const r = readinessLabel(s.readiness ? s.readiness.badge : 'BLOCKED');
+        const t = taskStatusLabels[s.taskStatus] || ['muted', s.taskStatus];
+        const d = dialogueStatusLabels[s.dialogueStatus] || ['muted', s.dialogueStatus];
+        const q = qaStatusLabels[s.qa] || ['muted', s.qa];
+        return `
+          <tr>
+            <td><strong>${escapeHtml(s.title)}</strong><br><span style="color:var(--muted);font-size:11.5px">${escapeHtml(s.id)}</span></td>
+            <td><span class="badge ${r.tone}">${escapeHtml(r.label)}</span></td>
+            <td><span class="badge ${t[0]}">${escapeHtml(t[1])}</span></td>
+            <td><span class="badge ${d[0]}">${escapeHtml(d[1])}</span></td>
+            <td><span class="badge ${q[0]}">${escapeHtml(q[1])}</span></td>
+            <td>${s.humanDecisionsCount || 0}</td>
+            <td>${s.canonDeltaCount || 0}</td>
+            <td><a class="btn small" href="#/project/${escapeHtml(p.id)}/scene/${escapeHtml(s.id)}">詳情 →</a></td>
+          </tr>`;
+      }).join('');
+      const emptyRow = (p.scenes && p.scenes.length === 0)
+        ? `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px">本專案尚無場景索引。</td></tr>` : '';
+      return `
+        <div class="sd-back"><a href="#/project/${escapeHtml(p.id)}">← 回 ${escapeHtml(p.name)} Dashboard</a></div>
+        <div class="section">
+          <div class="section-header">
+            <h2>場景索引快速覽<span class="en-sub">Legacy quick overview</span></h2>
+            <span class="desc">Round 2 主入口已切換為 <a href="#/project/${escapeHtml(p.id)}/scene-queue">場景列隊 / Scene Queue</a>。本表保留供比較。</span>
+          </div>
+          <table class="scene-table">
+            <thead>
+              <tr>
+                <th style="min-width:200px">場景</th>
+                <th>${gloss('Scene Readiness')}</th>
+                <th>${gloss('Scene Task')}</th>
+                <th>台詞</th>
+                <th>QA</th>
+                <th>HD</th>
+                <th>Canon Δ</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>${rows}${emptyRow}</tbody>
+          </table>
+        </div>`;
+    }
+
+    /* =====================================================================
+     * 12. View: 公版 Harness / 模板管理
+     * ===================================================================== */
+    function renderTemplates() {
+      const ws = window.MOCK.workspace;
+      const sectionsHtml = ws.templateLayerEntry.sections.map(s => `
+        <div class="card clickable" data-action="template-section" data-sid="${escapeHtml(s.id)}">
+          <div class="card-title">${escapeHtml(s.label)}</div>
+          <div class="card-meta">點擊進入 placeholder（mock）</div>
+          <div class="placeholder-note">本輪 prototype 不展開正式編輯器。</div>
+        </div>`).join('');
+      return `
+        <div class="section">
+          <div class="section-header">
+            <h2>${escapeHtml(ws.templateLayerEntry.label)} ${gloss('公版 Harness')}<span class="en-sub">Workspace Tools</span></h2>
+            <span class="desc">這是 Workspace 工具層，不是某個專案的 Bible。</span>
+          </div>
+          <div class="templates-warning">
+            <strong>⚠ 高風險區域。</strong> ${escapeHtml(ws.templateLayerEntry.warning)}<br>
+            一般作品內的規則調整應優先放在 <em>project-specific protocol</em>，而不是這裡。
+          </div>
+          <div class="template-section-grid">${sectionsHtml}</div>
+        </div>`;
+    }
+
+    /* =====================================================================
+     * 13. Action handlers
+     * ===================================================================== */
+    document.addEventListener('click', (e) => {
+      // 路由級切換
+      const navEl = e.target.closest('[data-nav]');
+      if (navEl) {
+        e.preventDefault();
+        router.go(navEl.getAttribute('data-nav'));
+        return;
+      }
+      const actEl = e.target.closest('[data-action]');
+      if (!actEl) return;
+      const action = actEl.getAttribute('data-action');
+
+      // ── Project Dashboard / Workspace Home ──
+      if (action === 'create-project')   return mockAction('新增專案', '會開啟新專案表單（mock）。');
+      if (action === 'sort-projects')    return mockAction('排序專案', 'mock 切換排序方式。');
+      if (action === 'project-menu')     return mockAction('專案選單', '封存 / 隱藏 / 刪除（mock）。');
+      if (action === 'cross-decisions')  return mockAction('跨專案待裁決', 'mock 跨 project 摘要。本輪不定義 HD 儲存層。');
+      if (action === 'next-action') {
+        const target = actEl.getAttribute('data-target');
+        const pid = actEl.getAttribute('data-pid');
+        const sid = actEl.getAttribute('data-sid');
+        const hd = actEl.getAttribute('data-hd');
+        if (target === 'scene-detail' && sid) return router.go(`#/project/${pid}/scene/${sid}`);
+        if (target === 'scene-queue') return router.go(`#/project/${pid}/scene-queue`);
+        if (target === 'scene-dialogue') return router.go(`#/project/${pid}/scene-dialogue`);
+        return mockAction('Next Action', `會切換到對應模組：${target}（mock）。`);
+      }
+      if (action === 'blocker') {
+        const sid = actEl.getAttribute('data-sid');
+        const pid = actEl.getAttribute('data-pid');
+        if (sid) return router.go(`#/project/${pid}/scene/${sid}`);
+        return mockAction('Blocker 詳情', '會展開詳細與處理建議（mock）。');
+      }
+      if (action === 'hd-item')          return mockAction('Human Decision 詳情', 'project-level HD 詳情（mock）。AI 不能代決。');
+      if (action === 'canon-item')       return mockAction('Canon Delta 候選', 'project-level Canon Delta 詳情（mock）。');
+      if (action === 'reading-item')     return mockAction('Agent 必讀文件', '會打開該文件 preview（mock）。本輪不讀真 repo。');
+      if (action === 'module-preview') {
+        const mid = actEl.getAttribute('data-mid');
+        return mockAction(`模組 preview：${mid}`, '本輪僅 Project Dashboard / Scene Queue / Scene Detail / Templates 有畫面。');
+      }
+      if (action === 'future-module')    return mockAction('未來功能', '此模組標記為 Future / optional。');
+      if (action === 'template-section') return mockAction(`公版區塊：${actEl.getAttribute('data-sid')}`, '會打開該區塊編輯器（mock）。');
+
+      // ── Scene Detail：side action / next action / agent ──
+      if (action === 'scene-next-action') {
+        const target = actEl.getAttribute('data-target');
+        const pid = actEl.getAttribute('data-pid');
+        const sid = actEl.getAttribute('data-sid');
+        const hd = actEl.getAttribute('data-hd');
+        const qa = actEl.getAttribute('data-qa');
+        const aaid = actEl.getAttribute('data-aaid');
+        if (target === 'modal-hd' && hd) return openHdModal(pid, sid, hd);
+        if (target === 'modal-qa' && qa) return openQaModal(pid, sid, qa);
+        if (target === 'agent-action') return mockAction(`Agent action: ${aaid}`, '本動作為 mock。');
+        return mockAction('Scene Next Action', `target=${target}（mock）。`);
+      }
+      if (action === 'scene-blocker')    return mockAction('Blocker 詳情（scene）', '會展開該 blocker（mock）。');
+      if (action === 'open-qa') {
+        return openQaModal(actEl.getAttribute('data-pid'), actEl.getAttribute('data-sid'), actEl.getAttribute('data-qaid'));
+      }
+      if (action === 'open-hd') {
+        return openHdModal(actEl.getAttribute('data-pid'), actEl.getAttribute('data-sid'), actEl.getAttribute('data-hdid'));
+      }
+      if (action === 'open-cd') {
+        return openCdModal(actEl.getAttribute('data-pid'), actEl.getAttribute('data-sid'), actEl.getAttribute('data-cdid'));
+      }
+      if (action === 'agent-action') {
+        if (actEl.classList.contains('disabled')) return;
+        return mockAction(`Agent action: ${actEl.getAttribute('data-aaid')}`, '本動作為 mock，不啟動真 Agent、不寫真資料、不生成真台詞。');
+      }
+      if (action === 'ref-link') {
+        return mockAction(`Bible reference: ${actEl.getAttribute('data-ref')}`, '本輪不接真 Bible，僅顯示 mock 引用。');
+      }
+    });
+
+    /* =====================================================================
+     * 14. Modal openers (Round 2)
+     * ===================================================================== */
+    function openQaModal(pid, sid, qaid) {
+      const p = projectById(pid); const s = sceneInProject(p, sid);
+      const q = (s && s.qaFindings || []).find(x => x.id === qaid);
+      if (!q) return mockAction('找不到 QA finding', `qaid=${qaid}`);
+      const body = `
+        <div class="meta-row">
+          <span><span class="badge ${q.severity === 'high' ? 'danger' : 'warning'}">${escapeHtml(q.severity)}</span></span>
+          <span>影響：${escapeHtml(q.affected ? `${q.affected.beatId} / ${q.affected.lineId}` : '—')}</span>
+        </div>
+        <div class="summary-text">${escapeHtml(q.summary)}</div>
+        <div class="ref-info">
+          ⚠ 此處顯示的「affected」只是 UX 引用，不定義正式 line_id schema。<br>
+          所有 mock action 皆不寫真檔、不執行真 QA。
+        </div>`;
+      const actions = [
+        { id: 'view-line', label: 'view affected line' },
+        { id: 'create-hd', label: '轉為 Human Decision', primary: true },
+        { id: 'request-rewrite', label: 'request rewrite' },
+      ];
+      openModal({ tag: 'qa', tagLabel: 'QA 結果 / QA Finding', title: q.title, body, actions });
+    }
+    function openHdModal(pid, sid, hdid) {
+      const p = projectById(pid); const s = sceneInProject(p, sid);
+      const d = (s && s.humanDecisions || []).find(x => x.id === hdid);
+      if (!d) return mockAction('找不到 Human Decision', `hdid=${hdid}`);
+      const body = `
+        <div class="meta-row">
+          <span><span class="badge ${d.blocking ? 'danger' : 'warning'}">${d.blocking ? 'blocking' : 'non-blocking'}</span></span>
+          <span>area：${escapeHtml(d.area)}</span>
+          <span>priority：${escapeHtml(d.priority)}</span>
+        </div>
+        <div class="summary-text">${escapeHtml(d.preview)}</div>
+        <div class="ref-info">
+          ⚠ Human Decision 必須由人類拍板。AI / Agent 不能自行 resolve。<br>
+          以下動作為 mock，不寫真 decision lifecycle。
+        </div>`;
+      const actions = [
+        { id: 'accept', label: '接受（mock）', primary: true },
+        { id: 'reject', label: '拒絕（mock）' },
+        { id: 'defer', label: '延後（mock）' },
+      ];
+      openModal({ tag: 'hd', tagLabel: '人類裁決 / Human Decision', title: d.title, body, actions });
+    }
+    function openCdModal(pid, sid, cdid) {
+      const p = projectById(pid); const s = sceneInProject(p, sid);
+      const c = (s && s.canonDeltas || []).find(x => x.id === cdid);
+      if (!c) return mockAction('找不到 Canon Delta candidate', `cdid=${cdid}`);
+      const body = `
+        <div class="meta-row">
+          <span><span class="badge info">${escapeHtml(c.state)}</span></span>
+          <span>source：${escapeHtml(c.source)}</span>
+        </div>
+        <div class="summary-text">${escapeHtml(c.preview || '（無 preview）')}</div>
+        <div class="ref-info">
+          影響：${escapeHtml(c.impact || '—')}<br>
+          ⚠ Canon Delta 接受/拒絕需由人類最終決定，且回寫動作不在本輪 prototype 範圍。
+        </div>`;
+      const actions = [
+        { id: 'accept-write', label: '接受並回寫（mock）', primary: true },
+        { id: 'reject', label: '拒絕（mock）' },
+        { id: 'revise', label: '修改後再審（mock）' },
+      ];
+      openModal({ tag: 'cd', tagLabel: 'Canon Delta 候選', title: c.title, body, actions });
+    }
+
+    /* =====================================================================
+     * 15. Render dispatcher
+     * ===================================================================== */
+    function render() {
+      router.current = router.parse();
+      renderBreadcrumb(router.current);
+      const root = $('#app-root');
+      switch (router.current.name) {
+        case 'home':           root.innerHTML = renderHome(); break;
+        case 'project':        root.innerHTML = renderProjectDashboard(); break;
+        case 'scene-queue':    root.innerHTML = renderSceneQueue(); break;
+        case 'scene-detail':   root.innerHTML = renderSceneDetail(); break;
+        case 'scene-dialogue': root.innerHTML = renderSceneDialogue(); break;
+        case 'templates':      root.innerHTML = renderTemplates(); break;
+        default:               root.innerHTML = '<div class="placeholder-note">未知路由。<a href="#/home">回首頁</a></div>';
+      }
+      syncEmptyBtn();
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+    router.onChange(render);
+    render();
+  })();
+  </script>
+</body>
+</html>

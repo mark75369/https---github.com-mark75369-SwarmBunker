@@ -1,0 +1,110 @@
+# 狀態：DRAFT
+# 版本：v0.1
+# 最後更新：2026-05-19
+# 適用範圍：Phase A.0.1 Expected Entity Manifest 初值，對齊 SPEC §5.4
+# 優先級：最高
+
+manifest_version: v0.1
+source: _design/SPEC.md §5.4
+description: Expected Entity Manifest for /status comparison after each workflow phase.
+
+phases:
+  bootstrap:
+    source_skill: /init-project
+    expected_entities: []
+    expected_artifacts:
+      - .protocol_version
+      - initial_directories
+
+  create_world:
+    source_skill: /create-world
+    expected_entities:
+      - W-rules
+      - W-language
+      - V
+
+  create_character:
+    source_skill: /create-character
+    expected_entities:
+      - C-<name>
+    repeatable: true
+
+  create_relationship:
+    source_skill: /create-relationship
+    expected_entities:
+      - R-<a>-<b>
+    repeatable: true
+
+  create_outline:
+    source_skill: /create-outline
+    expected_entities:
+      - P
+
+  create_detailed_outline:
+    source_skill: /create-detailed-outline
+    expected_entities:
+      - CH-<n>
+      - S-<ch>-<n>
+    expected_source: scene_index
+
+  # ========================================================
+  # create_org — ORG-* entity（F8 Phase 3 / D-074）
+  # opt-in, repeatable；無 org 的專案不列必有實體（同 W-style opt-in posture）
+  # /status 行為：present 計入完成度 weight 1.0、不報 missing-expected
+  #   （D-071 Phase 2 /status ORG opt-in rule；DECISIONS_LOG §6.24）
+  # Cross-ref: DECISIONS_LOG §6.25 D-074 / 00_protocol/00_n_組織創建協議.md
+  # ========================================================
+  create_org:
+    source_skill: /create-org
+    expected_entities:
+      - ORG-<name>
+    repeatable: true
+
+  # ========================================================
+  # style_anchor — W-style entity（human-write phase）
+  # D-055 path A 拍板；human-write entity；無 auto-creation skill
+  # D-053 scope 不擴大 — /create-world 不延伸到 §1.1 §1.2 也不寫 01_d
+  # /status 行為：本 phase 無對應 phase_log entry 時不 surface W-style；
+  #   01_d 一旦建檔，frontmatter `entities: [W-style]` 由 /status Stage 4
+  #   列為「未追蹤（手動建）」並計算 completion
+  # W-style 缺漏 surfacing 改由：
+  #   - /scene-task v0.2 §3.2 抽取階段標 TODO（T6 落地）
+  #   - /dialogue-write v0.3 Stage 1 診斷「文風錨定狀態」WARN（T7 落地）
+  # 未來 /anchor-style skill（NEW_REQ_21 子項 3）若實作可作為此 phase 的 source_skill
+  # 邏輯位置：pre-generation guard data source；scene_task 的依賴
+  # Cross-ref:
+  #   - 00_protocol/00_b_反ai味檢查表.md §1.1 §1.2
+  #   - 07_scene_tasks/07_a_單場台詞任務包模板.md §18.4
+  #   - _design/DECISIONS_LOG.md §6.18 D-055
+  #   - _design/POST_LOCK_PENDING.md NEW_REQ_21
+  # ========================================================
+  style_anchor:
+    source_skill: null
+    expected_entities:
+      - W-style
+    expected_artifacts:
+      - 01_world/01_d_文風樣本與指紋.md
+
+  scene_task:
+    source_skill: /scene-task
+    expected_entities:
+      - S-<ch>-<n>
+    expected_artifacts:
+      - task_path
+    repeatable: true
+
+  dialogue_write:
+    source_skill: /dialogue-write
+    expected_entities:
+      - S-<ch>-<n>
+    expected_artifacts:
+      - dialogue_paths
+    artifact_count_rule: ">=3 dialogue files per scene"
+    repeatable: true
+
+  qa:
+    source_skill: /qa
+    expected_artifacts:
+      - qa_report_paths
+    artifact_count_rule: "8 QA reports per target dialogue"
+    repeatable: true

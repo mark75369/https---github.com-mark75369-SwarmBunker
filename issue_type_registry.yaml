@@ -1,0 +1,433 @@
+# 狀態：LOCKED
+# 版本：v0.2（F8 Phase 3 / D-074 amendment — 純 append core.00_n_organization（7 議題，對應 ORG card 7 段；§13 Q1 7 段 + Q2 issue-ful user 拍板）+ user_extensions/core_overrides 對應空條目；既有 5 skill key 一字不動）
+# 歷史紀錄：v0.1（master 第五輪整合 — D-047 落地 + CODEX (e) recheck E2 GO 後升 LOCKED）
+# 最後更新：2026-06-03
+# 適用範圍：Phase B /create-* skill 議題清單 registry Template，供 parser 與 Instance bootstrap 使用
+# 優先級：最高
+
+# Issue Type Registry - Template
+# LOCKED-tier reference: schema authority for /create-* skill 議題清單 customization (D-047).
+# Instance bootstrap copies this file to <instance_root>/issue_type_registry.yaml.
+#
+# 三層機制（D-047 對齊 entity_type_registry / qa_type_registry pattern）：
+#   - core: LOCKED 議題範本，REQUIRED 等級的 locked=true 議題禁止 user SKIP
+#   - user_extensions: user 可加自訂議題（如恐怖類加「驚悚密度曲線」）
+#   - core_overrides: user 可標 SKIP 既有議題（locked=false 才能標）
+#
+# Phase B /create-* skill 啟動時讀本 registry：
+#   議題清單 = core 議題（依編號）+ user_extensions 議題 - core_overrides SKIP 條目
+#   對 core[*].locked: true 議題禁止 SKIP（即使在 core_overrides 列出也忽略並報 WARN）
+#
+# 拆分規則（區段 10 末節）不在本 registry — 屬 agent 階段 4 執行機制，
+# 由各 /create-* protocol 內部 hardcode（UD §1.1.2 §10.11 / §1.2.2 §10.9 / §1.3.2 §10.7 /
+# §1.4.2 §10.7 / §1.5.2 §10.7 為 agent-side mechanic，不向 user 提問，不可客製）。
+#
+# Required level 對應 UD §1.0.4 跳階段路徑議題必要性總表：
+#   - REQUIRED: 跳階段路徑下必答；agent 拒絕跳階段 4 直到補齊
+#   - STRONGLY_PREFERRED: 允許寫檔但對應分拆檔段落標 TODO，phase_log 紀錄缺漏
+#   - OPTIONAL: 允許寫檔不標 TODO，分拆檔對應段落留空
+#
+# locked 行為：
+#   - true: user 不得透過 core_overrides 跳過（典型：REQUIRED 議題）
+#   - false: user 可透過 core_overrides 跳過
+
+version: 1
+schema_version: data_format_spec_v0.3
+# D-047 對齊：本 registry 的契約 schema 在 IC v2.1 + ARCH v1.3 + TASKS v1.4 落地；
+# data_format_spec 引用維持 v0.3（與 entity_type_registry / qa_type_registry 兄弟對齊 — 借用
+# DF v0.3 既有 registry 通用 meta-schema：version / schema_version / core / user_extensions /
+# core_overrides 結構）
+
+# 5 個 /create-* skill 的議題清單（依 UD §1.1.2 / §1.2.2 / §1.3.2 / §1.4.2 / §1.5.2 抽取）
+# 命名採 UD LOCKED 權威：00_e_world / 00_f_character / 00_g_outline / 00_h_detailed_outline / 00_l_relationship
+# （POST_LOCK_PENDING NEW_REQ_1 v0.1 提議方案的 yaml key 對應錯位由 D-047 supersede）
+
+core:
+
+  # ─────────────────────────────────────────────────────────────────────
+  # 00_e 世界觀（/create-world）— 10 user-facing 議題（UD §1.1.2）
+  # 拆分規則 §10.11 為 agent 階段 4 機制，不入 registry
+  # ─────────────────────────────────────────────────────────────────────
+  00_e_world:
+    - id: 1
+      name: 世界類型快速分類
+      required_level: REQUIRED
+      locked: true
+      question_summary: "你貼的內容偏向哪種世界類型？（架空 / 半架空 / 現實+元素 / 賽博+後啟示 / 恐怖怪奇 / 其他）同時給一句敘事氣質定位。"
+      protocol_ref: "UD §1.1.2 §10.1"
+
+    - id: 2
+      name: 世界規則最小集
+      required_level: REQUIRED
+      locked: true
+      question_summary: "四子題：a 時間觀 / b 能量觀 / c 神+魔法+科技的邊界 / d 社會結構基底。子題 a/b/d 必答，c 可跳。"
+      protocol_ref: "UD §1.1.2 §10.2"
+
+    - id: 3
+      name: 科技水平
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "三子題：a 技術等級基準 / b 誰擁有先進技術 / c 技術階級差。影響「現代違和詞」候選表生成。"
+      protocol_ref: "UD §1.1.2 §10.3"
+
+    - id: 4
+      name: 人民生活水準
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "三層 + 對立軸：a 基層 / b 中層 / c 上層 / d 是否有對立軸（外圍 vs 核心、地表 vs 地下等）。"
+      protocol_ref: "UD §1.1.2 §10.4"
+
+    - id: 5
+      name: 各項價值觀
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "五維度分兩輪：a 生死觀（必答） / b 勞動觀 / c 家族觀 / d 權威觀 / e 自由觀。"
+      protocol_ref: "UD §1.1.2 §10.5"
+
+    - id: 6
+      name: 宗教
+      required_level: OPTIONAL
+      locked: false
+      question_summary: "四子題：a 信仰體系 / b 宗教階級 / c 宗教與政治關係 / d 宗教是否進日常用語（神名變髒話等）。"
+      protocol_ref: "UD §1.1.2 §10.6"
+
+    - id: 7
+      name: 語言層級切片
+      required_level: REQUIRED
+      locked: true
+      question_summary: "三子題：a 官方語 / b 民間語 / c 階級語。W-language 主體；可附範例句子供語感分析。"
+      protocol_ref: "UD §1.1.2 §10.7"
+
+    - id: 8
+      name: 陣營與階級語言
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "兩子題：a 主要陣營識別語感（2-5 個陣營，各陣營用詞偏好/句長/特色詞/禁忌詞） / b 階級切換時音色變化。"
+      protocol_ref: "UD §1.1.2 §10.8"
+
+    - id: 9
+      name: 類型語氣定位
+      required_level: REQUIRED
+      locked: true
+      question_summary: "三子題：a 基調定位（黑色幽默/史詩/文藝/寫實/恐怖/諷刺/...） / b 髒話尺度（高/中/低） / c 死亡處理偏好（煽情/流程化/殘留化）。"
+      protocol_ref: "UD §1.1.2 §10.9"
+
+    - id: 10
+      name: 越界禁區（協議邊界提醒）
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "agent 複述邊界（本協議不建角色/主線/章節/關係/台詞）；user 確認 OK 或標註特殊片段保留至下一輪 skill。"
+      protocol_ref: "UD §1.1.2 §10.10"
+
+  # ─────────────────────────────────────────────────────────────────────
+  # 00_f 角色（/create-character）— 10 user-facing 議題（UD §1.2.2）
+  # 拆分規則 §10.9 為 agent 階段 4 機制，不入 registry
+  # id 9/10 為 Wave2 D-065/D-066 升格 append（個性拆解 §A / 既有劇本聲線基準 + source coverage §B/§C/§D）
+  # ─────────────────────────────────────────────────────────────────────
+  00_f_character:
+    - id: 1
+      name: 角色類型分類
+      required_level: REQUIRED
+      locked: true
+      question_summary: "三檔模板選擇：a 主角級（深度） / b 副主/反派/夥伴（中度） / c NPC 群類（輕量）。+ 一句功能定位。"
+      protocol_ref: "UD §1.2.2 §10.1"
+
+    - id: 2
+      name: 聲線測試題（5 個極端場景）
+      required_level: REQUIRED
+      locked: true
+      question_summary: "以該角色身分回答 5 題各 1-3 行台詞：失去重要物/被冒犯/不想做但必須做/誤判承認/獨自自語。"
+      protocol_ref: "UD §1.2.2 §10.2"
+
+    - id: 3
+      name: 去名測試前置
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "三選一：a user 給情境讓 agent 用各角色口吻寫一段 / b user 直接寫範例對比 / c 跳過。確保跨角色辨識度。"
+      protocol_ref: "UD §1.2.2 §10.3"
+
+    - id: 4
+      name: 與 W-rules / V / W-language 合規性檢查
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "三層 agent 主導檢查 + user 確認：a 用詞 vs V（禁用詞） / b 概念 vs W-rules / c 層級 vs W-language。"
+      protocol_ref: "UD §1.2.2 §10.4"
+
+    - id: 5
+      name: 髒話來源欄位
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "依 00_b §2 髒話尺度分流：低尺度問替代物；中/高尺度問三題（觸發點/頻率/強度）+ 3-8 個慣用詞清單。"
+      protocol_ref: "UD §1.2.2 §10.5"
+
+    - id: 6
+      name: 偏移檢查欄位
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "兩子題各 3-5 項清單：a 該角色不得偏移成什麼 / b 該角色應該保留什麼。09_b 判定基線。"
+      protocol_ref: "UD §1.2.2 §10.6"
+
+    - id: 7
+      name: 聲線污染檢查
+      required_level: OPTIONAL
+      locked: false
+      question_summary: "兩子題：a 該角色容易被誤寫成什麼聲音（系統/AI/旁白/其他角色） / b 被誤寫的常見徵兆。"
+      protocol_ref: "UD §1.2.2 §10.7"
+
+    - id: 8
+      name: 與類型氣質合規檢查
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "agent 主導對齊 00_b §1 §2：該角色是否會把作品拉向不符類型語氣的方向？死亡/告別場景是否違反作品死亡處理偏好？"
+      protocol_ref: "UD §1.2.2 §10.8"
+
+    - id: 9
+      name: 既有劇本台詞聲線基準萃取
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "萃取既有劇本台詞（讀 _source_materials/dialogue/ + 08_dialogue_outputs/，可讀不可寫；speaker alias 對照 + 8-12 句覆蓋 8 場景類型），寫入聲線卡 §B 既有劇本台詞聲線基準；無既有劇本 source 則 skip 並於 §B 留 TODO。"
+      protocol_ref: "UD §1.2.2 §10.13"
+
+    - id: 10
+      name: 既有劇本聲線使用規則
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "由 §B 既有劇本台詞聲線基準歸納可直接複用 / 需調整後使用 / 不可直接當台詞，寫入聲線卡 §C 既有劇本聲線使用規則；無既有劇本 source 則 skip 並於 §C 留 TODO。供 /dialogue-write 對齊文筆。"
+      protocol_ref: "UD §1.2.2 §10.14"
+
+  # ─────────────────────────────────────────────────────────────────────
+  # 00_g 大綱（/create-outline）— 6 user-facing 議題（UD §1.3.2）
+  # 拆分規則 §10.7 為 agent 階段 4 機制，不入 registry
+  # ─────────────────────────────────────────────────────────────────────
+  00_g_outline:
+    - id: 1
+      name: 必先三件事
+      required_level: REQUIRED
+      locked: true
+      question_summary: "三子題各一句話：a 主線一句話（含主角+想要+阻力的戲劇性版本） / b 核心衝突（想做的事 vs 阻止他做的力量） / c 主題（疑問或主張）。任一缺則拒絕進階段 3。"
+      protocol_ref: "UD §1.3.2 §10.1"
+
+    - id: 2
+      name: 想要 vs 需要測試（戲劇經典原則）
+      required_level: REQUIRED
+      locked: true
+      question_summary: "三子題：a 主角「想要」（表層目標） / b 主角「需要」（內在成長） / c 兩者如何衝突（高潮處選擇）。"
+      protocol_ref: "UD §1.3.2 §10.2"
+
+    - id: 3
+      name: 結構選擇
+      required_level: REQUIRED
+      locked: true
+      question_summary: "兩子題：a 幕數結構（三幕/四幕/五幕/多幕/單章/片段集合/自訂） / b 章節數估計（範圍）。決定 05_b 章節骨架。"
+      protocol_ref: "UD §1.3.2 §10.3"
+
+    - id: 4
+      name: 與世界規則、角色合規性檢查
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "兩層 agent 主導檢查 + user 確認：a 主線 vs W-rules / b 主角弧線 vs C-* 聲線（聲線中「永遠不會做的事」是否被主線強迫做）。"
+      protocol_ref: "UD §1.3.2 §10.4"
+
+    - id: 5
+      name: 規模定位
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "賭注規模分類（可組合排序）：a 對世界要命（史詩級） / b 對角色要命，對世界不重要（個體級） / c 對特定群體要命（中間級） / d 混合。直接決定 00_b §3。"
+      protocol_ref: "UD §1.3.2 §10.5"
+
+    - id: 6
+      name: 類型偏移風險清單
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "5-10 條「本作不允許走的方向」（避免陰謀論化/單一反派化/救世主敘事/和解結尾/煽情死亡等）。寫入 00_b §4。"
+      protocol_ref: "UD §1.3.2 §10.6"
+
+  # ─────────────────────────────────────────────────────────────────────
+  # 00_h 細綱（/create-detailed-outline）— 6 user-facing 議題（UD §1.4.2）
+  # 拆分規則 §10.7 為 agent 階段 4 機制，不入 registry
+  # ─────────────────────────────────────────────────────────────────────
+  00_h_detailed_outline:
+    - id: 1
+      name: 章節節奏分布
+      required_level: REQUIRED
+      locked: true
+      question_summary: "兩子題：a 逐章情緒等級（每章打 high/mid/low） / b 全局曲線判斷（漸進高潮/先低後爆/波浪起伏/全篇高張）。子題 a 必答。"
+      protocol_ref: "UD §1.4.2 §10.1"
+
+    - id: 2
+      name: 角色弧線 × 章節矩陣對齊
+      required_level: REQUIRED
+      locked: true
+      question_summary: "兩子題：a 主角弧線階段切點（階段 1 起於 CH-N 結束於 CH-M） / b 其他主要角色弧線切點。主角必答；其他可標 TODO。"
+      protocol_ref: "UD §1.4.2 §10.2"
+
+    - id: 3
+      name: 資訊揭露時間軸
+      required_level: REQUIRED
+      locked: true
+      question_summary: "三子題：a 核心資訊清單 5-15 條 / b 每條資訊的揭露章節（解禁 CH-N 或永遠不直接揭露） / c 揭露方式（A 對 B 說/環境揭示/玩家自看/結局頓悟）。"
+      protocol_ref: "UD §1.4.2 §10.3"
+
+    - id: 4
+      name: 伏筆與回收佈點
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "兩子題：a 伏筆清單 3-10 條（埋於 CH-N、回收於 CH-M 或不回收） / b 誤導/公平性檢查（誤導點與揭穿章節）。"
+      protocol_ref: "UD §1.4.2 §10.4"
+
+    - id: 5
+      name: 高風險場景識別
+      required_level: REQUIRED
+      locked: true
+      question_summary: "列出全作高風險場景 + 類型（告別/和解/背叛/犧牲/告白/主角覺醒/反派理念/世界觀揭露/關係破裂/重大資訊揭露/結局前對話/其他）。06_a 索引 risk_type 來源。"
+      protocol_ref: "UD §1.4.2 §10.5"
+
+    - id: 6
+      name: 高風險場景的「作品專屬正確處理方式」
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "對 §10.5 出現的每種類型選一處理方式：死亡（殘留化/流程化/諷刺化/臨死遺言/自訂） / 真相揭露（拼湊/一次交代/環境/自訂） / 關係推進 / 系統 AI / 覺醒 / 反派理念。寫入 00_b §6。"
+      protocol_ref: "UD §1.4.2 §10.6"
+
+  # ─────────────────────────────────────────────────────────────────────
+  # 00_l 關係（/create-relationship）— 6 user-facing 議題（UD §1.5.2）
+  # 拆分規則 §10.7 為 agent 階段 4 機制，不入 registry
+  # ─────────────────────────────────────────────────────────────────────
+  00_l_relationship:
+    - id: 1
+      name: 關係類型分類
+      required_level: REQUIRED
+      locked: true
+      question_summary: "兩子題：a 基底類型可組合（對立/合作/血緣/戀愛/師徒/同袍/敵友/上下級/仇恨/救命/其他） / b 表面 vs 真實是否一致（誰在演）。"
+      protocol_ref: "UD §1.5.2 §10.1"
+
+    - id: 2
+      name: 權力差
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "兩子題：a 權力四維評估（資訊/武力/社會地位/情緒主動權 各自誰多） / b 權力會在哪些情境翻轉。"
+      protocol_ref: "UD §1.5.2 §10.2"
+
+    - id: 3
+      name: 稱呼系統
+      required_level: REQUIRED
+      locked: true
+      question_summary: "三子題：a 預設稱呼（C-a 對 C-b、C-b 對 C-a） / b 特定條件切換（受傷/生氣/獨處/公開/弧線切點各情境） / c 是否有絕對禁止的稱呼。下游 09_b 必讀。"
+      protocol_ref: "UD §1.5.2 §10.3"
+
+    - id: 4
+      name: 情緒債
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "三子題：a 誰欠誰什麼（救命/背叛/未還承諾/愧疚/未說感謝） / b 現在狀態（已還/未還/被忘/被否認/加深中） / c 主線中怎樣推進。"
+      protocol_ref: "UD §1.5.2 §10.4"
+
+    - id: 5
+      name: 不能說出口的事
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "3-10 條條目各四欄：是誰的禁忌 / 為什麼不說 / 如果說了會怎樣 / 在哪個情境會被破戒。下游 09_d 與任務包來源。"
+      protocol_ref: "UD §1.5.2 §10.5"
+
+    - id: 6
+      name: 關係時間線錨點
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "前提 05_b 已建；兩子題：a 章節錨點（CH-N/狀態變化/緩變或突變） / b 絕對不變的部分。05_b 未建則跳並標 TODO。"
+      protocol_ref: "UD §1.5.2 §10.6"
+
+  # ─────────────────────────────────────────────────────────────────────
+  # 00_n 組織（/create-org）— 7 user-facing 議題（00_n §4.1；F8 Phase 3 / D-074 amendment）
+  # 對應 ORG card 7 段固定骨架；issue-ful（user 拍板 §13 Q2 採加 issue list）
+  # 完整提問腳本權威 = 00_n §4.1（非 UD；ORG 不在 UD）；拆分為 agent 階段 4 機制不入 registry
+  # ─────────────────────────────────────────────────────────────────────
+  00_n_organization:
+    - id: 1
+      name: 組織本質
+      required_level: REQUIRED
+      locked: true
+      question_summary: "這是什麼組織 / 制度 / 體系？一句話定位它在世界中的角色 + 一段補充。ORG card §1。"
+      protocol_ref: "00_n §4.1 §1"
+
+    - id: 2
+      name: 對抗性質與來源
+      required_level: REQUIRED
+      locked: true
+      question_summary: "它為何是對抗源？對抗形式（制度壓迫 / 殘留債務 / 體系慣性 / 其他）+ 來源說明。ORG card §2。"
+      protocol_ref: "00_n §4.1 §2"
+
+    - id: 3
+      name: 組織結構/層級
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "組織內部結構 / 層級（高層 / 執行層 / 殘留網絡 / 派系等）；無明確層級可標 TODO。ORG card §3（F8 Phase 3 §13 Q1 user 拍板新增）。"
+      protocol_ref: "00_n §4.1 §3"
+
+    - id: 4
+      name: 殘留型態
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "以什麼形式存在 / 被引用（文件 / 條文 / 設施 / 流程）？是否已破產 / 解散？ORG card §4。"
+      protocol_ref: "00_n §4.1 §4"
+
+    - id: 5
+      name: 影響範圍
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "影響哪些角色 / 地點 / 主線段？受影響實體清單，供下游 depends_on / cross-ref。ORG card §5。"
+      protocol_ref: "00_n §4.1 §5"
+
+    - id: 6
+      name: 下游 hooks
+      required_level: STRONGLY_PREFERRED
+      locked: false
+      question_summary: "交給 /create-outline · /scene-task · /create-relationship 的鉤子（不含台詞）。ORG card §6。"
+      protocol_ref: "00_n §4.1 §6"
+
+    - id: 7
+      name: 文件語體 hint
+      required_level: OPTIONAL
+      locked: false
+      question_summary: "殘留文件「讀起來」的語體線索（官腔 / 條文體 / 公告體…）；僅 hint，正式文件語體卡待方向 B。ORG card §7。"
+      protocol_ref: "00_n §4.1 §7"
+
+# ─────────────────────────────────────────────────────────────────────
+# user_extensions: user 在 Instance root 加自訂議題（範例註解）
+# ─────────────────────────────────────────────────────────────────────
+# 範例：恐怖類專案加「驚悚密度曲線」議題到 00_h_detailed_outline
+#   00_h_detailed_outline:
+#     - id: 100                            # user 自訂 ID 從 100 起跳避免與 core 衝突
+#       name: 驚悚密度曲線
+#       required_level: STRONGLY_PREFERRED
+#       locked: false                      # user 加的議題永遠 locked=false
+#       question_summary: "全作各章節驚悚密度標籤（淡/中/濃/極濃）+ 密度曲線希望樣式"
+#       protocol_ref: "user-defined"
+
+user_extensions:
+  00_e_world: []
+  00_f_character: []
+  00_g_outline: []
+  00_h_detailed_outline: []
+  00_l_relationship: []
+  00_n_organization: []
+
+# ─────────────────────────────────────────────────────────────────────
+# core_overrides: user 標 SKIP 既有 core 議題（只能標 locked=false 議題）
+# ─────────────────────────────────────────────────────────────────────
+# 範例：純愛遊戲跳過議題 5（價值觀）、議題 6（宗教）
+#   00_e_world:
+#     - skip_id: 5
+#       reason: "純愛主題，價值觀僅在後期擴充時考量"
+#     - skip_id: 6
+#       reason: "無宗教設定"
+#
+# 若 user 嘗試 skip locked=true 議題（如 00_e_world id=1 世界類型快速分類），
+# parser 應忽略該 skip 條目並聚合 WARN 到 RepoIndex.issues。
+
+core_overrides:
+  00_e_world: []
+  00_f_character: []
+  00_g_outline: []
+  00_h_detailed_outline: []
+  00_l_relationship: []
+  00_n_organization: []

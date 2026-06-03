@@ -1,0 +1,1184 @@
+template_source: github.com/mark75369/Writing-tools
+template_commit: af57f96781ab1304a9ee5a46d2540fd8dfb8c1f0
+bootstrap_date: 2026-06-03
+project_name: 蟲潮孤堡
+customizations: []
+bootstrapped_registries:
+- source: _design/registries/entity_type_registry.template.yaml
+  target: entity_type_registry.yaml
+  version: data_format_spec_v0.3
+  note: 既存（Template dogfooding 帶來，內容與 template 等價，僅差一段註解）；bootstrap 保留不覆蓋，已過 check_entity_type_consistency
+- source: _design/registries/qa_type_registry.template.yaml
+  target: qa_type_registry.yaml
+  version: v0.1
+- source: _design/registries/issue_type_registry.template.yaml
+  target: issue_type_registry.yaml
+  version: v0.2
+bootstrapped_directories:
+- path: 10_art_assets/portrait/
+- path: 10_art_assets/bg/
+- path: 10_art_assets/cg/
+- path: 10_art_assets/sfx/
+- path: 10_art_assets/bgm/
+- path: 10_art_assets/voice/
+- path: 10_art_assets/ui/
+bootstrapped_files:
+- path: .gitignore
+  content_summary: 至少含 export/ 一行
+phase_log:
+- phase: bootstrap
+  date: 2026-06-03
+  skill: /init-project
+  status: completed
+  created_entities: []
+  scene_ids: []
+  customizations: []
+- phase: create-world
+  date: 2026-06-03
+  skill: /create-world
+  status: completed
+  created_entities:
+  - W-rules
+  - W-language
+  - V
+  issue_completions:
+    1: 答完
+    2: 答完
+    3: 答完
+    4: 答完
+    5: 答完
+    6: 跳過
+    7: 答完
+    8: 答完
+    9: 答完
+    10: 答完
+  notes: 議題 6 宗教跳過並於 01_a §12 / 02_b §11 標 TODO；01_b/02_b 由 DRAFT 升 REVIEW；01_a/01_c/02_a/02_c
+    既有 REVIEW 維持。
+- phase: create-org
+  date: 2026-06-03
+  skill: /create-org
+  status: completed
+  created_entities:
+  - ORG-無名加工公司
+  entities_touched:
+  - ORG-無名加工公司
+  issue_completions:
+    '1': answered
+    '2': answered
+    '3': answered
+    '4': answered
+    '5': answered
+    '6': answered
+    '7': answered
+  notes: 源素材忠實萃取自世界觀草案 §6 無名加工公司與蟲災事故責任鏈（§6.1–§6.7）+ §3 資訊黑洞段 + §4.2/§5.4 商業合理性；劇本V3
+    確認撤離/廢棄/廢棄實驗室殘留痕跡。depends_on=[W-rules,V]（C-* 角色尚未建為實體，不寫入避免懸空引用，§5 改以描述+TODO(6)
+    登錄）。自主跑：Stage 3 收斂 gate 視為已授權通過。核心不變量遵守：未建聲線卡、未寫 03_characters/、ORG 不當說話者、僅寫 11_organizations/。
+- phase: create-character
+  date: 2026-06-03
+  skill: /create-character
+  status: completed
+  created_entities:
+  - C-瑟琳
+  entities_touched:
+  - C-瑟琳
+  issue_completions:
+    '1': answered
+    '2': answered
+    '3': answered
+    '4': answered
+    '5': answered
+    '6': answered
+    '7': answered
+    '8': answered
+    '9': answered
+    '10': answered
+  notes: C-瑟琳 聲線卡寫入 03_characters/main/瑟琳_聲線卡.md，DRAFT。8 技術段 + §A(10 子段)/§B/§C/§D
+    全落地。D-050 子裁決 2：本 skill 僅寫 03_characters/；00_b §5 偏移基線 / 09_a 高風險句型 / 04_a/05_c
+    row 標題不在本 skill 寫權內，登錄為下游 hook（見聲線卡 §D 與 frictions）。
+- phase: create-character
+  date: 2026-06-03
+  skill: /create-character
+  status: completed
+  created_entities:
+  - C-諾拉
+  entities_touched:
+  - C-諾拉
+  issue_completions:
+    '1': answered
+    '2': answered
+    '3': skipped
+    '4': answered
+    '5': answered
+    '6': answered
+    '7': answered
+    '8': answered
+    '9': answered
+    '10': answered
+  notes: C-諾拉 聲線卡寫入 03_characters/main/諾拉_聲線卡.md，DRAFT。源：人設討論版 v0.1（全檔）+ 完整劇本V3.md（純
+    .md 無 docx 解析問題）。8 技術段 + §A 個性拆解(10 子段)/§B/§C/§D 全落地（順序 §A→§B→§C→§D）。D-050 子裁決
+    2：本 skill 僅寫 03_characters/；00_b §5 偏移基線 / 09_a 高風險句型不在本 skill 寫權內，登錄為 TODO/下游
+    hook（見聲線卡 §D 與 frictions），未越界。創意決策忠實萃取 source，未硬編造處標 INFERENCE/TODO。自主跑：Stage
+    3 收斂 gate 視為已授權通過。
+- phase: create-character
+  date: 2026-06-03
+  skill: /create-character
+  status: completed
+  created_entities:
+  - C-清道夫
+  entities_touched:
+  - C-清道夫
+  issue_completions:
+    '1': answered
+    '2': answered
+    '3': answered
+    '4': answered
+    '5': answered
+    '6': answered
+    '7': answered
+    '8': answered
+    '9': answered
+    '10': answered
+  notes: C-清道夫 聲線卡寫入 03_characters/main/清道夫_聲線卡.md，DRAFT。源：男主角_清道夫_人設v_0_1.md（全檔）+
+    完整劇本V3.md（speaker alias MainCharacter=清道夫，純 .md 無 docx 解析問題）。8 技術段 + §A 個性拆解(10
+    子段)/§B/§C/§D 全落地（順序 §A→§B→§C→§D）。D-050 子裁決 2：本 skill 僅寫 03_characters/；00_b §5
+    偏移基線 / 09_a 高風險句型 / 02_b 專屬髒話 / 04_a/05_c row 不在本 skill 寫權內，登錄為 §D 下游 hook + 卡內註記，未越界。創意決策忠實萃取
+    source，未硬編造處標 INFERENCE/TODO。自主跑：Stage 3 收斂 gate 視為已授權通過。
+- phase: create-character
+  date: 2026-06-03
+  skill: /create-character
+  status: completed
+  created_entities:
+  - C-莉娜
+  entities_touched:
+  - C-莉娜
+  issue_completions:
+    '1': answered
+    '2': answered
+    '3': answered
+    '4': answered
+    '5': answered
+    '6': answered
+    '7': answered
+    '8': answered
+    '9': answered
+    '10': answered
+  notes: C-莉娜聲線卡寫入03_characters/main/莉娜_聲線卡.md,DRAFT。8技術段+A(10子段)/B/C/D全落地,順序A->B->C->D。speaker
+    alias MainGirlB=莉娜(劇本Lv04 BeforeBattle_021/AfterBattle_020自報名確認)。D-050子裁決2：本skill僅寫03_characters/;00_b5偏移基線/09_a高風險句型/02_b專屬詞/04_a/05_c
+    row標題不在本skill寫權內,登錄為下游hook(見聲線卡D與frictions)。創意忠實萃取source(人設討論版v0.1全檔+完整劇本V3.md),未硬編造處標INFERENCE/TODO。自主跑Stage3收斂gate視為已授權。
+- phase: create-relationship
+  date: 2026-06-03
+  skill: /create-relationship
+  status: completed
+  created_entities:
+  - R-清道夫-瑟琳
+  entities_touched:
+  - R-清道夫-瑟琳
+  - C-清道夫
+  - C-瑟琳
+  issue_completions:
+    '1': answered
+    '2': answered
+    '3': answered
+    '4': answered
+    '5': answered
+    '6': skipped
+  notes: C↔C 標準流程（無 ORG 端）。R-清道夫-瑟琳 a=清道夫 b=瑟琳（裸名字典序 清U+6E05<瑟U+745F，python sorted
+    驗證）。寫檔：04_a 新增 R-清道夫-瑟琳 完整關係段（§1關係類型/§2權力差/§3稱呼/§4情緒債/§5不能說出口的事/§6不變的部分）+ 更新檔頭
+    frontmatter（entities/depends_on/weight）升 v0.2；兩端聲線卡各加 §關係 §R-清道夫-瑟琳 narrow section-level
+    merge（其餘段不動），升 v0.2。議題6跳過→**未寫 04_b**（依 SKILL.md Stage4 step2 + 00_l §10.6 前置：05_b
+    未建則跳 04_b），04_a §6 與兩卡關係段標 TODO(6) 待 /create-detailed-outline 建 CH-* 後 /iterate-relationship
+    補 04_b §章節錨點/§情緒債/§破戒錨點。D-050：本 skill 僅寫 04_relationships/ + 03_characters/ 聲線卡關係段；02_c
+    關係禁語登錄為下游 hook 未寫（SKILL.md D-050 寫檔目錄表將 02_vocabulary 列不寫，以 SKILL 為權威 supersede
+    00_l §10.7 02_c 目標；見 frictions）。05_c 註記同因 D-050 未寫（05_plot 列不寫）。創意忠實萃取兩端聲線卡 §D
+    hooks + §B/§A，未硬編造處標 INFERENCE/TODO。自主跑：Stage 3 收斂 gate 視為已授權通過。
+- phase: create-outline
+  date: 2026-06-03
+  skill: /create-outline
+  status: completed
+  created_entities:
+  - P
+  entities_touched:
+  - P
+  - C-清道夫
+  - C-瑟琳
+  - C-莉娜
+  - C-諾拉
+  prereq_waived: false
+  issue_completions:
+    '1': answered
+    '2': answered
+    '3': answered
+    '4': answered
+    '5': answered
+    '6': answered
+  notes: 主線 P 寫入 05_plot/05_a_主線大綱模板.md，DRAFT（REVIEW由後續verify/人類審代行）。依 00_g v0.2 五階段
+    + UD §1.3.2 §10 提問腳本 + issue_type_registry 00_g_outline(6 core議題,無user_extensions/overrides)動態構建。寫檔依
+    /create-outline SKILL.md D-050：05_a 主線骨架(§1必先三件事/§2想要vs需要/§3結構/§4合規含D-068個人線check/§5規模/§6類型偏移)
+    + issue4觸發05_c高層弧線alignment note(§0) + issue4觸發05_d高層資訊控制note(§0,蟲災真相前期隱瞞CH-08解禁)
+    + issue5觸發05_e高層伏筆規模placeholder(§0)。均P-scoped、不含章節/場景row、不創CH-*、不寫05_b。D-050邊界外缺寫登錄：00_b
+    §3規模定位/§4類型偏移(00_g v0.2與UD原文要求覆寫但SKILL D-050禁寫00_protocol/,以SKILL為權威supersede;見frictions)。創意忠實萃取世界觀01_a+四聲線卡功能定位/弧線段+ORG-無名加工公司+劇本V3
+    Prologue~Lv09,未硬編造處標INFERENCE/TODO。前置:W-rules/V/W-language≥REVIEW(✓)+四主角REVIEW(✓)。自主跑:Stage
+    3收斂gate視為已授權通過。
+- phase: create-relationship
+  date: 2026-06-03
+  skill: /create-relationship
+  status: completed
+  created_entities:
+  - R-清道夫-莉娜
+  entities_touched:
+  - R-清道夫-莉娜
+  - C-清道夫
+  - C-莉娜
+  issue_completions:
+    '1': answered
+    '2': answered
+    '3': answered
+    '4': answered
+    '5': answered
+    '6': skipped
+  notes: C↔C 標準流程（無 ORG 端，兩端皆 REVIEW 角色）。R-清道夫-莉娜 a=清道夫 b=莉娜（裸名字典序 清U+6E05<莉U+8389，python
+    sorted 驗證）。寫檔：04_a 新增 R-清道夫-莉娜 完整關係段（§1關係類型/§2權力差/§3稱呼/§4情緒債/§5不能說出口的事/§6不變的部分）+
+    更新檔頭 frontmatter（entities+R-清道夫-莉娜/C-莉娜, depends_on+C-莉娜, weight）升 v0.3；清道夫聲線卡
+    §關係 新增 §R-清道夫-莉娜 子段（既有 §關係 section append，narrow merge，其餘段不動）升 v0.3；莉娜聲線卡 創建 §關係
+    section + §R-清道夫-莉娜 子段（本卡首個關係段，section 創建，其餘段不動）升 v0.2。議題6跳過→**未寫 04_b**（依 SKILL.md
+    Stage4 step2 + 00_l §10.6 前置：05_b 未建則跳 04_b），04_a §6/§4c 與兩卡關係段標 TODO(6) 待 /create-detailed-outline
+    建 CH-* 後 /iterate-relationship 補 04_b §章節錨點/§情緒債/§破戒錨點。D-050：本 skill 僅寫 04_relationships/
+    + 03_characters/ 聲線卡關係段；02_c 關係禁語登錄為下游 hook 未寫（SKILL.md D-050 寫檔目錄表將 02_vocabulary
+    列不寫，以 SKILL 為權威 supersede 00_l §10.7 02_c 目標；見 frictions）。05_c 註記同因 D-050 未寫（05_plot
+    列不寫）。創意忠實萃取兩端聲線卡 §D-2 hooks（清道夫黑翼同事→火力搭檔/互罵建默契 + 莉娜五階段互嗆→同類社畜→火力搭檔→託付後背→撤離）+ §B/§A，未硬編造處標
+    INFERENCE/TODO。自主跑：Stage 3 收斂 gate 視為已授權通過。
+- phase: create-relationship
+  date: 2026-06-03
+  skill: /create-relationship
+  status: completed
+  created_entities:
+  - R-清道夫-諾拉
+  entities_touched:
+  - R-清道夫-諾拉
+  - C-清道夫
+  - C-諾拉
+  issue_completions:
+    '1': answered
+    '2': answered
+    '3': answered
+    '4': answered
+    '5': answered
+    '6': skipped
+  notes: C↔C 標準流程（兩端皆 REVIEW 角色，無 ORG 端）。R-清道夫-諾拉 a=清道夫 b=諾拉（裸名字典序 清U+6E05<諾U+8AFE，python
+    sorted 驗證）。寫檔：04_a 新增 R-清道夫-諾拉 完整關係段（§1關係類型/§2權力差/§3稱呼/§4情緒債/§5不能說出口的事/§6不變的部分）+
+    更新檔頭 frontmatter（entities+R-清道夫-諾拉/C-諾拉, depends_on+C-諾拉, weight）升 v0.4；清道夫聲線卡
+    §關係 新增 §R-清道夫-諾拉 子段（既有 §關係 section append，narrow merge，其餘段不動）升 v0.4；諾拉聲線卡 創建 §關係
+    section + §R-清道夫-諾拉 子段（本卡首個關係段，section 創建，其餘段不動）升 v0.2。議題6跳過→**未寫 04_b**（依 SKILL.md
+    Stage4 step2 + 00_l §10.6 前置：05_b 未建則跳 04_b），04_a §6/§4c 與兩卡關係段標 TODO(6) 待 /create-detailed-outline
+    建 CH-* 後 /iterate-relationship 補 04_b §章節錨點/§情緒債/§破戒錨點。D-050：本 skill 僅寫 04_relationships/
+    + 03_characters/ 聲線卡關係段；02_c 關係禁語登錄為下游 hook 未寫（SKILL.md D-050 寫檔目錄表將 02_vocabulary
+    列不寫，以 SKILL 為權威 supersede 00_l §10.7 02_c 目標；見 frictions）。05_c 註記同因 D-050 未寫（05_plot
+    列不寫）。創意忠實萃取兩端聲線卡 §D-2 hooks（清道夫第3 hook 高價值人力→不可替換的人類 + 諾拉第1 hook 五階段弧線/權力差明文/§B-8/9
+    既有劇本台詞）+ §A，未硬編造處標 INFERENCE/TODO。自主跑：Stage 3 收斂 gate 視為已授權通過。
+- phase: create-relationship
+  date: 2026-06-03
+  skill: /create-relationship
+  status: completed
+  created_entities:
+  - R-無名加工公司-諾拉
+  entities_touched:
+  - R-無名加工公司-諾拉
+  - ORG-無名加工公司
+  - C-諾拉
+  issue_completions:
+    '1': answered
+    '2': answered
+    '3': answered
+    '4': answered
+    '5': answered
+    '6': skipped
+  notes: '**首個 C↔ORG endpoint 關係（D-074 / 00_l v0.3 §2.2）**：a=ORG-無名加工公司 b=C-諾拉（裸名字典序
+    無U+7121<諾U+8AFE，python sorted 驗證）。至多一端 ORG 成立、兩端皆 REVIEW（ORG card REVIEW + 諾拉卡
+    REVIEW）。**ORG 端無聲線卡 → 只寫 C 端(諾拉)聲線卡關係段，ORG 端跳過聲線卡寫入**（依 SKILL.md Stage4 step3
+    skip if a is ORG-*）。6 議題以角色對組織視角理解：組織不回話、未虛構 ORG 台詞/聲線；稱呼=諾拉單向指稱、不能說出口=諾拉單向資訊管制。寫檔：04_a
+    新增 R-無名加工公司-諾拉 完整關係段（§1關係類型/§2權力差/§3稱呼/§4情緒債/§5不能說出口的事/§6不變的部分）+ 更新檔頭 frontmatter（entities+R-無名加工公司-諾拉/ORG-無名加工公司,
+    depends_on+ORG-無名加工公司, weight）升 v0.5；諾拉聲線卡 §關係 append §R-無名加工公司-諾拉 子段（既有 §關係 section
+    append，narrow merge，其餘段不動）升 v0.3。議題6跳過→**未寫 04_b**（05_b 未建：依 SKILL.md Stage4 step2
+    + 00_l §10.6 前置），04_a §6/§4c 與諾拉卡關係段標 TODO(6) 待 /create-detailed-outline 建 CH-*
+    後 /iterate-relationship 補 04_b §章節錨點/§破戒錨點(資訊解禁點)+05_d 對齊。D-050：本 skill 僅寫 04_relationships/
+    + 03_characters/ 聲線卡關係段；02_c 關係禁語 + 05_d 資訊揭露節點登錄為下游 hook 未寫（SKILL.md D-050 寫檔目錄表將
+    02_vocabulary/ 與 05_plot/ 列不寫，以 SKILL 為權威 supersede 00_l §10.7/§5 目標；見 frictions）。創意忠實萃取
+    ORG card §1-§6（事故源頭/責任真空/資料殘片8類/資訊黑洞/§6 R-諾拉-ORG hook）+ 諾拉聲線卡 §D-3 hooks（解碼/拼接無名加工公司殘留/判斷蟲災非自然/判斷刪除封存痕跡）+
+    §A/§B 聲線，未硬編造處標 INFERENCE/TODO。自主跑：Stage 3 收斂 gate 視為已授權通過。'
+- phase: create-detailed-outline
+  date: 2026-06-03
+  skill: /create-detailed-outline
+  status: completed
+  created_entities:
+  - CH-01
+  - CH-02
+  - CH-03
+  - CH-04
+  - CH-05
+  - CH-06
+  - CH-07
+  - CH-08
+  - CH-09
+  - S-01-01
+  - S-02-01
+  - S-03-01
+  - S-04-01
+  - S-04-02
+  - S-05-01
+  - S-06-01
+  - S-06-02
+  - S-07-01
+  - S-07-02
+  - S-08-01
+  - S-08-02
+  - S-09-01
+  entities_touched:
+  - P
+  - CH-01
+  - CH-02
+  - CH-03
+  - CH-04
+  - CH-05
+  - CH-06
+  - CH-07
+  - CH-08
+  - CH-09
+  - S-01-01
+  - S-02-01
+  - S-03-01
+  - S-04-01
+  - S-04-02
+  - S-05-01
+  - S-06-01
+  - S-06-02
+  - S-07-01
+  - S-07-02
+  - S-08-01
+  - S-08-02
+  - S-09-01
+  prereq_waived: false
+  issue_completions:
+    '1': answered
+    '2': answered
+    '3': answered
+    '4': answered
+    '5': answered
+    '6': answered
+  notes: 依 00_h v0.2 五階段 + issue_type_registry 00_h_detailed_outline(6 core 議題,無 user_extensions/overrides)
+    動態構建。D-050 子裁決 2：本 skill 僅寫 05_b + 06_a 兩檔(supersede 00_h §10.7 廣目標 05_c/05_d/05_e/00_b
+    §6)。05_b 新增 §24 作品專屬章節結構(CH-01..CH-09 索引表/全局節奏曲線/弧線矩陣摘要/資訊揭露伏筆摘要/高風險處理基線/缺漏標記)+
+    frontmatter entities/depends_on/weight；06_a 新增 §22 作品專屬場景索引(13 場 S-row 索引表 + 各場目的/出場/地點/衝突/揭露關係/節拍/risk_type
+    七要素 + 缺漏標記)+ frontmatter。S-08-02 為 ORG 揭露場、四人全出場、ORG-無名加工公司以文件現身不說話(核心不變量,不建 speaker
+    row/不寫 ORG 台詞)。D-054：採 aggregate 06_a 慣例,未拆 per-scene 檔,下游 /scene-task hybrid
+    fallback 本 aggregate row。創意忠實萃取主線 P §3.2 9 章 + 四聲線卡弧線階段 + ORG card §2/§4 殘片 +
+    任務指定 13 場 S-ID(完全照用)，未硬編造處標 INFERENCE/TODO。CH 完成度~30% / S 完成度~20%，狀態 DRAFT(REVIEW
+    由人類 B.8 gate 代行)。00_b §6 高風險處理基線缺寫(D-050 禁寫 00_protocol/)登錄 TODO(6)+frictions。自主跑：Stage
+    3 收斂 gate 視為已授權通過。
+- phase: scene-task
+  date: 2026-06-03
+  skill: /scene-task
+  status: completed
+  scene_id: S-05-01
+  task_path: 07_scene_tasks/CH05_S01_台詞任務包.md
+  todo_count: 6
+  read_source: aggregate
+  customizations: []
+- phase: scene-task
+  date: 2026-06-03
+  skill: /scene-task
+  status: completed
+  scene_id: S-03-01
+  task_path: 07_scene_tasks/CH03_S01_台詞任務包.md
+  todo_count: 4
+  read_source: aggregate
+  customizations: []
+  notes: D-054 hybrid：無 per-scene 檔 → fallback aggregate 06_a §22.1/§22.2 S-03-01
+    row（read_source=aggregate）。依 UD §2.3 五階段；D-050 子裁決2：僅寫 07_scene_tasks/ + 本 phase_log
+    entry。核心欄位 3/9/10/12/14/15 全就緒。非核心 TODO 4 項（時間/§18.4 W-style 量化指紋因 01_d 未落地以聲線卡§B替代並WARN/§13
+    逐條資訊row因05_d無§CH-03表以高層note+05_b§24.4推得/總句數上限）。本場中風險(戰鬥/互嗆互認)，§18.3 高風險處理=N/A（00_b
+    §6 未落地不影響）。創意忠實對齊兩端聲線卡§A/§B/§C/§D + R-清道夫-莉娜段 + 06_a §22.2 七要素，未硬編造處標 TODO/推得來源。自主跑：Stage
+    3 收斂 gate 視為已授權通過寫檔。
+- phase: scene-task
+  date: 2026-06-03
+  skill: /scene-task
+  status: completed
+  scene_id: S-08-02
+  task_path: 07_scene_tasks/CH08_S02_台詞任務包.md
+  todo_count: 6
+  read_source: aggregate
+  customizations: []
+- phase: dialogue-write
+  date: 2026-06-03
+  skill: /dialogue-write
+  status: completed
+  scene_id: S-03-01
+  dialogue_paths:
+  - 08_dialogue_outputs/CH03_S01_莉娜首戰_dialogue_v01A.md
+  - 08_dialogue_outputs/CH03_S01_莉娜首戰_dialogue_v01B.md
+  - 08_dialogue_outputs/CH03_S01_莉娜首戰_dialogue_v01C.md
+  mode_tag: DRAFT_TRIAL
+  converge_sources: null
+  incomplete_fields:
+  - 時間
+  - §18.4文風量化指紋(01_d未落地以聲線卡§B替代)
+  - §13逐條資訊row
+  - 總句數上限
+  prereq_waived: false
+  notes: D.2.5 gate：task pack 為 狀態DRAFT/pipeline_state TASK_DRAFT(非 REVIEW/TASK_REVIEW)，自主跑視為已授權通過(記
+    friction)。三版試寫：v01A 克制短句強潛台詞 / v01B 攻防更尖互嗆更烈 / v01C 情緒更重旁白承載。各版有完整對白 body(15/15、15/14、16/11
+    speaker 行)。文風錨定狀態：01_d W-style 未落地(Template 骨架)，以兩端聲線卡§B 既有劇本基準為文風第一順位錨點(清道夫§B+莉娜§B
+    原句直接複用初登場/戰鬥/戰後)。聲線忠實：清道夫成本黑色幽默+官方文書腔反諷+危機切短+認可反話；莉娜火爆登場+罵綁技術+反問後綴+綁任務關心+結尾叫代號清道夫。資訊控制：流放往事僅淺層怨氣(留S-04-01)、蟲群異常不歸因(CH-08禁區)。D-050
+    子裁決2：僅寫 08_dialogue_outputs/ + 本 phase_log。未越界。
+- phase: dialogue-write
+  date: 2026-06-03
+  skill: /dialogue-write --converge
+  status: completed
+  scene_id: S-03-01
+  dialogue_paths:
+  - 08_dialogue_outputs/CH03_S01_莉娜首戰_dialogue_v02.md
+  mode_tag: CONVERGENCE
+  converge_sources:
+  - 08_dialogue_outputs/CH03_S01_莉娜首戰_dialogue_v01A.md
+  - 08_dialogue_outputs/CH03_S01_莉娜首戰_dialogue_v01B.md
+  - 08_dialogue_outputs/CH03_S01_莉娜首戰_dialogue_v01C.md
+  incomplete_fields:
+  - 時間
+  - 總句數上限
+  prereq_waived: false
+  notes: 收斂 v02(狀態REVIEW/pipeline_state DIALOGUE_CONVERGED/mode_tag CONVERGENCE/source_dialogues=3
+    trial)。整合：v01B 尖銳開場互嗆定調 + v01A 戰鬥短命令交錯節奏 + v01C 清道夫第一人稱旁白承載盤算情緒(克制不抒情)。互嗆烈度收在A與B之間，未滑惡毒。結尾莉娜首次叫清道夫=戰技互認信號(慎用一次)。17/13
+    speaker 行，完整對白 body。禁用詞掃描乾淨(守護/羈絆/命運/希望/救贖/夥伴/我需要你 僅出現於設計註解描述其缺席，非台詞)。D-050：僅寫
+    08_ + 本 phase_log。
+- phase: dialogue-write
+  date: 2026-06-03
+  skill: /dialogue-write
+  status: completed
+  scene_id: S-05-01
+  dialogue_paths:
+  - 08_dialogue_outputs/CH05_S01_諾拉初遇_dialogue_v01A.md
+  - 08_dialogue_outputs/CH05_S01_諾拉初遇_dialogue_v01B.md
+  - 08_dialogue_outputs/CH05_S01_諾拉初遇_dialogue_v01C.md
+  mode_tag: DRAFT_TRIAL
+  converge_sources: null
+  incomplete_fields: []
+  prereq_waived: false
+  notes: 試寫三版（v01A克制短句/v01B攻防尖/v01C情緒重）各有完整對白body（26/25/27 speaker行）。文風錨點=聲線卡§B既有劇本基準（01_d
+    W-style指紋缺，task §18.4 fallback）。D.2.5 gate：任務包實際為狀態DRAFT/pipeline_state TASK_DRAFT（非REVIEW/TASK_REVIEW），自主跑視為已授權通過寫檔，記friction。v01B『外部威脅處理單元』+v01C過早交心為刻意踩線、已標人類裁決項待收斂裁。
+- phase: dialogue-write
+  date: 2026-06-03
+  skill: /dialogue-write --converge
+  status: completed
+  scene_id: S-05-01
+  dialogue_paths:
+  - 08_dialogue_outputs/CH05_S01_諾拉初遇_dialogue_v02.md
+  mode_tag: CONVERGENCE
+  converge_sources:
+  - 08_dialogue_outputs/CH05_S01_諾拉初遇_dialogue_v01A.md
+  - 08_dialogue_outputs/CH05_S01_諾拉初遇_dialogue_v01B.md
+  - 08_dialogue_outputs/CH05_S01_諾拉初遇_dialogue_v01C.md
+  incomplete_fields: []
+  prereq_waived: false
+  notes: 收斂v02（狀態REVIEW/DIALOGUE_CONVERGED/CONVERGENCE）28 speaker行真實對白。取v01A骨架+v01B攻防+v01C厭世底色一句；裁v01B過早稱呼『外部威脅處理單元』改『處理效率可接受』、裁v01C過早交心改回功利包裝（守關係階段=高價值人力支援起點）。資訊控制停在暗示層、諾拉不解蟲災真相（§8.4）。本skill不auto跑/qa與D.3.5。
+- phase: dialogue-write
+  date: '2026-06-03'
+  skill: /dialogue-write
+  status: completed
+  scene_id: S-08-02
+  dialogue_paths:
+  - 08_dialogue_outputs/CH08_S02_養殖場真相_dialogue_v01A.md
+  - 08_dialogue_outputs/CH08_S02_養殖場真相_dialogue_v01B.md
+  - 08_dialogue_outputs/CH08_S02_養殖場真相_dialogue_v01C.md
+  mode_tag: DRAFT_TRIAL
+  converge_sources: null
+  incomplete_fields:
+  - style_anchor(§18.4 W-style 指紋缺;fallback 聲線卡§B)
+  prereq_waived: false
+- phase: dialogue-write
+  date: '2026-06-03'
+  skill: /dialogue-write --converge
+  status: completed
+  scene_id: S-08-02
+  dialogue_paths:
+  - 08_dialogue_outputs/CH08_S02_養殖場真相_dialogue_v02.md
+  mode_tag: CONVERGENCE
+  converge_sources:
+  - 08_dialogue_outputs/CH08_S02_養殖場真相_dialogue_v01A.md
+  - 08_dialogue_outputs/CH08_S02_養殖場真相_dialogue_v01B.md
+  - 08_dialogue_outputs/CH08_S02_養殖場真相_dialogue_v01C.md
+  incomplete_fields: []
+  prereq_waived: false
+- phase: dialogue-write
+  date: '2026-06-03'
+  skill: /dialogue-write
+  status: completed
+  scene_id: S-08-01
+  dialogue_paths:
+  - 08_dialogue_outputs/CH08_S01_組織棄養_dialogue_v01A.md
+  - 08_dialogue_outputs/CH08_S01_組織棄養_dialogue_v01B.md
+  - 08_dialogue_outputs/CH08_S01_組織棄養_dialogue_v01C.md
+  mode_tag: DRAFT_TRIAL
+  converge_sources: null
+  incomplete_fields:
+  - style_anchor(§18.4 W-style 指紋缺;fallback 聲線卡§B)
+  prereq_waived: false
+  notes: 四人場(清道夫/莉娜/諾拉/瑟琳)試寫v01A克制短句/v01B攻防尖(莉娜怒峰×清道夫官腔反諷)/v01C情緒重(旁白承載低谷)。各版25/26/22 speaker行真實對白。AI客服=組織遠端介面官腔(非聲線卡speaker,org_as_speaker=false)。資訊控制:揭組織棄養條款化,鎖蟲災人為(S-08-02前)。D.2.5 gate:任務包TASK_DRAFT,自主跑視為授權通過。本skill不auto跑/qa與D.3.5。
+- phase: dialogue-write
+  date: '2026-06-03'
+  skill: /dialogue-write --converge
+  status: completed
+  scene_id: S-08-01
+  dialogue_paths:
+  - 08_dialogue_outputs/CH08_S01_組織棄養_dialogue_v02.md
+  mode_tag: CONVERGENCE
+  converge_sources:
+  - 08_dialogue_outputs/CH08_S01_組織棄養_dialogue_v01A.md
+  - 08_dialogue_outputs/CH08_S01_組織棄養_dialogue_v01B.md
+  - 08_dialogue_outputs/CH08_S01_組織棄養_dialogue_v01C.md
+  incomplete_fields: []
+  prereq_waived: false
+  notes: 收斂v02(狀態REVIEW/DIALOGUE_CONVERGED/CONVERGENCE)27 speaker行真實對白。取v01A骨架+v01B怒峰攻防(個屁連珠/引用威脅等級極低反諷)+v01C旁白低谷一段;裁v01C過量旁白(四段縮兩處關鍵OS)。四角色聲線分得開:清道夫成本反諷OS/莉娜罵綁死胖子+技術/諾拉系統回報零粗口/瑟琳結巴敬語傭兵先生。守團結宣言禁區、AI客服純官腔不認錯。本skill不auto跑/qa與D.3.5。
+
+- phase: qa
+  date: 2026-06-03
+  skill: /qa
+  status: completed
+  scene_id: S-03-01
+  target_dialogue: 08_dialogue_outputs/CH03_S01_莉娜首戰_dialogue_v02.md
+  qa_report_paths:
+    - 09_quality_assurance/CH03_S01_莉娜首戰_dialogue_v02_QA_類型偏移_報告.md      # qa_type: GENRE_DRIFT
+    - 09_quality_assurance/CH03_S01_莉娜首戰_dialogue_v02_QA_資訊控制_報告.md      # qa_type: INFO_CONTROL
+    - 09_quality_assurance/CH03_S01_莉娜首戰_dialogue_v02_QA_對話張力_報告.md      # qa_type: DRAMATIC_TENSION
+    - 09_quality_assurance/CH03_S01_莉娜首戰_dialogue_v02_QA_聲線_報告.md          # qa_type: VOICE_CONSISTENCY
+    - 09_quality_assurance/CH03_S01_莉娜首戰_dialogue_v02_QA_節奏感_報告.md        # qa_type: RHYTHM
+    - 09_quality_assurance/CH03_S01_莉娜首戰_dialogue_v02_QA_AI味_報告.md          # qa_type: AI_FLAVOR
+    - 09_quality_assurance/CH03_S01_莉娜首戰_dialogue_v02_QA_禁用詞_報告.md        # qa_type: FORBIDDEN_WORD
+    - 09_quality_assurance/CH03_S01_莉娜首戰_dialogue_v02_QA_跨場一致性_報告.md    # qa_type: CROSS_SCENE_CONTINUITY
+  qa_decision: PASS
+  depth_layer: standard
+  notes: "Stage 0 UDV 全 5 條通過（檔有真實對白 body 24 speaker 行 / phase_log dialogue_paths 磁碟存在 / DIALOGUE_CONVERGED 對應 --converge completed 紀錄 / 依賴 >= REVIEW / 任務包 REVIEW(B.8 gate 代行) 核心欄位非空）。8 報全 PASS → qa_decision PASS。F-022：05_d 無逐場 row、00_b §5/§6 與 02_c §7/§8.2 未落地，以聲線卡偏移段/§B + 05_d §0 + R §5 + W-rules §22.1 + 任務包 §13/§14.3 替代，覆蓋充分不阻擋判定。09_i 比較集為空（首個進 QA 場、無 FINAL 前場），以恆定基線代理檢查。自主跑：Stage 3 approval gate 視為已授權通過寫檔。D-050：僅寫 09_quality_assurance/ 8 報 + 08_ frontmatter 兩欄(pipeline_state DIALOGUE_CONVERGED->QA_PASSED, qa_decision null->PASS) + 本 phase_log entry。未越界。"
+
+- phase: qa
+  date: 2026-06-03
+  skill: /qa
+  status: completed
+  scene_id: S-05-01
+  target_dialogue: 08_dialogue_outputs/CH05_S01_諾拉初遇_dialogue_v02.md
+  qa_report_paths:
+    - 09_quality_assurance/CH05_S01_諾拉初遇_dialogue_v02_QA_AI味_報告.md      # qa_type: AI_FLAVOR
+    - 09_quality_assurance/CH05_S01_諾拉初遇_dialogue_v02_QA_聲線_報告.md      # qa_type: VOICE_CONSISTENCY
+    - 09_quality_assurance/CH05_S01_諾拉初遇_dialogue_v02_QA_禁用詞_報告.md    # qa_type: FORBIDDEN_WORD
+    - 09_quality_assurance/CH05_S01_諾拉初遇_dialogue_v02_QA_資訊控制_報告.md  # qa_type: INFO_CONTROL
+    - 09_quality_assurance/CH05_S01_諾拉初遇_dialogue_v02_QA_類型偏移_報告.md  # qa_type: GENRE_DRIFT
+    - 09_quality_assurance/CH05_S01_諾拉初遇_dialogue_v02_QA_節奏感_報告.md    # qa_type: RHYTHM
+    - 09_quality_assurance/CH05_S01_諾拉初遇_dialogue_v02_QA_對話張力_報告.md  # qa_type: DRAMATIC_TENSION
+    - 09_quality_assurance/CH05_S01_諾拉初遇_dialogue_v02_QA_跨場一致性_報告.md # qa_type: CROSS_SCENE_CONTINUITY
+  qa_decision: PASS
+  notes: "Stage 0 UDV 通過（檔存在/28 speaker行真實對白/phase_log無謊報/pipeline_state DIALOGUE_CONVERGED 與 --converge completed 紀錄一致）。UDV 第4條 note：任務包為 狀態DRAFT/TASK_DRAFT（非REVIEW），屬自主跑 D.2.5 gate 視為已授權通過（phase_log 已記 friction，非靜默失敗），WARN 不 abort。8 報全 PASS → QA_PASSED。對抗式：每份先列攻擊切角再判 PASS。雙 lens 全跑無分歧。Friction：05_d 缺逐場row(F-022,以§0高層note+R§5替代)；09_i 無FINAL場可比(改前瞻continuity)。本skill不auto升FINAL/不建09_e。"
+- phase: qa
+  date: 2026-06-03
+  skill: /qa
+  status: completed
+  scene_id: S-08-02
+  target_dialogue: 08_dialogue_outputs/CH08_S02_養殖場真相_dialogue_v02.md
+  qa_report_paths:
+    - 09_quality_assurance/CH08_S02_養殖場真相_dialogue_v02_QA_AI味_報告.md      # qa_type: AI_FLAVOR
+    - 09_quality_assurance/CH08_S02_養殖場真相_dialogue_v02_QA_聲線_報告.md      # qa_type: VOICE_CONSISTENCY
+    - 09_quality_assurance/CH08_S02_養殖場真相_dialogue_v02_QA_禁用詞_報告.md    # qa_type: FORBIDDEN_WORD
+    - 09_quality_assurance/CH08_S02_養殖場真相_dialogue_v02_QA_資訊控制_報告.md  # qa_type: INFO_CONTROL
+    - 09_quality_assurance/CH08_S02_養殖場真相_dialogue_v02_QA_類型偏移_報告.md  # qa_type: GENRE_DRIFT
+    - 09_quality_assurance/CH08_S02_養殖場真相_dialogue_v02_QA_節奏感_報告.md    # qa_type: RHYTHM
+    - 09_quality_assurance/CH08_S02_養殖場真相_dialogue_v02_QA_對話張力_報告.md  # qa_type: DRAMATIC_TENSION
+    - 09_quality_assurance/CH08_S02_養殖場真相_dialogue_v02_QA_跨場一致性_報告.md # qa_type: CROSS_SCENE_CONTINUITY
+  qa_decision: PASS
+  notes: 8/8 報告全 PASS。Stage 0 UDV 通過（台詞檔有真實對白 body 42 speaker 行、phase_log 無謊報、pipeline_state 與 converge 紀錄一致、task pack 核心欄位非空）。自主跑：Stage 3 review gate 視為已授權通過寫檔。F-022 friction：00_b §5 角色偏移基線 + 00_b §6 高風險基線為空 Template 骨架，以聲線卡偏移段 + 05_b §24.5 替代；05_d 逐場 row 缺但 §0 高層 note 已落地足供解禁時點判定。09_i corpus 限制：無 FINAL/LOCKED 比對語料，降級為 QA_PASSED 同主角場軟比對。D-050 子裁決2：僅寫 09_quality_assurance/ 8 報 + 08 frontmatter 兩欄 + 本 phase_log entry。
+- phase: scene-task
+  date: 2026-06-03
+  skill: /scene-task
+  status: completed
+  scene_id: S-04-02
+  task_path: 07_scene_tasks/CH04_S02_台詞任務包.md
+  todo_count: 3
+  read_source: aggregate
+  customizations: []
+  notes: D-054 hybrid 讀檔=無 per-scene 檔 fallback aggregate 06_a §22.1/§22.2 S-04-02 row（read_source=aggregate）。依 UD §2.3 五階段+00_k 階段1。D-050 子裁決2：僅寫 07_scene_tasks/CH04_S02_台詞任務包.md + 本 phase_log entry。核心 6 欄(3/9/10/12/14/15)全就緒。TODO 3 項(17 時間/總句數上限；§18.4 文風量化指紋因 01_d W-style 未落地以聲線卡§B fallback 並 WARN；02_c §7/§8.2 角色/場景禁用詞缺以全作品層§3-§6替代)。本場中低風險(弧線轉折/自由搭檔期)，§18.3=N/A(00_b §6 未落地不影響)。瑟琳語氣從『我會努力』遞進到『讓我來/這次讓我帶路你負責開槍』，自信遞進錨在具體帶路、不滑宣言；清道夫嘴推手做讓位、認可藏反話。資訊控制：CH-04 禁區=蟲災真相成因(人為/組織/蟲后)全 HIDDEN，僅停在『不對勁』暗示(05_d §0/W-rules §22.1)。本場=主線使用角色功能非個人線高潮(05_b §24.3/D-068)。創意忠實對齊兩端聲線卡§A/§B/§C/§D + R-清道夫-瑟琳§1-§6 + 06_a §22.2 七要素 + 05_b §24，未硬編造處標 TODO/WARN/推得來源。自主跑：Stage 3 收斂 gate 視為已授權通過寫檔。F-022 友善缺漏以可得來源替代並記 friction。pre-existing：phase_log 既有 S-03-01/S-05-01 qa entries 縮排異常(嵌在 S-08-02 dialogue-write entry 下，非 top-level)，屬前輪遺留缺陷，本 entry 以正確 top-level 縮排 append，不改他人 entry(D-050 runtime-log exception 僅及本 entry)。
+- phase: scene-task
+  date: 2026-06-03
+  skill: /scene-task
+  status: completed
+  scene_id: S-06-01
+  task_path: 07_scene_tasks/CH06_S01_台詞任務包.md
+  todo_count: 4
+  read_source: aggregate
+  customizations: []
+  notes: D-054 hybrid 無 per-scene 檔 fallback aggregate 06_a 22.1/22.2 S-06-01 row (read_source=aggregate)。UD 2.3 五階段；D-050 子裁決2 僅寫 07_scene_tasks/ + 本 phase_log entry。核心欄位 3/9/10/12/14/15 全就緒。非核心 TODO 4 項(總句數上限/13.4 W-style 三層比例+跨層約束 01_d 未落地以聲線卡B替代並WARN/per角色量化指紋缺/04_b章節錨點)。本場中低風險(功利期/入隊)，18.3 高風險處理=N/A。創意忠實對齊兩端聲線卡A/B/C/D + R-清道夫-諾拉段(5/6/2/3) + 06_a 22.2 七要素 + 05_b 24 CH-06 弧線/伏筆 + 05_d 0(蟲災真相CH-08禁區) + 05_e 0(自動化伏筆回收CH-09)，未硬編造處標 TODO/推得來源。情境補充忠實落地：諾拉用數據語言評估隊伍維護價值/把基地當好睡的地方/認錯不道歉。自主跑 Stage 3 收斂 gate 視為已授權通過寫檔。
+- phase: scene-task
+  date: 2026-06-03
+  skill: /scene-task
+  status: completed
+  scene_id: S-02-01
+  task_path: 07_scene_tasks/CH02_S01_台詞任務包.md
+  todo_count: 4
+  read_source: aggregate
+  customizations: []
+  notes: D-054 hybrid 無 per-scene 檔 fallback aggregate 06_a §22.1/§22.2 S-02-01 row（read_source=aggregate）。依 UD §2.3 五階段；D-050 子裁決2 僅寫 07_scene_tasks/ + 本 phase_log entry。核心欄位 3/9/10/12/14/15 全就緒。非核心 TODO 4 項（時間/§18.4 W-style 量化指紋因 01_d 未落地以聲線卡§B替代並WARN/§13 逐條資訊row因05_d無§CH-02表以05_b§24.4+§0推得/總句數上限）。本場中低風險(劇情場成長被認可)，§18.3 高風險處理=N/A。創意忠實對齊兩端聲線卡§A/§B/§C/§D + R-清道夫-瑟琳段§5不能說出口的事 + 05_c瑟琳成長期/清道夫起疑 + 05_b§24.2/§24.4 CH-02(蟲災規模不對勁懸念/真相成因禁區/白霧沙地=蟲洞伏筆) + 06_a §22.2 七要素，未硬編造處標 TODO/推得來源。自主跑：Stage 3 收斂 gate 視為已授權通過寫檔。
+- phase: scene-task
+  date: 2026-06-03
+  skill: /scene-task
+  status: completed
+  scene_id: S-01-01
+  task_path: 07_scene_tasks/CH01_S01_台詞任務包.md
+  todo_count: 6
+  read_source: aggregate
+  customizations: []
+  notes: D-054 hybrid：無 per-scene 檔 → fallback aggregate 06_a §22.1/§22.2 S-01-01 row（read_source=aggregate）。依 UD §2.3 五階段；D-050 子裁決2：僅寫 07_scene_tasks/ + 本 phase_log entry。核心欄位 3/9/10/12/14/15 全就緒。非核心 TODO 6 項（時間/§13逐條資訊row因05_d §CH-01空以05_b§24摘要替代/02_a02_b逐詞解禁/總句數上限/§18.4 W-style量化指紋因01_d Template骨架以聲線卡§B替代並WARN/04_b章節錨點）。本場 risk_type=劇情場(怯生互動)中低風險，§18.3 高風險處理=N/A（00_b §6 未落地不影響）。創意忠實對齊兩端聲線卡§A/§B/§C/§D + R-清道夫-瑟琳 04_a§1-§5 + 06_a §22.2 七要素 + 05_b§24 CH-01節奏mid/弧線(清道夫想要起點/瑟琳怯生期)，未硬編造處標 TODO/INFERENCE/來源。自主跑：Stage 3 收斂 gate 視為已授權通過寫檔。
+- phase: scene-task
+  date: 2026-06-03
+  skill: /scene-task
+  status: completed
+  scene_id: S-07-01
+  task_path: 07_scene_tasks/CH07_S01_台詞任務包.md
+  todo_count: 5
+  read_source: aggregate
+  customizations: []
+
+- phase: scene-task
+  date: 2026-06-03
+  skill: /scene-task
+  status: completed
+  scene_id: S-07-02
+  task_path: 07_scene_tasks/CH07_S02_台詞任務包.md
+  todo_count: 2
+  read_source: aggregate
+  customizations: []
+  notes: "S-07-02 C3 諾拉險出事不可替換（C-清道夫, C-諾拉）。Stage1-5 自主跑：D.2.5 / Stage3 approval gate 視為已授權通過寫檔。read_source=aggregate（無 per-scene 檔，fallback 06_a §22.1 row + §22.2 S-07-02 細節）。核心欄位 3/9/10/12/14/15 全非空。2 TODO=§18.3 00_b §6 高風險基線缺寫(F-022,以 05_e 高風險 note + 00_b 通用救援/瀕死偏好 fallback+WARN) / §18.4 文風錨定 01_d W-style 未落地(STYLE_ANCHOR,以兩角色聲線卡 §B 既有劇本台詞 fallback+WARN)。禁區守住：蟲災=人為真相 CH-08 才解禁、本場禁觸(05_d §0)；禁救援煽情/諾拉抒情/說破關係(02_c §3.3 我需要你 等列禁用)。D-050 子裁決2：僅寫 07_scene_tasks/ + 本 phase_log entry，未越界。"
+- phase: scene-task
+  date: 2026-06-03
+  skill: /scene-task
+  status: completed
+  scene_id: S-04-01
+  task_path: 07_scene_tasks/CH04_S01_台詞任務包.md
+  todo_count: 5
+  read_source: aggregate
+  customizations: []
+  notes: D-054 hybrid 無 per-scene 檔 fallback aggregate 06_a 22.1/22.2 S-04-01 row (read_source=aggregate)。UD 2.3 五階段+00_k 階段1；D-050 子裁決2 僅寫 07_scene_tasks/CH04_S01_台詞任務包.md + 本 phase_log entry。核心欄位 3/9/10/12/14/15 全就緒。非核心 TODO 5 項(場景時間日夜/18.1 總句數上限/18.4 文風量化指紋因 01_d Template 骨架 W-style 未落地以聲線卡 B 既有劇本台詞基準替代並 WARN(F-022/D-055)/18.3 高風險基線 00_b 6 未落地但本場非高風險 N/A/04_b 章節錨點未建)。本場中低風險(信任建立/伏筆回收)。創意忠實對齊兩端聲線卡 A/B/C/D + R-清道夫-莉娜段(1-6) + 06_a 22.2 S-04-01 七要素 + 05_b CH-04 row(同類社畜信任建立/mid 節奏) + 05_c(莉娜同類社畜戰場搭檔) + 05_e 0(莉娜往事回收 CH-04)，未硬編造處標 TODO/WARN/推得來源。情境補充忠實落地：莉娜修舊砲吐槽黑翼發爛裝備/拒簽爛槍被流放往事(回收 S-03-01)，清道夫成本黑色幽默附和，同類社畜感。資訊控制：流放往事可回收(怨氣帶過不煽情)；蟲災成因(人為/組織知情/蟲后)全 HIDDEN(CH-08 禁區 05_d 0/W-rules 22.1)；關係不命名戀愛。自主跑 Stage 3 收斂 gate 視為已授權通過寫檔。
+- phase: scene-task
+  date: 2026-06-03
+  skill: /scene-task
+  status: completed
+  scene_id: S-08-01
+  task_path: 07_scene_tasks/CH08_S01_台詞任務包.md
+  todo_count: 5
+  read_source: aggregate
+  customizations: []
+  notes: D-054 hybrid 無 per-scene 檔 -> fallback aggregate 06_a §22.1/§22.2 S-08-01 row（read_source=aggregate）。依 UD §2.3 五階段 + 00_k 階段1。D-050 子裁決2：僅寫 07_scene_tasks/ + 本 phase_log entry。高風險場（重大資訊揭露/制度冷漠），§18.3 處理=流程化+諷刺化（00_b §6 空,以 06_a §22.2 + 05_b §24.5 替代）。核心欄位 3/9/10/12/14/15 全就緒。非核心 TODO 5：時間/玩家選項/句數上限/§18.4文風量化指紋(01_d W-style未落地→聲線卡§B替代並WARN,F-022)/女角互相關係段(暫以聲線卡hooks替代)。資訊控制：可揭組織棄養+見死不救條款化(W-rules §5.3),蟲災=人為真相鎖至 S-08-02(W-rules §22.1)。AI客服=組織非人格介面,官腔程序體,不進/dialogue-write為speaker、不道歉認錯(02_c §陣營詞)。創意對齊四聲線卡§A/§B/§C/§D+三段R-清道夫-*+06_a §22.2 七要素。自主跑：Stage3收斂gate視為已授權通過寫檔。
+- phase: scene-task
+  date: 2026-06-03
+  skill: /scene-task
+  status: completed
+  scene_id: S-09-01
+  task_path: 07_scene_tasks/CH09_S01_台詞任務包.md
+  todo_count: 7
+  read_source: aggregate
+  customizations: []
+  notes: D-054 hybrid 無 per-scene 檔 fallback aggregate 06_a 22.1/22.2 S-09-01 row（read_source=aggregate）。四人全出場聯合防衛戰高光（結局前/隊伍高光,高風險）。依 UD 2.3 五階段;D-050 子裁決2 僅寫 07_scene_tasks/ + 本 phase_log。核心欄位 3/9/10/12/14/15 全就緒(14/15 由 06_a 22.2+聲線卡A+R-* 5+05_b 24.3 推得標 INFERENCE)。非核心 TODO 7 項。高風險處理=行動式(避免主題/責任宣言,fallback 05_b 24.5 因 00_b 6 缺寫 F-022);18.4 文風以聲線卡 B 替代並 WARN(01_d 為 Template 骨架);資訊以 05_d/05_e 0 高層 note + 05_b 24.4 推得(逐章 row 缺 F-022)。friction:三女角彼此(瑟琳-莉娜/瑟琳-諾拉/莉娜-諾拉)無正式 R-* 段,三女角互動以聲線卡 D hooks 替代並 WARN。創意忠實對齊四聲線卡 A/B/C/D + 含清道夫三對 R-* 段 + 06_a 22.2 七要素 + 情境補充(四人各司其職默契成形/避免滑熱血煽情),未硬編造處標 INFERENCE/推得來源。自主跑:Stage 3 收斂 gate 視為已授權通過寫檔。
+- phase: scene-task
+  date: 2026-06-03
+  skill: /scene-task
+  status: completed
+  scene_id: S-06-02
+  task_path: 07_scene_tasks/CH06_S02_台詞任務包.md
+  todo_count: 7
+  read_source: aggregate
+  customizations: []
+  notes: D-054 hybrid：無 per-scene 檔 → fallback aggregate 06_a §22.1/§22.2 S-06-02 row（read_source=aggregate）。四人首次同框磨合場（隊伍成形）。friction：R-莉娜-諾拉 關係實體不存在，本場該對以兩聲線卡 §D-2 職能磨合 hook 推導（F-022 類）。D-050 子裁決2：僅寫 07_scene_tasks/ + 本 phase_log。
+- phase: dialogue-write
+  date: 2026-06-03
+  skill: /dialogue-write
+  status: completed
+  scene_id: S-01-01
+  dialogue_paths:
+    - 08_dialogue_outputs/CH01_S01_瑟琳學裝填_dialogue_v01A.md
+    - 08_dialogue_outputs/CH01_S01_瑟琳學裝填_dialogue_v01B.md
+    - 08_dialogue_outputs/CH01_S01_瑟琳學裝填_dialogue_v01C.md
+  mode_tag: DRAFT_TRIAL
+  converge_sources: null
+  incomplete_fields: []
+  prereq_waived: false
+  notes: "試寫三版 v01A(克制短句強潛台詞)/v01B(攻防更尖)/v01C(情緒重避免直說)。各版完整對白 12-15 speaker turn,兩端聲線忠實:清道夫成本語言+官腔反諷+嘴推手做+去英雄化(無一句直說保護);瑟琳固定敬語傭兵先生+緩衝那個/對不起+主動報能力(我懂一點槍械構造,對齊§B BeforeBattle_026)+怕但仍往前。資訊控制:世界壓力(津貼被砍/官腔報告)明說;蟲群異常以報告vs現實落差埋種子不歸因(CH-08禁區);瑟琳村落/父親僅留白未說破;關係不命名戀愛。文風錨=兩端聲線卡§B(01_d W-style為Template骨架未落地,WARN F-022/D-055)。friction:任務包 header 狀態=DRAFT/pipeline_state=TASK_DRAFT,D.2.5 review gate 未翻 REVIEW/TASK_REVIEW;自主跑視為已授權通過寫檔(無互動 user)。自主跑 Stage 3 preview+approval gate 視為已授權。org_as_speaker=false(本場無 ORG 說話者)。"
+- phase: dialogue-write
+  date: 2026-06-03
+  skill: /dialogue-write --converge
+  status: completed
+  scene_id: S-01-01
+  dialogue_paths:
+    - 08_dialogue_outputs/CH01_S01_瑟琳學裝填_dialogue_v02.md
+  mode_tag: CONVERGENCE
+  converge_sources:
+    - 08_dialogue_outputs/CH01_S01_瑟琳學裝填_dialogue_v01A.md
+    - 08_dialogue_outputs/CH01_S01_瑟琳學裝填_dialogue_v01B.md
+    - 08_dialogue_outputs/CH01_S01_瑟琳學裝填_dialogue_v01C.md
+  incomplete_fields: []
+  prereq_waived: false
+  notes: "收斂 v02(REVIEW/DIALOGUE_CONVERGED)。以 v01A 克制節奏為骨架,吸收 v01B 官腔反諷攻防尖點+跟上≠留嘴硬默許,融 v01C 少量內心旁白+怕但仍往前情緒重量;攻防不拉滿(避免逼近欺負人紅線),情緒不拉滿(守不煽情)。完整對白 12 清道夫/13 瑟琳 speaker turn。可保留亮點表 6 條標來源版本。微暖只到多看兩秒/移開視線,默許包裝成懶得跑第二趟(嘴推手做),全程無 02_c §3.3 直說保護禁用詞。source_dialogues 寫入三 trial 路徑。下一步:人類確認後跑 /qa(本 skill 不 auto-trigger /qa/D.3.5)。org_as_speaker=false。"
+- phase: dialogue-write
+  date: 2026-06-03
+  skill: /dialogue-write
+  status: completed
+  scene_id: S-07-01
+  dialogue_paths:
+  - 08_dialogue_outputs/CH07_S01_火力掩護_dialogue_v01A.md
+  - 08_dialogue_outputs/CH07_S01_火力掩護_dialogue_v01B.md
+  - 08_dialogue_outputs/CH07_S01_火力掩護_dialogue_v01C.md
+  mode_tag: DRAFT_TRIAL
+  converge_sources: null
+  incomplete_fields:
+  - 時間（§6 06_a 未標精確時段）
+  - 18.4 文風錨定量化指紋（01_d Template 骨架；以聲線卡 §B 替代）
+  - 13 資訊控制逐條 row（F-022；由 05_b §24.4+05_d §0+06_a §22.2+W-rules §22.1 推得）
+  - 總句數上限（§18.1 區間已給，最終定數待人類）
+  prereq_waived: false
+  notes: 任務包 gate 為 TASK_DRAFT/狀態DRAFT（非 TASK_REVIEW/REVIEW）；自主跑鐵則 3 視為已授權通過並寫檔（見 friction）。核心 6 欄就緒（任務包 §21）。文風錨定 WARN：01_d 未落地，以兩端聲線卡 §B 為文風錨。
+- phase: dialogue-write
+  date: 2026-06-03
+  skill: /dialogue-write --converge
+  status: completed
+  scene_id: S-07-01
+  dialogue_paths:
+  - 08_dialogue_outputs/CH07_S01_火力掩護_dialogue_v02.md
+  mode_tag: CONVERGENCE
+  converge_sources:
+  - 08_dialogue_outputs/CH07_S01_火力掩護_dialogue_v01A.md
+  - 08_dialogue_outputs/CH07_S01_火力掩護_dialogue_v01B.md
+  - 08_dialogue_outputs/CH07_S01_火力掩護_dialogue_v01C.md
+  incomplete_fields: []
+  prereq_waived: false
+  notes: 收斂 v01A 骨架+v01B 對攻烈度+v01C 賭注旁白與半破戒；v02 狀態 REVIEW / DIALOGUE_CONVERGED。不 auto-run D.3.5 / /qa。
+- phase: dialogue-write
+  date: '2026-06-03'
+  skill: /dialogue-write
+  status: completed
+  scene_id: S-04-02
+  dialogue_paths:
+  - 08_dialogue_outputs/CH04_S02_瑟琳帶路_dialogue_v01A.md
+  - 08_dialogue_outputs/CH04_S02_瑟琳帶路_dialogue_v01B.md
+  - 08_dialogue_outputs/CH04_S02_瑟琳帶路_dialogue_v01C.md
+  mode_tag: DRAFT_TRIAL
+  converge_sources: null
+  incomplete_fields:
+  - style_anchor(§18.4 W-style 指紋缺;fallback 聲線卡§B)
+  - 時間/總句數上限(§17 06_a 未硬指定)
+  prereq_waived: false
+  notes: "Trial 3 版 S-04-02 瑟琳主動帶路。核心 6 欄(3/9/10/12/14/15)全就緒;上游 C-清道夫/C-瑟琳/R-清道夫-瑟琳 皆 REVIEW。D.2.5 task review gate 自主跑視為已授權通過(任務包 frontmatter 仍 TASK_DRAFT/DRAFT,未改任務包)。§18.4 W-style 未落地 → fallback 兩端聲線卡§B(WARN,不阻擋)。各版有真實對白:v01A=21 speaker 行(克制短句強潛台詞)、v01B=22 行(攻防更尖)、v01C=17 行(情緒更重旁白承載)。speakers=清道夫,瑟琳;org_as_speaker=false。D-050 子裁決2:僅寫 08_dialogue_outputs/ + 本 phase_log entry,未越界。"
+- phase: dialogue-write
+  date: '2026-06-03'
+  skill: /dialogue-write --converge
+  status: completed
+  scene_id: S-04-02
+  dialogue_paths:
+  - 08_dialogue_outputs/CH04_S02_瑟琳帶路_dialogue_v02.md
+  mode_tag: CONVERGENCE
+  converge_sources:
+  - 08_dialogue_outputs/CH04_S02_瑟琳帶路_dialogue_v01A.md
+  - 08_dialogue_outputs/CH04_S02_瑟琳帶路_dialogue_v01B.md
+  - 08_dialogue_outputs/CH04_S02_瑟琳帶路_dialogue_v01C.md
+  incomplete_fields: []
+  prereq_waived: false
+  notes: "收斂 v02 整合 v01A+v01B+v01C(三 trial 均 DIALOGUE_TRIAL/DRAFT_TRIAL/同 scene_id,驗證通過)。取 A 克制旁白收尾+B 請纓核心句與頂質疑攻防骨架+C 談外面世界明亮長句段;攻防收在瑟琳低攻擊性邊界、抒情壓回監看線下。v02=21 speaker 行+旁白,有真實對白。狀態 REVIEW/pipeline_state DIALOGUE_CONVERGED/mode_tag CONVERGENCE;source_dialogues=3 trial paths。speakers=清道夫,瑟琳;org_as_speaker=false。未 auto-run D.3.5/qa。D-050:僅寫 08_+本 entry。"
+- phase: dialogue-write
+  date: '2026-06-03'
+  skill: /dialogue-write
+  status: completed
+  scene_id: S-04-02
+  dialogue_paths:
+  - 08_dialogue_outputs/CH04_S02_瑟琳帶路_dialogue_v01A.md
+  - 08_dialogue_outputs/CH04_S02_瑟琳帶路_dialogue_v01B.md
+  - 08_dialogue_outputs/CH04_S02_瑟琳帶路_dialogue_v01C.md
+  mode_tag: DRAFT_TRIAL
+  converge_sources: null
+  incomplete_fields:
+  - style_anchor(§18.4 W-style 指紋缺;fallback 聲線卡§B)
+  - 時間/總句數上限(§17 06_a 未硬指定)
+  prereq_waived: false
+  notes: "Trial 3 版 S-04-02 瑟琳主動帶路。核心 6 欄(3/9/10/12/14/15)全就緒;上游 C-清道夫/C-瑟琳/R-清道夫-瑟琳 皆 REVIEW。D.2.5 task review gate 自主跑視為已授權通過(任務包 frontmatter 仍 TASK_DRAFT/DRAFT,未改任務包)。§18.4 W-style 未落地 → fallback 兩端聲線卡§B(WARN,不阻擋)。各版有真實對白:v01A=21 speaker 行(克制短句強潛台詞)、v01B=22 行(攻防更尖)、v01C=17 行(情緒更重旁白承載)。speakers=清道夫,瑟琳;org_as_speaker=false。D-050 子裁決2:僅寫 08_dialogue_outputs/ + 本 phase_log entry,未越界。"
+- phase: dialogue-write
+  date: '2026-06-03'
+  skill: /dialogue-write --converge
+  status: completed
+  scene_id: S-04-02
+  dialogue_paths:
+  - 08_dialogue_outputs/CH04_S02_瑟琳帶路_dialogue_v02.md
+  mode_tag: CONVERGENCE
+  converge_sources:
+  - 08_dialogue_outputs/CH04_S02_瑟琳帶路_dialogue_v01A.md
+  - 08_dialogue_outputs/CH04_S02_瑟琳帶路_dialogue_v01B.md
+  - 08_dialogue_outputs/CH04_S02_瑟琳帶路_dialogue_v01C.md
+  incomplete_fields: []
+  prereq_waived: false
+  notes: "收斂 v02 整合 v01A+v01B+v01C(三 trial 均 DIALOGUE_TRIAL/DRAFT_TRIAL/同 scene_id,驗證通過)。取 A 克制旁白收尾+B 請纓核心句與頂質疑攻防骨架+C 談外面世界明亮長句段;攻防收在瑟琳低攻擊性邊界、抒情壓回監看線下。v02=21 speaker 行+旁白,有真實對白。狀態 REVIEW/pipeline_state DIALOGUE_CONVERGED/mode_tag CONVERGENCE;source_dialogues=3 trial paths。speakers=清道夫,瑟琳;org_as_speaker=false。未 auto-run D.3.5/qa。D-050:僅寫 08_+本 entry。"
+- phase: dialogue-write
+  date: 2026-06-03
+  skill: /dialogue-write
+  status: completed
+  scene_id: S-06-01
+  dialogue_paths:
+    - 08_dialogue_outputs/CH06_S01_諾拉接管_dialogue_v01A.md
+    - 08_dialogue_outputs/CH06_S01_諾拉接管_dialogue_v01B.md
+    - 08_dialogue_outputs/CH06_S01_諾拉接管_dialogue_v01C.md
+  mode_tag: DRAFT_TRIAL
+  converge_sources: null
+  incomplete_fields: ["§13.1 total_line_cap", "§13.4 W-style 01_d not landed (F-022)"]
+  prereq_waived: false
+  note: "D.2.5 task review gate: task pack 狀態 DRAFT/TASK_DRAFT not REVIEW/TASK_REVIEW; autonomous-run rule 3 treats gate as authorized-passed (friction logged)"
+- phase: dialogue-write
+  date: 2026-06-03
+  skill: /dialogue-write --converge
+  status: completed
+  scene_id: S-06-01
+  dialogue_paths:
+    - 08_dialogue_outputs/CH06_S01_諾拉接管_dialogue_v02.md
+  mode_tag: CONVERGENCE
+  converge_sources:
+    - 08_dialogue_outputs/CH06_S01_諾拉接管_dialogue_v01A.md
+    - 08_dialogue_outputs/CH06_S01_諾拉接管_dialogue_v01B.md
+    - 08_dialogue_outputs/CH06_S01_諾拉接管_dialogue_v01C.md
+  incomplete_fields: []
+  prereq_waived: false
+- phase: dialogue-write
+  date: '2026-06-03'
+  skill: /dialogue-write
+  status: completed
+  scene_id: S-02-01
+  dialogue_paths:
+  - 08_dialogue_outputs/CH02_S01_瑟琳指蟲洞_dialogue_v01A.md
+  - 08_dialogue_outputs/CH02_S01_瑟琳指蟲洞_dialogue_v01B.md
+  - 08_dialogue_outputs/CH02_S01_瑟琳指蟲洞_dialogue_v01C.md
+  mode_tag: DRAFT_TRIAL
+  converge_sources: null
+  incomplete_fields:
+  - style_anchor(§18.4 W-style 指紋缺;fallback 聲線卡§B)
+  prereq_waived: false
+  notes: 試寫 v01A(克制短句強潛台詞,21 speaker行)/v01B(攻防更尖 妳一個逃村的懂什麼+扯後領退後,21行)/v01C(情緒更重 旁白暖意 我說對了,21行)。皆真實對白body具體對白行。清道夫=厭世吐槽+成本記帳+認錯短促嘖/算我看走眼(§B測試題4)+反話認可+綁安全命令,在乎不直說;瑟琳=固定敬語傭兵先生+那個…緩衝+聽村裡獵人說傳聞口吻(§B BeforeBattle_012)+嘿嘿式收下(§B AfterBattle_010)+明亮錨具體小成就不宣言+被嫌只嘟囔不還擊。資訊只談空的/塌/危險不歸因(W-rules §22.1 CH-08禁區)。觸發任務包§12.1權力翻轉情境1短暫非定型。D.2.5 gate:任務包為DRAFT/TASK_DRAFT(非REVIEW),自主跑視為已授權通過(記friction非靜默)。文風錨:01_d W-style未落地→聲線卡§B替代並WARN(F-022)。D-050:僅寫08_dialogue_outputs/+本phase_log。本skill不auto跑/qa與D.3.5。
+- phase: dialogue-write
+  date: '2026-06-03'
+  skill: /dialogue-write --converge
+  status: completed
+  scene_id: S-02-01
+  dialogue_paths:
+  - 08_dialogue_outputs/CH02_S01_瑟琳指蟲洞_dialogue_v02.md
+  mode_tag: CONVERGENCE
+  converge_sources:
+  - 08_dialogue_outputs/CH02_S01_瑟琳指蟲洞_dialogue_v01A.md
+  - 08_dialogue_outputs/CH02_S01_瑟琳指蟲洞_dialogue_v01B.md
+  - 08_dialogue_outputs/CH02_S01_瑟琳指蟲洞_dialogue_v01C.md
+  incomplete_fields: []
+  prereq_waived: false
+  notes: 收斂v02(狀態REVIEW/DIALOGUE_CONVERGED/CONVERGENCE,24 speaker行真實對白)。v01A骨架四段節奏為主幹+取v01B攻防尖點(妳一個逃村的懂什麼/扯後領退後!/數量不太對勁)+取v01C成就感兩句(我說對了/原來我記得的東西真的有用)與清道夫第一人稱旁白暖意。裁減:v01C旁白暖意削回兩段避免稀釋黑色幽默、瑟琳逃村碎片裁掉只留聽獵人說(守低演出成本);衝突同位認可句v01A+v01B合併。守關係階段=救命恩人漸趨並肩早期,認可一次鬆口不跳階。資訊停表象不歸因。本skill不auto跑/qa與D.3.5。
+
+- phase: dialogue-write
+  date: 2026-06-03
+  skill: /dialogue-write
+  status: completed
+  scene_id: S-04-01
+  dialogue_paths:
+    - 08_dialogue_outputs/CH04_S01_社畜修砲_dialogue_v01A.md
+    - 08_dialogue_outputs/CH04_S01_社畜修砲_dialogue_v01B.md
+    - 08_dialogue_outputs/CH04_S01_社畜修砲_dialogue_v01C.md
+  mode_tag: DRAFT_TRIAL
+  converge_sources: null
+  incomplete_fields: []
+  prereq_waived: false
+  notes: "自主跑 trial 3 版（v01A 克制短句/v01B 對攻更尖/v01C 情緒重）。D.2.5 task review gate + Stage3 approval 視為已授權通過寫檔。任務包核心欄位 3/9/10/12/14/15 全就緒。上游 C-清道夫/C-莉娜/R-清道夫-莉娜 皆 REVIEW。文風錨定 01_d W-style 未落地（STYLE_ANCHOR WARN, F-022/D-055），以兩聲線卡 §B 既有劇本台詞基準替代對齊。回收 S-03-01 流放伏筆（拒簽爛槍→流放，怨氣帶過不煽情）；核心價值硬話『給戰士配發會殺死自己的槍那是謀殺』§B-7 落地。守 CH-08 禁區（不歸因蟲災成因/不命名戀愛）。speakers=清道夫,莉娜；org_as_speaker=false。D-050 子裁決2 僅寫 08_dialogue_outputs/ + 本 phase_log。"
+
+- phase: dialogue-write
+  date: 2026-06-03
+  skill: /dialogue-write --converge
+  status: completed
+  scene_id: S-04-01
+  dialogue_paths:
+    - 08_dialogue_outputs/CH04_S01_社畜修砲_dialogue_v02.md
+  mode_tag: CONVERGENCE
+  converge_sources:
+    - 08_dialogue_outputs/CH04_S01_社畜修砲_dialogue_v01A.md
+    - 08_dialogue_outputs/CH04_S01_社畜修砲_dialogue_v01B.md
+    - 08_dialogue_outputs/CH04_S01_社畜修砲_dialogue_v01C.md
+  incomplete_fields: []
+  prereq_waived: false
+  notes: "收斂 v02（DIALOGUE_CONVERGED/REVIEW）：以 v01B 對攻骨架為主軸，嫁接 v01C 高潮情緒重量（被劃掉的數字+成本接住），收尾融 v01A 克制節制；三版亮點皆入（可保留亮點表 8 項）。互嗆底色+代號認可+不說破三底線守住（§R §6）。人類裁決項：時段/互嗆烈度/總句數。自主跑收斂 gate 視為已授權通過寫檔。不 auto-trigger /qa（下游 8 份）。"
+- phase: dialogue-write
+  date: 2026-06-03
+  skill: /dialogue-write
+  status: completed
+  scene_id: S-07-02
+  dialogue_paths:
+    - 08_dialogue_outputs/CH07_S02_諾拉不可替換_dialogue_v01A.md
+    - 08_dialogue_outputs/CH07_S02_諾拉不可替換_dialogue_v01B.md
+    - 08_dialogue_outputs/CH07_S02_諾拉不可替換_dialogue_v01C.md
+  mode_tag: DRAFT_TRIAL
+  converge_sources: null
+  incomplete_fields: ["§18.3 高風險基線(00_b §6 缺寫,F-022,以05_e+00_b通用救援/瀕死偏好 fallback)", "§18.4 文風量化指紋(01_d W-style未落地,STYLE_ANCHOR,以兩角色聲線卡§B既有劇本台詞 fallback)"]
+  prereq_waived: false
+  notes: "S-07-02 C3 諾拉險出事不可替換（C-清道夫, C-諾拉）trial 3 版。自主跑：D.2.5 task review gate(任務包實際 DRAFT/TASK_DRAFT)視為已授權通過；Stage3 approval gate 視為已授權通過寫檔。核心欄位3/9/10/12/14/15全非空。上游 C-清道夫REVIEW/C-諾拉REVIEW/R-清道夫-諾拉REVIEW 皆>=REVIEW。org_as_speaker=false(本場無ORG說話者)。文風錨定狀態 WARN：§18.4 為TODO,以聲線卡§B(清道夫12句/諾拉11句覆蓋8場景類型)fallback。三版取角：v01A克制短句強潛台詞(20 speaker行)/v01B攻防更尖+「別死」反將(22行)/v01C情緒更重過度精確不可替換+破折號改口(21行)。聲線忠實：清道夫危機切短命令+成本記帳遮掩+漏半句立刻撤回+OS去英雄化;諾拉系統回報語法+認錯不道歉+萬物換算管理術語+收尾要睡+零粗口。禁區守住：蟲災=人為真相全禁觸(05_d §0);無煽情/無諾拉抒情/無說破關係(02_c §3.3「我需要你/我不能失去妳」等紅線僅出現在設計註解引述,不在正文)。D-050 子裁決2：僅寫 08_dialogue_outputs/ + 本 phase_log entry,未越界。不 auto 觸發 D.3.5/qa。"
+- phase: dialogue-write
+  date: 2026-06-03
+  skill: /dialogue-write --converge
+  status: completed
+  scene_id: S-07-02
+  dialogue_paths:
+    - 08_dialogue_outputs/CH07_S02_諾拉不可替換_dialogue_v02.md
+  mode_tag: CONVERGENCE
+  converge_sources:
+    - 08_dialogue_outputs/CH07_S02_諾拉不可替換_dialogue_v01A.md
+    - 08_dialogue_outputs/CH07_S02_諾拉不可替換_dialogue_v01B.md
+    - 08_dialogue_outputs/CH07_S02_諾拉不可替換_dialogue_v01C.md
+  incomplete_fields: []
+  prereq_waived: false
+  notes: "S-07-02 收斂 v02（CONVERGENCE/REVIEW/DIALOGUE_CONVERGED,24 speaker行）。整合三版亮點：v01A 乾淨撤離+最短記帳撤回;v01B 攻防四回合骨架+「狗娘養的妳就不能怕一次嗎」+「別死」反將+OS「抖的是我」;v01C 反覆檢查傷勢動作+破折號改口「下次再這樣我就——」+諾拉過度精確「不可替換」計算。同位置衝突取捨：不可替換台詞保留v01C過度精確為主+併v01B「別死」收束;清道夫後怕分置OS層(抖的是我)與台面層(破折號改口)不重複。自主跑：Stage5 approval gate 視為已授權通過寫檔;source_dialogues=3 trial paths。org_as_speaker=false。守 §19.2.4 不可磨平亮點(口是心非反差萌/嘴推手做/成本vs優先級對撞)。需人類裁決(§19.2.5/09_e final-gating)。D-050 子裁決2 僅寫 08_dialogue_outputs/ + 本 phase_log。不 auto 觸發 D.3.5/qa(下一步：人類確認後 /qa v02)。"
+- phase: dialogue-write
+  date: 2026-06-03
+  skill: /dialogue-write
+  status: completed
+  scene_id: S-09-01
+  dialogue_paths:
+    - 08_dialogue_outputs/CH09_S01_聯合防衛戰_dialogue_v01A.md
+    - 08_dialogue_outputs/CH09_S01_聯合防衛戰_dialogue_v01B.md
+    - 08_dialogue_outputs/CH09_S01_聯合防衛戰_dialogue_v01C.md
+  mode_tag: DRAFT_TRIAL
+  converge_sources: null
+  incomplete_fields: ["§18.4文風量化指紋(01_d W-style未落地→聲線卡§B替代,WARN,F-022)", "三女角彼此R-*段(瑟琳-莉娜/瑟琳-諾拉/莉娜-諾拉)無正式段→聲線卡§D hooks替代,WARN", "時段(06_a未標,INFERENCE)"]
+  prereq_waived: false
+  notes: "四人聯合防衛戰高光(結局前/隊伍高光,高風險)試寫3版。v01A克制短句默契留白/v01B攻防尖莉娜↔諾拉互嗆全開+東牆50秒過載危機/v01C情緒重清道夫旁白盤算層承載駐守決心。四聲線分得開:清道夫成本厭世+旁白記帳遮掩在乎/瑟琳敬語傭兵先生+怕但仍往前+後勤路線高光/莉娜火爆老娘本小姐罵綁火控+綁任務關心/諾拉零粗口系統回報+優先級包裝在乎。對齊四聲線卡§A/§B/§C/§D+含清道夫三對R-*+06_a §22.2+任務包§11/§13/§14.3。駐守決心由行動(明天南線多堆兩成)+成本邏輯落地非宣言(05_c §12.2);蟲后僅暗示不全揭(05_d §0);自動化/能源伏筆(S-06-01)由諾拉部署落地回收。無關係說滿/主題宣言/告別煽情/禁用詞。org_as_speaker=false(本場無ORG說話者)。D-050子裁決2:僅寫08_dialogue_outputs/+本phase_log。friction:任務包磁碟gate為狀態DRAFT/pipeline_state TASK_DRAFT(非REVIEW/TASK_REVIEW),自主跑rule#3視D.2.5 gate已授權通過寫檔(已記friction)。文風錨定降級來源(聲線卡§B,01_d Template骨架,WARN)。"
+- phase: dialogue-write
+  date: 2026-06-03
+  skill: /dialogue-write --converge
+  status: completed
+  scene_id: S-09-01
+  dialogue_paths:
+    - 08_dialogue_outputs/CH09_S01_聯合防衛戰_dialogue_v02.md
+  mode_tag: CONVERGENCE
+  converge_sources:
+    - 08_dialogue_outputs/CH09_S01_聯合防衛戰_dialogue_v01A.md
+    - 08_dialogue_outputs/CH09_S01_聯合防衛戰_dialogue_v01B.md
+    - 08_dialogue_outputs/CH09_S01_聯合防衛戰_dialogue_v01C.md
+  incomplete_fields: []
+  prereq_waived: false
+  notes: "收斂定稿v02。以v01A克制骨架+收工務實收尾為主幹,保留v01B莉娜↔諾拉技術互嗆全開+東牆50秒過載協同頂點+清道夫↔莉娜雙向對攻,採v01C清道夫旁白盤算層承載駐守決心(旁白比例收斂不壓戰鬥節奏)。三版共同骨架(配置→第一波→南線繞道→東牆危機→退潮收尾)無衝突節拍。狀態REVIEW/pipeline_state DIALOGUE_CONVERGED/mode_tag CONVERGENCE/source_dialogues=三trial。不auto-run D.3.5/不auto-run /qa。org_as_speaker=false。下一步:人類確認後跑/qa v02。"
+
+- phase: dialogue-write
+  date: '2026-06-03'
+  skill: /dialogue-write
+  status: completed
+  scene_id: S-06-02
+  dialogue_paths:
+  - 08_dialogue_outputs/CH06_S02_四人磨合_dialogue_v01A.md
+  - 08_dialogue_outputs/CH06_S02_四人磨合_dialogue_v01B.md
+  - 08_dialogue_outputs/CH06_S02_四人磨合_dialogue_v01C.md
+  mode_tag: DRAFT_TRIAL
+  converge_sources: null
+  incomplete_fields:
+  - "style_anchor(§18.4 01_d W-style 未落地;fallback 四聲線卡§B,WARN)"
+  - "R-莉娜-諾拉 關係實體不存在(以兩卡§D-2 hook 推導,friction)"
+  prereq_waived: false
+  notes: '試寫 3 版 S-06-02 四人首次同框磨合（隊伍成形）。各版皆真實對白 body 具體對白行，四說話者全到、無缺席：v01A=29 speaker行(清9/瑟5/莉8/諾7,克制短句強潛台詞+椅子起手)、v01B=21行(清5/瑟3/莉7/諾6,攻防更尖:供電火控互嗆最烈+瑟琳硬擠進緩衝)、v01C=21行(清5/瑟2/莉7/諾7,情緒更重但避免直說:莉娜流放底色一句/諾拉值得維護/清道夫懶得重找)。四聲線分得開:清道夫成本厭世整合者拍板不下場比技術+OS去英雄化;瑟琳怯生敬語(傭兵先生/莉娜小姐/諾拉小姐)+那個…緩衝+後勤具體小事(咖啡/收線/分電路);莉娜火爆老娘本小姐+反問後綴(炸給誰看)+罵綁具體技術(火控線/供電/良率)+紙上談兵嫌棄;諾拉零粗口冷處理+系統回報語法(因果關係上來說)+重複前句迴避+萬物換算(效率/優先級/值得維護)+收尾要睡。莉娜↔諾拉錯位攻防(火爆主攻×冷處理吸收),諾拉全程未被激到飆粗口對罵(守辨識核心§7);認可只到嫌棄式不情願(勉強堪用/效率可接受/給我參數)非太快互相認可(守§12.3/§14.4)。守 CH-08 禁區:全場無蟲災真相,技術互嗆只到硬體vs自動化路線差異(§13.1);無隊伍宣言/情感和解(§8.2/§14.4)。speakers_used=清道夫,瑟琳,莉娜,諾拉;org_as_speaker=false(本場無 ORG 說話者)。D.2.5 task review gate:任務包實際 狀態DRAFT/pipeline_state TASK_DRAFT(非REVIEW),自主跑視為已授權通過(記 friction 非靜默失敗)。文風錨定 WARN:§18.4 01_d W-style Template 骨架未落地,以四聲線卡§B 既有劇本台詞基準 fallback(STYLE_ANCHOR,F-022/D-055)。friction:R-莉娜-諾拉 關係實體不存在,本場核心對以兩卡§D-2 職能磨合 hook+§A-9 差異推導(F-022 類)。D-050 子裁決2:僅寫 08_dialogue_outputs/ + 本 phase_log entry,未越界。不 auto 觸發 D.3.5/qa。'
+- phase: dialogue-write
+  date: '2026-06-03'
+  skill: /dialogue-write --converge
+  status: completed
+  scene_id: S-06-02
+  dialogue_paths:
+  - 08_dialogue_outputs/CH06_S02_四人磨合_dialogue_v02.md
+  mode_tag: CONVERGENCE
+  converge_sources:
+  - 08_dialogue_outputs/CH06_S02_四人磨合_dialogue_v01A.md
+  - 08_dialogue_outputs/CH06_S02_四人磨合_dialogue_v01B.md
+  - 08_dialogue_outputs/CH06_S02_四人磨合_dialogue_v01C.md
+  incomplete_fields: []
+  prereq_waived: false
+  notes: '收斂 v02 S-06-02 四人磨合(CONVERGENCE/REVIEW/DIALOGUE_CONVERGED,27 speaker行真實對白,清8/瑟4/莉8/諾7)。整合三版亮點:取 v01A 椅子起手(四個人一張能用的椅子)+四聲線乾淨落差;取 v01B 最尖供電火控互嗆(拿優先級表去拍死牠們嗎/修不出讓它打中東西的腦子/變數已記錄)+瑟琳硬擠進緩衝(我把線分開走了)+清道夫拍板四句(鐵歸莉娜/數歸諾拉/線歸瑟琳/現場我說了算);取 v01C 遮掩式在乎收尾(莉娜寫五頁報告給死胖子簽流放底色不直說/諾拉據點值得維護→效率可接受立即蓋掉/清道夫懶得重找一批人)。四段節奏完整:互嗆→緩衝→拍板→各自不肯認。同位衝突取捨:認可句採嫌棄式不情願(勉強堪用合併良率比預估高);莉娜流放露出控在制度厭世層不碰被當棄子直說(交人類微調)。可保留亮點表 7 項。錯位攻防+諾拉零粗口未對罵守住;無隊伍宣言/太快認可/蟲災真相。speakers_used=清道夫,瑟琳,莉娜,諾拉;org_as_speaker=false。source_dialogues=3 trial paths。自主跑:Stage5 approval gate 視為已授權通過寫檔。需人類裁決(表層/真實目標 INFERENCE/流放露出程度/互稱)。D-050 子裁決2:僅寫 08_dialogue_outputs/ + 本 phase_log。不 auto 觸發 D.3.5/qa(下一步:人類確認後 /qa v02)。'
+
+- phase: qa
+  date: 2026-06-03
+  skill: /qa
+  status: completed
+  scene_id: S-01-01
+  target_dialogue: 08_dialogue_outputs/CH01_S01_瑟琳學裝填_dialogue_v02.md
+  qa_report_paths:
+    - 09_quality_assurance/CH01_S01_瑟琳學裝填_dialogue_v02_QA_類型偏移_報告.md      # qa_type: GENRE_DRIFT
+    - 09_quality_assurance/CH01_S01_瑟琳學裝填_dialogue_v02_QA_資訊控制_報告.md      # qa_type: INFO_CONTROL
+    - 09_quality_assurance/CH01_S01_瑟琳學裝填_dialogue_v02_QA_對話張力_報告.md      # qa_type: DRAMATIC_TENSION
+    - 09_quality_assurance/CH01_S01_瑟琳學裝填_dialogue_v02_QA_聲線_報告.md          # qa_type: VOICE_CONSISTENCY
+    - 09_quality_assurance/CH01_S01_瑟琳學裝填_dialogue_v02_QA_節奏感_報告.md        # qa_type: RHYTHM
+    - 09_quality_assurance/CH01_S01_瑟琳學裝填_dialogue_v02_QA_AI味_報告.md          # qa_type: AI_FLAVOR
+    - 09_quality_assurance/CH01_S01_瑟琳學裝填_dialogue_v02_QA_禁用詞_報告.md        # qa_type: FORBIDDEN_WORD
+    - 09_quality_assurance/CH01_S01_瑟琳學裝填_dialogue_v02_QA_跨場一致性_報告.md    # qa_type: CROSS_SCENE_CONTINUITY
+  qa_decision: PASS
+  depth_layer: standard
+  notes: "Stage 0 UDV 5 條：1 台詞檔有真實對白 body 25 speaker turn(清12/瑟13) PASS;2 phase_log dialogue-write --converge 宣稱 v02 path 磁碟存在 PASS;3 pipeline_state DIALOGUE_CONVERGED 對應 --converge completed 紀錄一致 + 依賴 C-清道夫/C-瑟琳 REVIEW、R-清道夫-瑟琳 落 04_a >=REVIEW PASS;4 任務包 07_scene_tasks/CH01_S01_台詞任務包.md 核心欄位(3/9/10/12/14/15)非空但 狀態DRAFT/TASK_DRAFT → F-029 已知 waiver,記 WARN 不 abort;5 無宣稱外部檔缺失 PASS。UDV=PASS_WITH_WARN。8 報全 PASS → qa_decision PASS。對抗式:每份先列攻擊切角再判 PASS,雙 lens 全跑無分歧。F-022:00_b §5/§6 角色/高風險基線空、02_c §7/§8.2 角色/場景禁用詞空、05_d §CH-01 逐場 row 空 → 以兩端聲線卡偏移段/§B/黑名單 + 任務包 §13/§14.3 + 04_a R §5 + 05_b §24 + W-rules §22.1 替代,覆蓋充分不阻擋判定。F-031:09_i 無 FINAL/LOCKED 前場(本場為時間線最前)→ 前瞻 continuity + QA_PASSED 同主角軟比對。08_ frontmatter 更新 pipeline_state DIALOGUE_CONVERGED->QA_PASSED + qa_decision null->PASS,未動 body。D-050 子裁決2:僅寫 09_quality_assurance/ 8 報 + 08_ frontmatter 兩欄 + 本 phase_log entry。未越界。自主跑:Stage 3 approval gate 視為已授權通過寫檔。"
+- phase: qa
+  date: 2026-06-03
+  skill: /qa
+  status: completed
+  scene_id: S-06-01
+  target_dialogue: 08_dialogue_outputs/CH06_S01_諾拉接管_dialogue_v02.md
+  qa_report_paths:
+    - 09_quality_assurance/CH06_S01_諾拉接管_dialogue_v02_QA_AI味_報告.md      # qa_type: AI_FLAVOR
+    - 09_quality_assurance/CH06_S01_諾拉接管_dialogue_v02_QA_聲線_報告.md      # qa_type: VOICE_CONSISTENCY
+    - 09_quality_assurance/CH06_S01_諾拉接管_dialogue_v02_QA_禁用詞_報告.md    # qa_type: FORBIDDEN_WORD
+    - 09_quality_assurance/CH06_S01_諾拉接管_dialogue_v02_QA_資訊控制_報告.md  # qa_type: INFO_CONTROL
+    - 09_quality_assurance/CH06_S01_諾拉接管_dialogue_v02_QA_類型偏移_報告.md  # qa_type: GENRE_DRIFT
+    - 09_quality_assurance/CH06_S01_諾拉接管_dialogue_v02_QA_節奏感_報告.md    # qa_type: RHYTHM
+    - 09_quality_assurance/CH06_S01_諾拉接管_dialogue_v02_QA_對話張力_報告.md  # qa_type: DRAMATIC_TENSION
+    - 09_quality_assurance/CH06_S01_諾拉接管_dialogue_v02_QA_跨場一致性_報告.md # qa_type: CROSS_SCENE_CONTINUITY
+  qa_decision: PASS
+  depth_layer: standard
+  notes: "Stage 0 UDV 全5條通過(檔有真實對白body 27 speaker行清15/諾12 / phase_log dialogue-write --converge dialogue_paths 磁碟存在 / pipeline_state DIALOGUE_CONVERGED 對應 --converge completed 紀錄 / 依賴 C-清道夫 C-諾拉 R-清道夫-諾拉 皆 REVIEW)。UDV第4條 WARN(非abort,F-029): 任務包 狀態DRAFT/TASK_DRAFT(非REVIEW),自主跑D.2.5 gate視為已授權,核心欄位3/9/10/12/14/15非空。8報全PASS->QA_PASSED。對抗式:每份先列攻擊切角再判PASS。雙lens全跑無分歧。F-022:00_b §1/§5/§6 + 02_c §7/§8.2 + 05_d逐場row 未落地,以聲線卡§B/§6偏移段/§7污染 + 任務包§8/§9.3/§9.4 + R §5(09_d基線) + W-rules §22.1 替代,覆蓋充分不阻擋判定。09_i:採實證比對(F-031),比較集含同對前場 S-05-01(QA_PASSED,緊接其後),CH-06內無其他QA_PASSED場故以S-05-01為錨點+CH-07前瞻提醒。D-050子裁決2:僅寫09_quality_assurance/ 8報 + 08 frontmatter兩欄(pipeline_state DIALOGUE_CONVERGED->QA_PASSED, qa_decision null->PASS) + 本phase_log entry。未越界。本skill不auto升FINAL/不建09_e。"
+- phase: qa
+  date: 2026-06-03
+  skill: /qa
+  status: completed
+  scene_id: S-07-01
+  target_dialogue: 08_dialogue_outputs/CH07_S01_火力掩護_dialogue_v02.md
+  qa_report_paths:
+    - 09_quality_assurance/CH07_S01_火力掩護_dialogue_v02_QA_類型偏移_報告.md      # qa_type: GENRE_DRIFT
+    - 09_quality_assurance/CH07_S01_火力掩護_dialogue_v02_QA_資訊控制_報告.md      # qa_type: INFO_CONTROL
+    - 09_quality_assurance/CH07_S01_火力掩護_dialogue_v02_QA_對話張力_報告.md      # qa_type: DRAMATIC_TENSION
+    - 09_quality_assurance/CH07_S01_火力掩護_dialogue_v02_QA_聲線_報告.md          # qa_type: VOICE_CONSISTENCY
+    - 09_quality_assurance/CH07_S01_火力掩護_dialogue_v02_QA_節奏感_報告.md        # qa_type: RHYTHM
+    - 09_quality_assurance/CH07_S01_火力掩護_dialogue_v02_QA_AI味_報告.md          # qa_type: AI_FLAVOR
+    - 09_quality_assurance/CH07_S01_火力掩護_dialogue_v02_QA_禁用詞_報告.md        # qa_type: FORBIDDEN_WORD
+    - 09_quality_assurance/CH07_S01_火力掩護_dialogue_v02_QA_跨場一致性_報告.md    # qa_type: CROSS_SCENE_CONTINUITY
+  qa_decision: PASS
+  depth_layer: standard
+  notes: "Stage 0 UDV 5 條：1 台詞檔有真實對白 body 24 speaker 行(12 清道夫/12 莉娜)非空殼; 2 phase_log dialogue-write --converge S-07-01 completed 且 v02 檔磁碟存在; 3 pipeline_state DIALOGUE_CONVERGED 對應 --converge completed 紀錄一致+依賴 C-清道夫/C-莉娜/R-清道夫-莉娜 皆 REVIEW; 5 無宣稱已寫但缺檔。第 4 條 task pack 為 狀態DRAFT/TASK_DRAFT(非 REVIEW)=已知 F-029 waiver,記 WARN 不 abort(自主跑 D.2.5 視為已授權)。8 報全 PASS(對抗式每份先列攻擊切角再判 PASS;雙 lens 全跑無分歧)→ qa_decision PASS。F-022:05_d 無逐章 §CH-07 row/00_b §5/§6/02_c §7/§8.2 為空 Template 骨架,以聲線卡偏移段+§B+R §5/§6+任務包 §13/§14.3+00_b §1 已落地基調替代,覆蓋充分不阻擋。禁用詞掃描:正文唯一'神'命中為'分神'複合詞誤報已排除;'別死'被刻意改寫成記帳變體屬模範規避。09_i:同章 FINAL/LOCKED corpus 空(S-07-02 僅 REVIEW)→前瞻式+S-03-01 QA_PASSED 同對軟比對(F-031)。自主跑:Stage 3 approval gate 視為已授權通過寫檔。D-050 子裁決2:僅寫 09_quality_assurance/ 8 報+08_ frontmatter 兩欄(pipeline_state DIALOGUE_CONVERGED->QA_PASSED, qa_decision null->PASS)+本 phase_log entry,未越界。"
+- phase: qa
+  date: 2026-06-03
+  skill: /qa
+  status: completed
+  scene_id: S-04-02
+  target_dialogue: 08_dialogue_outputs/CH04_S02_瑟琳帶路_dialogue_v02.md
+  qa_report_paths:
+    - 09_quality_assurance/CH04_S02_瑟琳帶路_dialogue_v02_QA_類型偏移_報告.md      # qa_type: GENRE_DRIFT
+    - 09_quality_assurance/CH04_S02_瑟琳帶路_dialogue_v02_QA_資訊控制_報告.md    # qa_type: INFO_CONTROL
+    - 09_quality_assurance/CH04_S02_瑟琳帶路_dialogue_v02_QA_對話張力_報告.md    # qa_type: DRAMATIC_TENSION
+    - 09_quality_assurance/CH04_S02_瑟琳帶路_dialogue_v02_QA_聲線_報告.md        # qa_type: VOICE_CONSISTENCY
+    - 09_quality_assurance/CH04_S02_瑟琳帶路_dialogue_v02_QA_節奏感_報告.md      # qa_type: RHYTHM
+    - 09_quality_assurance/CH04_S02_瑟琳帶路_dialogue_v02_QA_AI味_報告.md        # qa_type: AI_FLAVOR
+    - 09_quality_assurance/CH04_S02_瑟琳帶路_dialogue_v02_QA_禁用詞_報告.md      # qa_type: FORBIDDEN_WORD
+    - 09_quality_assurance/CH04_S02_瑟琳帶路_dialogue_v02_QA_跨場一致性_報告.md  # qa_type: CROSS_SCENE_CONTINUITY
+  qa_decision: PASS
+  depth_tier: standard
+  notes: "S-04-02 收斂 v02 標準層 8 報全 PASS。對抗式逐報攻擊切角+雙 lens 無分歧。UDV Stage0 通過(檔有真實對白 21 speaker行+旁白/phase_log converge entry 實存/pipeline_state DIALOGUE_CONVERGED 與 phase_log 一致)。任務包 DRAFT/TASK_DRAFT=F-029 已知 waiver 記 WARN 未 abort。F-022: 05_d逐場/02_c §7§8.2 空 → 以 R§5+任務包§13/§14.3+W-rules§22.1+聲線卡黑名單替代並記 friction(09_d/09_c)。09_i: CH-04 無 FINAL 同 cast 比較場 → 前瞻式+同 cast REVIEW 前作諮詢性實證(F-031)。frontmatter 更新 pipeline_state QA_PASSED/qa_decision PASS。D-050 子裁決2: 僅寫 09_quality_assurance/ 8報+08_ frontmatter 兩欄+本 phase_log。未產 09_e、未升 FINAL/LOCKED。"
+
+- phase: qa
+  date: 2026-06-03
+  skill: /qa
+  status: completed
+  scene_id: S-02-01
+  target_dialogue: 08_dialogue_outputs/CH02_S01_瑟琳指蟲洞_dialogue_v02.md
+  qa_report_paths:
+    - 09_quality_assurance/CH02_S01_瑟琳指蟲洞_dialogue_v02_QA_類型偏移_報告.md      # qa_type: GENRE_DRIFT
+    - 09_quality_assurance/CH02_S01_瑟琳指蟲洞_dialogue_v02_QA_資訊控制_報告.md      # qa_type: INFO_CONTROL
+    - 09_quality_assurance/CH02_S01_瑟琳指蟲洞_dialogue_v02_QA_對話張力_報告.md      # qa_type: DRAMATIC_TENSION
+    - 09_quality_assurance/CH02_S01_瑟琳指蟲洞_dialogue_v02_QA_聲線_報告.md          # qa_type: VOICE_CONSISTENCY
+    - 09_quality_assurance/CH02_S01_瑟琳指蟲洞_dialogue_v02_QA_節奏感_報告.md        # qa_type: RHYTHM
+    - 09_quality_assurance/CH02_S01_瑟琳指蟲洞_dialogue_v02_QA_AI味_報告.md          # qa_type: AI_FLAVOR
+    - 09_quality_assurance/CH02_S01_瑟琳指蟲洞_dialogue_v02_QA_禁用詞_報告.md        # qa_type: FORBIDDEN_WORD
+    - 09_quality_assurance/CH02_S01_瑟琳指蟲洞_dialogue_v02_QA_跨場一致性_報告.md    # qa_type: CROSS_SCENE_CONTINUITY
+  qa_decision: PASS
+  depth_layer: standard
+  notes: "Stage 0 UDV 全 5 條通過（台詞檔有真實對白 body 24 speaker 行=清道夫15/瑟琳9+旁白5段 / phase_log dialogue-write --converge completed 紀錄存在且 dialogue_paths 磁碟存在 / frontmatter DIALOGUE_CONVERGED 對應 --converge completed 紀錄 / 依賴 C-清道夫,C-瑟琳,R-清道夫-瑟琳 皆 REVIEW / source_task 任務包核心欄位 3/9/10/12/14/15 非空）。UDV 第4條 WARN(非abort,F-029)：任務包 狀態DRAFT/TASK_DRAFT(非REVIEW)，屬已知 waiver，自主跑 D.2.5 gate 視為已授權通過(phase_log 已記 friction，非靜默)。8 報全 PASS → qa_decision PASS。對抗式：每份先列攻擊切角+為何攻不破再判 PASS；雙 lens 全跑無分歧。F-022：05_d 無逐場 §CH-02 row、00_b §5/§6 與 02_c 角色/場景禁用詞未落地，以 R §5(09_d明文基線)/聲線卡§B+偏移段/任務包§13§14.3/05_b§24.4/W-rules§22.1 替代，覆蓋充分不阻擋判定。00_b §1/§2 已落地直接引用。09_i：有實證前場 S-01-01(CH01_S01_瑟琳學裝填_v02,QA_PASSED,同主角對怯生期)做 chapter scope 實證四軸比對(F-031 實證優先),S-04-02 前瞻為輔。D-050 子裁決2：僅寫 09_quality_assurance/ 8 報 + 08_ frontmatter 兩欄(pipeline_state DIALOGUE_CONVERGED->QA_PASSED, qa_decision null->PASS) + 本 phase_log entry。未越界、未建 09_e、未升 FINAL。"
+- phase: qa
+  date: 2026-06-03
+  skill: /qa
+  status: completed
+  scene_id: S-07-02
+  target_dialogue: 08_dialogue_outputs/CH07_S02_諾拉不可替換_dialogue_v02.md
+  qa_report_paths:
+    - 09_quality_assurance/CH07_S02_諾拉不可替換_dialogue_v02_QA_類型偏移_報告.md      # qa_type: GENRE_DRIFT
+    - 09_quality_assurance/CH07_S02_諾拉不可替換_dialogue_v02_QA_資訊控制_報告.md      # qa_type: INFO_CONTROL
+    - 09_quality_assurance/CH07_S02_諾拉不可替換_dialogue_v02_QA_對話張力_報告.md      # qa_type: DRAMATIC_TENSION
+    - 09_quality_assurance/CH07_S02_諾拉不可替換_dialogue_v02_QA_聲線_報告.md          # qa_type: VOICE_CONSISTENCY
+    - 09_quality_assurance/CH07_S02_諾拉不可替換_dialogue_v02_QA_節奏感_報告.md        # qa_type: RHYTHM
+    - 09_quality_assurance/CH07_S02_諾拉不可替換_dialogue_v02_QA_AI味_報告.md          # qa_type: AI_FLAVOR
+    - 09_quality_assurance/CH07_S02_諾拉不可替換_dialogue_v02_QA_禁用詞_報告.md        # qa_type: FORBIDDEN_WORD
+    - 09_quality_assurance/CH07_S02_諾拉不可替換_dialogue_v02_QA_跨場一致性_報告.md    # qa_type: CROSS_SCENE_CONTINUITY
+  qa_decision: PASS
+  depth_layer: standard
+  notes: "Stage 0 UDV 全 5 條通過（v02 有真實對白 body 24 speaker 行/phase_log dialogue-write --converge S-07-02 dialogue_paths 磁碟存在/frontmatter DIALOGUE_CONVERGED 對應 --converge completed 紀錄/depends_on C-清道夫·C-諾拉·R-清道夫-諾拉 皆 REVIEW/v01A·v01B·v01C 宣稱檔皆存在）。UDV 第4條 note：任務包 狀態DRAFT/TASK_DRAFT（非 REVIEW），F-029 已知 waiver，記 WARN 不 abort。8 報全 PASS → qa_decision PASS。對抗式：每份先列 lens A 攻擊切角+為何攻不破再判 PASS，雙 lens 全跑無分歧。09_d 注意 05_d 缺逐場 row(F-022)以 05_d §0+04_a §5 5條+任務包 §13 替代；09_c §3.4 告別套語/§3.3 關係總結詞紅線零命中（救援未寫成瀕死遺言場）；09_i 無 FINAL/LOCKED 比較集→前瞻式(F-031)+QA_PASSED 同主角場軟比對。F-022 friction：00_b §3/§4/§5/§6·02_c §7/§8.2·01_d W-style 為 Template 骨架空，以聲線卡 §B/§6/§7+00_b §1/§2+04_a §5/§6+任務包 §13/§14 fallback 覆蓋充分。D-050 子裁決2：僅寫 09_quality_assurance/ 8 報 + 08_ frontmatter 兩欄(DIALOGUE_CONVERGED->QA_PASSED, qa_decision null->PASS) + 本 phase_log entry，未越界。不 auto 升 FINAL/不建 09_e。"
+- phase: qa
+  date: 2026-06-03
+  skill: /qa
+  status: completed
+  scene_id: S-04-01
+  target_dialogue: 08_dialogue_outputs/CH04_S01_社畜修砲_dialogue_v02.md
+  qa_report_paths:
+    - 09_quality_assurance/CH04_S01_社畜修砲_dialogue_v02_QA_類型偏移_報告.md      # qa_type: GENRE_DRIFT
+    - 09_quality_assurance/CH04_S01_社畜修砲_dialogue_v02_QA_資訊控制_報告.md      # qa_type: INFO_CONTROL
+    - 09_quality_assurance/CH04_S01_社畜修砲_dialogue_v02_QA_對話張力_報告.md      # qa_type: DRAMATIC_TENSION
+    - 09_quality_assurance/CH04_S01_社畜修砲_dialogue_v02_QA_聲線_報告.md          # qa_type: VOICE_CONSISTENCY
+    - 09_quality_assurance/CH04_S01_社畜修砲_dialogue_v02_QA_節奏感_報告.md        # qa_type: RHYTHM
+    - 09_quality_assurance/CH04_S01_社畜修砲_dialogue_v02_QA_AI味_報告.md          # qa_type: AI_FLAVOR
+    - 09_quality_assurance/CH04_S01_社畜修砲_dialogue_v02_QA_禁用詞_報告.md        # qa_type: FORBIDDEN_WORD
+    - 09_quality_assurance/CH04_S01_社畜修砲_dialogue_v02_QA_跨場一致性_報告.md    # qa_type: CROSS_SCENE_CONTINUITY
+  qa_decision: PASS
+  depth_layer: standard
+  notes: "Stage 0 UDV 5 條：(1)台詞檔有真實對白 body 約28 speaker 行非節拍/TODO (2)phase_log dialogue-write 宣稱檔 v01A/B/C/v02 磁碟皆存在無謊報 (3)pipeline_state DIALOGUE_CONVERGED 對應 --converge completed 紀錄一致 (4)任務包核心欄位 3/9/10/12/14/15 非空但 狀態DRAFT/TASK_DRAFT → 已知 F-029 waiver WARN 不 abort (5)無宣稱已寫卻缺失外部檔。8 報全 PASS → qa_decision PASS。對抗式：每份先列攻擊切角+為何攻不破。雙 lens 全跑無分歧。F-022 friction：00_b §1.1/§1.2/§3/§4/§5 + 02_c §7/§8.2 + 05_d 逐場 row + 01_d W-style 為 Template 空段，以 00_b §1 基調/聲線卡 §A/§B/§R §5/任務包 §13/§14 替代，覆蓋充分。09_i：無 FINAL/LOCKED 語料，降級 QA_PASSED 同主角前置場 S-03-01 軟比對 + 前瞻 continuity(F-031)。D-050 子裁決2：僅寫 09_quality_assurance/ 8 報 + 08_ frontmatter 兩欄(pipeline_state DIALOGUE_CONVERGED->QA_PASSED, qa_decision null->PASS) + 本 phase_log entry。未越界。自主跑：Stage 3 approval gate 視為已授權通過寫檔。"
+- phase: qa
+  date: 2026-06-03
+  skill: /qa
+  status: completed
+  scene_id: S-08-01
+  target_dialogue: 08_dialogue_outputs/CH08_S01_組織棄養_dialogue_v02.md
+  qa_report_paths:
+    - 09_quality_assurance/CH08_S01_組織棄養_dialogue_v02_QA_類型偏移_報告.md      # qa_type: GENRE_DRIFT
+    - 09_quality_assurance/CH08_S01_組織棄養_dialogue_v02_QA_資訊控制_報告.md      # qa_type: INFO_CONTROL
+    - 09_quality_assurance/CH08_S01_組織棄養_dialogue_v02_QA_對話張力_報告.md      # qa_type: DRAMATIC_TENSION
+    - 09_quality_assurance/CH08_S01_組織棄養_dialogue_v02_QA_聲線_報告.md          # qa_type: VOICE_CONSISTENCY
+    - 09_quality_assurance/CH08_S01_組織棄養_dialogue_v02_QA_節奏感_報告.md        # qa_type: RHYTHM
+    - 09_quality_assurance/CH08_S01_組織棄養_dialogue_v02_QA_AI味_報告.md          # qa_type: AI_FLAVOR
+    - 09_quality_assurance/CH08_S01_組織棄養_dialogue_v02_QA_禁用詞_報告.md        # qa_type: FORBIDDEN_WORD
+    - 09_quality_assurance/CH08_S01_組織棄養_dialogue_v02_QA_跨場一致性_報告.md    # qa_type: CROSS_SCENE_CONTINUITY
+  qa_decision: PASS
+  depth_layer: standard
+  notes: "Stage 0 UDV 5 條：(1)v02 有真實對白 body 27 speaker 行(四人+AI客服)非節拍/TODO (2)phase_log dialogue-write --converge S-08-01 宣稱 dialogue_paths v02 磁碟存在無謊報，v01A/B/C 亦存在 (3)pipeline_state DIALOGUE_CONVERGED 對應 --converge completed 紀錄一致；depends_on 四聲線卡+三 R-* 皆 REVIEW (4)任務包核心欄位 3/9/10/12/14/15 非空但 狀態DRAFT/TASK_DRAFT → 已知 F-029 waiver WARN 不 abort (5)無宣稱已寫卻缺失外部檔。8 報全 PASS → qa_decision PASS。對抗式：每份先列 lens A 攻擊切角+為何攻不破再判 PASS，雙 lens 全跑無分歧。09_f=none 偏移(黑色幽默/制度冷漠正向承載場)。09_d 三真相鎖(蟲災人為/組織知情/養殖場無名加工公司)零洩漏，與同章 S-08-02(已 QA_PASSED)解禁邊界一致。09_b 四角色對 §B 基準高度一致+去名可辨+AI客服守純官腔零認錯。09_c §3/§5/§6/§陣營詞/§14.3/聲線卡黑名單全零命中；黑話(死胖子/棄子/個屁)在 §14.2 解禁範圍。09_a 12項命中0/抽象詞零命中。09_g 句長擺盪充分(low谷留白為刻意)。09_i 實證比對同章 S-08-02(QA_PASSED)聲線無漂移/資訊閘門連續/動機因果連續(棄養→自力求生→查線索)(F-031 實證非前瞻)。F-022 friction：00_b §4/§5/§6 + 02_c §7/§8.2 + 01_d W-style 為 Template 骨架空，以 00_b §1/§2 已落地基調 + 聲線卡 §A/§B/偏移段/§R §5 + 任務包 §13/§14.3 + 06_a §22.2 + W-rules §22.1 fallback 覆蓋充分。01_d 缺量化指紋 → 09_g 質性句長判定+WARN。D-050 子裁決2：僅寫 09_quality_assurance/ 8 報 + 08_ frontmatter 兩欄(DIALOGUE_CONVERGED->QA_PASSED, qa_decision null->PASS) + 本 phase_log entry，未越界。不 auto 升 FINAL/不建 09_e。"
+
+- phase: qa
+  date: 2026-06-03
+  skill: /qa
+  status: completed
+  scene_id: S-09-01
+  target_dialogue: 08_dialogue_outputs/CH09_S01_聯合防衛戰_dialogue_v02.md
+  qa_report_paths:
+    - 09_quality_assurance/CH09_S01_聯合防衛戰_dialogue_v02_QA_AI味_報告.md      # qa_type: AI_FLAVOR
+    - 09_quality_assurance/CH09_S01_聯合防衛戰_dialogue_v02_QA_聲線_報告.md      # qa_type: VOICE_CONSISTENCY
+    - 09_quality_assurance/CH09_S01_聯合防衛戰_dialogue_v02_QA_禁用詞_報告.md    # qa_type: FORBIDDEN_WORD
+    - 09_quality_assurance/CH09_S01_聯合防衛戰_dialogue_v02_QA_資訊控制_報告.md  # qa_type: INFO_CONTROL
+    - 09_quality_assurance/CH09_S01_聯合防衛戰_dialogue_v02_QA_類型偏移_報告.md  # qa_type: GENRE_DRIFT
+    - 09_quality_assurance/CH09_S01_聯合防衛戰_dialogue_v02_QA_節奏感_報告.md    # qa_type: RHYTHM
+    - 09_quality_assurance/CH09_S01_聯合防衛戰_dialogue_v02_QA_對話張力_報告.md  # qa_type: DRAMATIC_TENSION
+    - 09_quality_assurance/CH09_S01_聯合防衛戰_dialogue_v02_QA_跨場一致性_報告.md # qa_type: CROSS_SCENE_CONTINUITY
+  qa_decision: PASS
+  depth_layer: standard
+  notes: "Stage 0 UDV 5 條：(1)台詞檔有真實對白 body 50 speaker行+8清道夫OS行,非空殼;(2)phase_log dialogue_paths(v01A/B/C+v02)磁碟全存在;(3)pipeline_state DIALOGUE_CONVERGED 對應 phase_log /dialogue-write --converge S-09-01 completed 紀錄一致;(4)任務包 07_scene_tasks/CH09_S01_台詞任務包.md 存在+核心欄位非空,但 狀態DRAFT/pipeline_state TASK_DRAFT(非REVIEW)=已知 waiver,記 WARN 不 abort(F-029,自主跑 D.2.5 gate 視為已授權);(5)宣稱外部檔皆存在。8 報全 PASS→qa_decision PASS。對抗式:每報先列攻擊切角(4-7切角)再判 PASS,雙 lens 全跑無分歧。F-022:00_b §5偏移基線/§6高風險基線=Template空骨架→以四聲線卡偏移段+05_b §24.5替代;02_c §7.2/§8.2角色/場景禁用詞空→以聲線卡黑名單+任務§14.3替代;05_d 為§0高層note(較預期完整,蟲后暗示/CH-08解禁時點已落地)無CH-09逐場row→以§0+任務§13替代。禁用詞body機械掃描0命中。F-031:無FINAL/LOCKED場→09_i降級對3個QA_PASSED同弧線前場(S-08-02/S-05-01/S-03-01)部分實證軟比對+前瞻,非純前瞻。D-050子裁決2:僅寫09_quality_assurance/ 8報+08_ frontmatter兩欄(pipeline_state DIALOGUE_CONVERGED->QA_PASSED,qa_decision null->PASS)+本phase_log entry。未越界。不auto升FINAL/不建09_e/不auto觸發下游。"
+- phase: qa
+  date: '2026-06-03'
+  skill: /qa
+  status: completed
+  scene_id: S-06-02
+  target_dialogue: 08_dialogue_outputs/CH06_S02_四人磨合_dialogue_v02.md
+  qa_report_paths:
+    - 09_quality_assurance/CH06_S02_四人磨合_dialogue_v02_QA_類型偏移_報告.md      # qa_type: GENRE_DRIFT
+    - 09_quality_assurance/CH06_S02_四人磨合_dialogue_v02_QA_資訊控制_報告.md      # qa_type: INFO_CONTROL
+    - 09_quality_assurance/CH06_S02_四人磨合_dialogue_v02_QA_對話張力_報告.md      # qa_type: DRAMATIC_TENSION
+    - 09_quality_assurance/CH06_S02_四人磨合_dialogue_v02_QA_聲線_報告.md          # qa_type: VOICE_CONSISTENCY
+    - 09_quality_assurance/CH06_S02_四人磨合_dialogue_v02_QA_節奏感_報告.md        # qa_type: RHYTHM
+    - 09_quality_assurance/CH06_S02_四人磨合_dialogue_v02_QA_AI味_報告.md          # qa_type: AI_FLAVOR
+    - 09_quality_assurance/CH06_S02_四人磨合_dialogue_v02_QA_禁用詞_報告.md        # qa_type: FORBIDDEN_WORD
+    - 09_quality_assurance/CH06_S02_四人磨合_dialogue_v02_QA_跨場一致性_報告.md    # qa_type: CROSS_SCENE_CONTINUITY
+  qa_decision: PASS
+  udv_result: PASS（UDV 1/2/3/5 通過；第4條任務包 狀態DRAFT 屬 F-029 已知 waiver 記 WARN 不 abort）
+  lens_divergence: none（8 報雙 lens 全一致）
+  frictions:
+    - F-022: 05_d逐場揭露/02_c §7角色禁用詞/§8.2單場禁用詞/00_b §5偏移清單空 → 以聲線卡+關係段+任務包§13/§14替代（09_d/09_c/09_b）
+    - F-031: 無FINAL/LOCKED場 → 09_i前瞻模式+CH06_S01(QA_PASSED)降級參考交叉
+    - F-029: 任務包TASK_DRAFT(非REVIEW) UDV第4條 waiver 記WARN
+  notes: '8報全PASS→qa_decision PASS。對抗式逐報列攻擊切角+為何攻不破(09_f椅子梗尺度落差/09_d諾拉莉娜未碰蟲災禁區/09_h錯位攻防+收尾潛台詞張力/09_b四角去名測試辨識+諾拉零粗口守住/09_g句長擺盪非平均/09_a抽象詞零命中+諾拉系統語法屬風格核心非AI味/09_c禁用詞機械零命中/09_i與S-06-01接管狀態連續)。目標台詞 frontmatter pipeline_state→QA_PASSED/qa_decision→PASS。D-050子裁決2:僅寫 09_quality_assurance/8報 + 08 frontmatter兩欄 + 本phase_log。不auto升FINAL/不auto建09_e。下一步:人類確認可定稿→填09_e→升FINAL。'

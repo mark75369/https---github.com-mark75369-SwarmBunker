@@ -1,0 +1,56 @@
+我是 game-dialogue-bible 專案的使用者。11th master 對話 A 完成 first-run + second-run sandbox audit cycle + 5 採納 transcribe（POST_LOCK_PENDING v0.24 §5.18）後，前端後續工作交接給你這條 dialogue。
+
+工作資料夾：D:\劇本開發工具
+GitHub remote：https://github.com/mark75369/Writing-tools.git
+
+你是「11th master frontend dialogue」承接 _tools/frontend/ 後續工作。
+
+第一步必讀（按順序）：
+1. _design/FRONTEND_HANDOFF.md v0.1（你的 scope 入口）
+2. _design/POST_LOCK_PENDING.md v0.24 §1 NEW_REQ_20 + NEW_REQ_22 + NEW_REQ_24（你要處理的 finding）
+3. _design/AUDIT_2026Q2_REPORT.md v0.1 §1-§8（前兩 cycle 全紀錄；你接手 cycle N）
+4. _design/SANDBOX_REFACTOR_PLAN.md v0.1（sandbox audit 戰略落地核心檔 + 3-stage workflow base）
+   ※ 注意：原列的 _sandbox/CLAUDE_CODE_AUDIT_PROTOCOL.md 目前缺檔（sandbox 已清），3-stage 規格改以 _design/FRONTEND_DIALOGUE_KICKOFF.md §B 為準。
+
+第二步精選讀（碰到才看）：
+5. _design/HANDOFF_TO_11TH_MASTER.md v1.1 §9（11th master 整體戰略 reframe）
+6. _design/UX_SPEC.md v0.4 §11.1.5/§11.1.6（NEW_REQ_20 要對齊的規格）
+7. _tools/frontend/static/js/components/ProjectDashboard.js（NEW_REQ_20 主要 patch 對象，line 292-335 + 337-377）
+8. _tools/frontend/server.py（backend endpoint 候選 /api/dashboard/pending-status）
+9. .claude/skills/export-character/SKILL.md L231（NEW_REQ_24 Wave 14 directive 原文）
+
+你的 scope：
+接手所有 _tools/frontend/ 相關工作 + NEW_REQ_20 + NEW_REQ_24 兩議題 + frontend 角色重塑評估 + 對應 audit cycle。三條路徑由 user 拍板：
+- 路徑 W（窄）：純 NEW_REQ_20 dashboard 3 finding patch
+- 路徑 M（中，推薦）：W + NEW_REQ_24 角色檔名 design 拍板（含 audit-first reasoning collection）
+- 路徑 F（全）：M + frontend 11 feature 全 reframe 評估（audit + 大型 refactor）
+
+Workflow 模式：3-stage（用 Claude Code Dynamic Workflows 跑 Stage 1）
+- Stage 1 AUDIT — Dynamic Workflows 並行子代理 audit（read-only）。在 _sandbox/snapshot/ 內跑，開 5 個並行 read-only 子任務，各產一份 report 到 _sandbox/audit-reports/：
+  · F-A1：_tools/frontend/ 全目錄 dead code / 未使用 module / 殘留 placeholder 盤點 → audit-F-A1-deadcode.md
+  · F-A2：ProjectDashboard.js line 292-335 + 337-377，NEW_REQ_20 三 finding 對 production 現況 cross-check（含與 UX_SPEC §11.1.6 落差）→ audit-F-A2-dashboard.md
+  · F-A3：server.py + static/js/state.js，backend /api/dashboard/pending-status 是否存在 + 資料流 drift → audit-F-A3-backend-state.md
+  · F-B1：全 repo .md/.py + export-character/SKILL.md git blame，角色檔名 hyphen vs underscore 全 scan + L231 Wave 14 directive reasoning → audit-F-B1-filename.md
+  · F-C1：全 frontend + UX_SPEC §11，11 個 Phase A.0F feature 在工具新角色下的存廢評估（read-only 只評估不 apply）→ audit-F-C1-reframe.md
+- Stage 2 REVIEW — single-agent cross-check 5 份 report + 採納建議 + memo（NEW_REQ_24 在此決 Option 1/2/3）
+- Stage 3 APPLY — 寫 production；Ask permissions mode；每個 edit explicit gate
+- Stage 4 收尾 — append AUDIT_2026Q2_REPORT.md §9 + POST_LOCK_PENDING 升 v0.25 + GIT SUMMARY
+
+重要邊界（嚴格 scope）：
+- ✗ 不重做 10 LOCKED spec / D-001~D-055（除非 user 拍板新 D-056+）
+- ✗ 不擅自啟新 D-NNN 拍板（有新議題回升 user）
+- ✗ 不動 POST_LOCK_PENDING NEW_REQ_22 entry 主體 + AUDIT_2026Q2_REPORT §1-§8（屬 11th master 對話 A；你只能 append）
+- ✗ 不重做 11th master 對話 A 已完成的 work
+- ✓ 可 patch _tools/frontend/ 任何檔
+- ✓ 可開新 NEW_REQ_25+ entry
+- ✓ 可動 CLAUDE.md / AGENTS.md frontend 相關 row（如 dashboard 完成度）
+
+Pre-flight（跑 Stage 1 前，PowerShell）：
+cd D:\劇本開發工具
+git status --short
+rm -r -force _sandbox\snapshot, _sandbox\audit-reports, _sandbox\review-reports, _sandbox\apply-reports 2>$null
+mkdir _sandbox\snapshot, _sandbox\audit-reports, _sandbox\review-reports, _sandbox\apply-reports
+robocopy . _sandbox\snapshot /E /XD .git _sandbox node_modules .venv __pycache__ /XF *.pyc
+git log -1 --format="%H" > _sandbox\PRE_CYCLE_COMMIT.txt
+
+請先回報你讀完必讀後對 scope + 三條路徑 + workflow 模式的理解，再等 user 拍板實際走哪條路徑。
